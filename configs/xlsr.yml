@@ -1,0 +1,2 @@
+upstream: xlsr
+input_dim: 1024
