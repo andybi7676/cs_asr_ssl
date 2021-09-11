@@ -1,2 +1,25 @@
-upstream: xlsr
-input_dim: 1024
+mission: LID #{LID, ASR}
+
+dataset:
+  bucket_path: './data/len_for_bucket/SEAME'
+  train: ['train']
+  test: ['dev-man', 'dev-sge']
+
+upstream: 
+  name: wav2vec2_xlsr
+  ckpt: null
+
+featurizer:
+  type: weighted-sum
+  ckpt: null
+
+downstream:
+  ckpt: null
+  type: RNN
+  RNN:
+    cell: LSTM
+    layer: 2
+    input_dim: 1024
+    output_dim: 1024
+  CNN:
+    
