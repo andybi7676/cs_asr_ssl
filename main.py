@@ -8,47 +8,9 @@ from models.model import Downstream, Featurizer
 from torch.utils.tensorboard import SummaryWriter
 import os
 
-config_path = './configs/w2v2_base.yml'
+from tools.
 
-# def train(upstream, featurizer, **config):
-#     dataset_config = config['DATASET']
-#     splits = dataset_config['train']
-#     train_dataset = LID_Dataset(splits, **dataset_config)
-#     train_dataloader = DataLoader(train_dataset, batch_size=1, shuffle=True)
-
-#     device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-#     upstream.to(device)
-#     upstream.eval()
-#     Featurizer.to(device)
-#     specaug = None
-#     if config.get('specaug'):
-#         from tools.specaug import SpecAug
-#         specaug = SpecAug(**config["SPECAUG"])
-#     specaug.to(device)
-#     # pbar = tqdm(total=self.config['hyperparams']['total_steps'], dynamic_ncols=True, desc='overall')
-#     epochs = 0
-
-#     for batch_id, (X, Y) in enumerate(tqdm(train_dataloader, dynamic_ncols=True, total=len(train_dataloader), desc=f'training')):
-        
-#         wav, label = X.to(device), Y.to(device)
-#         print(wav.size())
-#         print(label.size())
-
-#         with torch.no_grad():
-#             feature = upstream(wav)
-#         feature = feature['hidden_states']
-
-#         # print(feature)
-#         feature = featurizer(feature)
-#         print(feature)
-#         if specaug:
-#             feature, _ = specaug(feature)
-#         print(feature)
-
-
-
-#         assert 1==2
+config_path = './configs/xlsr.yml'
 
 class Runner():
     def __init__(self, config, args=None):
@@ -63,8 +25,11 @@ class Runner():
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.upstream = torch.hub.load('s3prl/s3prl', self.config['UPSTREAM']['name']).to(self.device)
         self.featurizer = Featurizer(self.upstream, self.device, **self.config['FEATURIZER']).to(self.device)
-        # self.downstream = Downstream(self.device, **self.config['DOWNSTREAM']).to(self.device)
+        self.downstream = Downstream(self.featurizer.upstream_dim, **self.config['DOWNSTREAM']).to(self.device)
     
+    def _get_optimizer(self, trainable_models):
+        
+
     def train_LID(self):
 
         dataset_config = self.config['DATASET']
@@ -79,21 +44,43 @@ class Runner():
         # pbar = tqdm(total=self.config['hyperparams']['total_steps'], dynamic_ncols=True, desc='overall')
         epochs = 0
         self.upstream.eval()
-        for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader, dynamic_ncols=True, total=len(self.train_dataloader), desc=f'training')):
-            print(wavs)
-            wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], labels
-            print(wavs[0].size())
-            # print(labels[0].size())
+        self.featurizer.train()
+        self.downstream.train()
+        trainable_models = [self.featurizer, self.downstream]
 
+        optimizer = self._get_optimizer(self.trainable_models)
+        if self.config.get('scheduler'):
+            scheduler = self._get_scheduler(optimizer)
+        for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader, dynamic_ncols=True, total=len(self.train_dataloader), desc=f'training')):
+            # print(wavs)
+            wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ]
+            # wavs => list(tensor(length))
+            print(labels[0].size())
+            
             with torch.no_grad():
                 features = self.upstream(wavs)
-                features = features['hidden_states'] # features = tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
+                features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
 
-            features = self.featurizer(features) # features = tensor(N,T,C)
+            features = self.featurizer(features) # features => tensor(N,T,C)
             if self.specaug:
-                features, _ = self.specaug(features)  # features = list(tensor_1(T,C), ...tensor_n(T, C))
-            
+                features, _ = self.specaug(features)  # features => list(tensor_1(T,C), ...tensor_n(T, C))
+            print(features[0].size())
+            # revise label length
+            assert len(features) == len(labels), 'length of features and labels not consistent'
+            for idx, lb in enumerate(labels):
+                diff = lb.size()[0] - features[idx].size()[0]
+                assert diff >= 0, 'Unexpected event happened, ' 
+                q, r = diff // 2, diff % 2
+                if q > 0 :
+                    labels[idx] = lb[q+r: -q]
+                else:
+                    labels[idx] = lb[r:]
+            # print(features[0].size(), labels[0].size())
+                # assert labels[idx].size()[0] == features[idx].size()[0]
+            loss = self.downstream(features, labels)
 
+            gradient_accumulate_steps = self.config['hyperparams'].get('gradient_accumulate_steps')
+            print(loss)
             assert 1==2
 
 def main():
