@@ -169,7 +169,11 @@ class Downstream(nn.Module):
                 labels,
             )
         
-        return loss
+        # loss = loss / log_probs.size()[1]
+
+        acc = (log_probs.argmax(dim=1) == labels).type(torch.float).sum().item()
+        
+        return acc, loss, log_probs.size()[1]
 
 
 

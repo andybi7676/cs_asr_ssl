@@ -69,6 +69,7 @@ class Runner():
         backward_steps = 0
         gradient_accumulate_steps = self.config['hyperparams']['gradient_accumulate_steps']
         # self.train_dataloader.sampler.set_epoch(epoch)
+        avg_acc, avg_loss, total_frames = 0., 0., 0
         while pbar.n < pbar.total:
             for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader, dynamic_ncols=True, total=len(self.train_dataloader), desc=f'training')):
                 try:
@@ -97,7 +98,11 @@ class Runner():
                         else:
                             labels[idx] = lb[r:]
                     
-                    loss = self.downstream(features, labels)
+                    acc, loss, frames = self.downstream(features, labels)
+
+                    avg_acc += acc
+                    avg_loss += loss.item()
+                    total_frames += frames
 
                     (loss / gradient_accumulate_steps).backward()
                     # del loss
@@ -137,7 +142,12 @@ class Runner():
                 if scheduler:
                     scheduler.step()
                 
-                print(f'loss: {loss.item()}, global_step = {global_step}')
+                avg_loss /= total_frames
+                avg_acc /= total_frames
+                print(f'[step: {global_step}] avg_loss= {avg_loss}, avg_acc= {avg_acc}')
+                total_frames = 0
+                avg_acc = 0.
+                avg_loss = 0.
                 # if global_step % self.config['hyperparams'][]
 
                 pbar.update(1)
