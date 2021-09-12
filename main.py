@@ -17,9 +17,10 @@ class Runner():
     def __init__(self, config, args=None):
         
         self.exp_name = '-'.join([config['UPSTREAM']['name'], config['mission'], config['id']])
-        # outdir = f'./results/{self.exp_name}'
-        # if not os.path.exists(outdir): os.makedirs(outdir)
-        # writer = SummaryWriter(log_dir=f'{self.exp_name}')
+        self.outdir = f'./results/{self.exp_name}'
+        self.init_ckpt = {}
+        if not os.path.exists(self.outdir): os.makedirs(self.outdir)
+        writer = SummaryWriter(log_dir=f'{self.exp_name}')
         self.config = config
         self.args = args
 
@@ -142,13 +143,27 @@ class Runner():
                 if scheduler:
                     scheduler.step()
                 
-                avg_loss /= total_frames
+                avg_loss /= gradient_accumulate_steps
                 avg_acc /= total_frames
-                print(f'[step: {global_step}] avg_loss= {avg_loss}, avg_acc= {avg_acc}')
+                print(f' [step: {global_step}] avg_loss= {avg_loss}, avg_acc= {avg_acc}')
                 total_frames = 0
                 avg_acc = 0.
                 avg_loss = 0.
-                # if global_step % self.config['hyperparams'][]
+
+                if global_step % self.config['hyperparams']['save_step']:
+                    ckpt = {
+                        'Downstream': self.downstream.state_dict()
+                        'Featurizer': self.featurizer.state_dict()
+                        'Optimizer': optimizer.state_dict(),
+                        'Step': global_step,
+                        'Epoch': epoch,
+                        'Config': self.config
+                    }
+                    out_path = os.path.join(self.outdir, f'state-{global_step}.pt')
+                    torch.save(ckpt, out_path)
+
+
+
 
                 pbar.update(1)
             epoch += 1
