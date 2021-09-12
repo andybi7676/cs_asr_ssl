@@ -34,8 +34,8 @@ class LID_Dataset(Dataset):
         f_names = table_list['file_path'].tolist()
         f_len = table_list['length'].tolist()
 
-        self.X = [''.join(f.split('.')[:-1]) for f in f_names[0:10]]
-        # print(self.X)
+        self.X = [ f.split('.')[0] for f in f_names ]
+        print(self.X)
 
         
     def _load_wav(self, wav_path):
