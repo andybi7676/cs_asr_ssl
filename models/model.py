@@ -1,6 +1,8 @@
 import torch.nn as nn
 import torch
 
+import torch.nn.functional as F
+
 
 class Downstream(nn.Module):
     def __init__(self, **kwargs):
@@ -10,6 +12,24 @@ class Downstream(nn.Module):
 class Featurizer(nn.Module):
     def __init__(self, **kwargs):
         super().__init__()
+        self.layer_num = 25
+        self.weights = nn.Parameter(torch.zeros(self.layer_num))
+
+    def _weighted_sum(self, feature):
+        assert self.layer_num == len(feature), f"{self.layer_num} != {len(feature)}"
+        stacked_feature = torch.stack(feature, dim=0)
+
+        _, *origin_shape = stacked_feature.shape
+        stacked_feature = stacked_feature.view(self.layer_num, -1)
+        norm_weights = F.softmax(self.weights, dim=-1)
+        weighted_feature = (norm_weights.unsqueeze(-1) * stacked_feature).sum(dim=0)
+        weighted_feature = weighted_feature.view(*origin_shape)
+
+        return weighted_feature
+    
+    def forward(self, feature):
+        return self._weighted_sum(feature)
+
 
 class Classifier(nn.Module):
     def __init__(self, input_dim=1024, **kwargs):

@@ -1,4 +1,16 @@
+id: '001'
 mission: LID #{LID, ASR}
+
+hyperparams:
+  total_steps: 1000000
+  gradient_clipping: 1
+  gradient_accumulate_steps: 32
+  log_step: 10000
+  eval_step: 50000
+  save_step: 100000
+  max_keep: 1
+  eval_dataloaders:
+    - test
 
 dataset:
   bucket_path: './data/len_for_bucket/SEAME'
@@ -12,6 +24,16 @@ upstream:
 featurizer:
   type: weighted-sum
   ckpt: null
+
+specaug:
+  apply_time_warp: true
+  apply_time_mask: true
+  apply_freq_mask: true
+  time_warp_window: 5
+  time_mask_width_range: [0, 40]
+  freq_mask_width_range: [0, 50]
+  num_freq_mask: 4
+  num_time_mask: 2
 
 downstream:
   ckpt: null

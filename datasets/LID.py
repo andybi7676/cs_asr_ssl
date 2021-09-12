@@ -34,7 +34,8 @@ class LID_Dataset(Dataset):
         f_names = table_list['file_path'].tolist()
         f_len = table_list['length'].tolist()
 
-        self.X = [''.join(f.split('.')[:-1]) for f in f_names[0:3]]
+        self.X = [''.join(f.split('.')[:-1]) for f in f_names[0:10]]
+        # print(self.X)
 
         
     def _load_wav(self, wav_path):
@@ -47,9 +48,11 @@ class LID_Dataset(Dataset):
 
     def __getitem__(self, index):
         # Load acoustic feature and pad
-        wav = self._load_wav(self.X[index]+'.wav')
-        label = torch.load(self.X[index]+'_lid.pt')
-        return torch.FloatTensor(wav), torch.LongTensor(label) # bucketing, return ((wavs, labels))
+        wav = torch.FloatTensor(self._load_wav(self.X[index]+'.wav'))
+        label = torch.LongTensor(torch.load(self.X[index]+'_lid.pt').squeeze())
+        # print(f'wav size: {wav[0].size()}')
+        # print(f'label size: {label[0].size()}')
+        return wav, label # bucketing, return ((wavs, labels))
     
     # def collate_fn(self, items):
     #     assert len(items) == 1
