@@ -8,7 +8,7 @@ from models.model import Downstream, Featurizer
 from torch.utils.tensorboard import SummaryWriter
 import os
 
-from tools.
+from tools.optim import get_optimizer
 
 config_path = './configs/xlsr.yml'
 
@@ -28,7 +28,13 @@ class Runner():
         self.downstream = Downstream(self.featurizer.upstream_dim, **self.config['DOWNSTREAM']).to(self.device)
     
     def _get_optimizer(self, trainable_models):
-        
+        optimizer = get_optimizer(
+            trainable_models, 
+            self.config['hyperparams']['total_steps'],
+            self.config['optimizer']
+        )
+        self._load_weight(optimizer, 'Optimizer')
+        return optimizer
 
     def train_LID(self):
 
@@ -49,6 +55,7 @@ class Runner():
         trainable_models = [self.featurizer, self.downstream]
 
         optimizer = self._get_optimizer(self.trainable_models)
+        print(optimizer)
         if self.config.get('scheduler'):
             scheduler = self._get_scheduler(optimizer)
         for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader, dynamic_ncols=True, total=len(self.train_dataloader), desc=f'training')):
