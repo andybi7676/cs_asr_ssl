@@ -52,7 +52,7 @@ class LID_Dataset(Dataset):
         label = [ torch.load(self.X[index]+'_lid.pt').squeeze() ]
         # print(f'wav size: {wav[0].size()}')
         # print(f'label size: {label[0].size()}')
-        return ([wav], [label]) # bucketing, return ((wavs, labels))
+        return (wav, label) # bucketing, return ((wavs, labels))
     
     def collate_fn(self, items):
         assert len(items) == 1

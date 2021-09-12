@@ -71,30 +71,28 @@ class Runner():
         splits = dataset_config['train']
         self.train_dataset = LID_Dataset(splits, **dataset_config)
         self.train_dataloader = DataLoader(self.train_dataset, batch_size=1, collate_fn=self.train_dataset.collate_fn, shuffle=True)
-        specaug = None
-        if self.config.get('specaug'):
+        self.specaug = None
+        if self.config.get('SPECAUG'):
             from tools.specaug import SpecAug
-            specaug = SpecAug(**self.config["SPECAUG"])
-            specaug.to(self.device)
+            self.specaug = SpecAug(**self.config["SPECAUG"])
+            self.specaug.to(self.device)
         # pbar = tqdm(total=self.config['hyperparams']['total_steps'], dynamic_ncols=True, desc='overall')
         epochs = 0
         self.upstream.eval()
         for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader, dynamic_ncols=True, total=len(self.train_dataloader), desc=f'training')):
-            
+            print(wavs)
             wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], labels
             print(wavs[0].size())
-            # print(labels.size())
+            # print(labels[0].size())
 
             with torch.no_grad():
                 features = self.upstream(wavs)
-            features = features['hidden_states']
+                features = features['hidden_states'] # features = tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
 
-            # print(feature)
-            features = self.featurizer(features)
-            print(features)
-            if specaug:
-                features, _ = specaug(features)
-            print(features)
+            features = self.featurizer(features) # features = tensor(N,T,C)
+            if self.specaug:
+                features, _ = self.specaug(features)  # features = list(tensor_1(T,C), ...tensor_n(T, C))
+            
 
             assert 1==2
 
