@@ -34,7 +34,12 @@ class LID_Dataset(Dataset):
         f_names = table_list['file_path'].tolist()
         f_len = table_list['length'].tolist()
 
-        self.X = [ os.path.join(data_path, f.split('.')[0]) for f in tqdm(f_names, total=len(f_names), desc='loading dataset') ]
+        self.valid_names = []
+        for f in tqdm(f_names, total=len(f_names), desc='loading dataset'):
+            name = os.path.join(data_path, f.split('.')[0])
+            if os.path.isfile(name.replace('SEAME', 'SEAME_LID')+'_lid.pt') and os.path.isfile(name+'.wav'):
+                self.valid_names.append(name)
+
         # print(self.X)
 
         
@@ -44,12 +49,12 @@ class LID_Dataset(Dataset):
         return wav.view(-1)
     
     def __len__(self):
-        return len(self.X)
+        return len(self.valid_names)
 
     def __getitem__(self, index):
         # Load acoustic feature and pad
-        wav = [ self._load_wav(self.X[index]+'.wav').numpy() ]
-        label = [ torch.load(self.X[index].replace('SEAME', 'SEAME_LID')+'_lid.pt').squeeze() ]
+        wav = [ self._load_wav(self.valid_names[index]+'.wav').numpy() ]
+        label = [ torch.load(self.valid_names[index].replace('SEAME', 'SEAME_LID')+'_lid.pt').squeeze() ]
         # print(f'wav size: {wav[0].size()}')
         # print(f'label size: {label[0].size()}')
         return (wav, label) # bucketing, return ((wavs, labels))

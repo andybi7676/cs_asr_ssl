@@ -7,6 +7,7 @@ from datasets.LID import LID_Dataset
 from models.model import Downstream, Featurizer
 from torch.utils.tensorboard import SummaryWriter
 import os
+import math
 
 from tools.optim import get_optimizer
 
@@ -55,12 +56,14 @@ class Runner():
         self.featurizer.train()
         self.downstream.train()
         trainable_models = [self.featurizer, self.downstream]
-        trainable_params = [self.featurizer.parameters(), self.downstream.parameters()]
+        trainable_params = list(self.featurizer.parameters()) + list(self.downstream.parameters())
 
         optimizer = self._get_optimizer(trainable_models)
         print(optimizer)
         if self.config.get('scheduler'):
             scheduler = self._get_scheduler(optimizer)
+        else:
+            scheduler = None
         
         epoch = 0
         backward_steps = 0
@@ -97,13 +100,13 @@ class Runner():
                     loss = self.downstream(features, labels)
 
                     (loss / gradient_accumulate_steps).backward()
-                    del loss
+                    # del loss
                     # assert 1==2
                 except RuntimeError as e:
                     if 'CUDA out of memory' in str(e):
                         print(f'[Runner] - CUDA out of memory at step {global_step}')
-                        # if is_initialized():
-                        # raise
+                        # if self.first_round:
+                            # raise
                         with torch.cuda.device(self.device):
                             torch.cuda.empty_cache()
                         optimizer.zero_grad()
@@ -119,6 +122,7 @@ class Runner():
                     continue
 
                 # gradient clipping
+                # print(trainable_params)
                 grad_norm = torch.nn.utils.clip_grad_norm_(
                     trainable_params, self.config['hyperparams']['gradient_clipping'])
 
