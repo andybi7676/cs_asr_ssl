@@ -99,7 +99,7 @@ class RNNs(nn.Module):
         dropout,
         layer_norm,
         proj,
-        output_size=3,
+        output_size=4,
         module='LSTM',
         bidirection=True,
         **kwargs
@@ -162,7 +162,7 @@ class Downstream(nn.Module):
         features = self.projector(features)
         logits, log_probs_len = self.model(features, features_len)
         log_probs = nn.functional.log_softmax(logits, dim=-1)
-        print(log_probs.size())
+        # print(log_probs.size())
 
         loss = self.objective(
                 log_probs.transpose(-1, 1),
