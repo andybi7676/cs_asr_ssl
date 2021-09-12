@@ -1,18 +1,33 @@
+from datasets.LID import SAMPLE_RATE
 import torch.nn as nn
 import torch
 
 import torch.nn.functional as F
 
-
+SAMPLE_RATE = 16000
 class Downstream(nn.Module):
     def __init__(self, **kwargs):
         super().__init__()
     
 
 class Featurizer(nn.Module):
-    def __init__(self, **kwargs):
+    def __init__(self, upstream, device, **kwargs):
         super().__init__()
-        self.layer_num = 25
+
+        upstream.eval()
+
+        paired_wavs = [torch.randn(SAMPLE_RATE).to(device)]
+        paired_features = upstream(paired_wavs)
+
+        feature = paired_features['hidden_states']
+        if isinstance(feature, (list, tuple)):
+            self.layer_num = len(feature)
+            print(
+                f"[ Featurizer ] - Take a list of {self.layer_num} features and weighted sum them."
+            )
+        else:
+            raise ValueError('Invalid feature!')
+
         self.weights = nn.Parameter(torch.zeros(self.layer_num))
 
     def _weighted_sum(self, feature):

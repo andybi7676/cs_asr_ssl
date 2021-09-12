@@ -12,20 +12,21 @@ hyperparams:
   eval_dataloaders:
     - test
 
-dataset:
+DATASET:
   bucket_path: './data/len_for_bucket/SEAME'
+  data_path: './data/SEAME'
   train: ['train']
   test: ['dev-man', 'dev-sge']
 
-upstream: 
+UPSTREAM: 
   name: wav2vec2_xlsr
   ckpt: null
 
-featurizer:
+FEATURIZER:
   type: weighted-sum
   ckpt: null
 
-specaug:
+SPECAUG:
   apply_time_warp: true
   apply_time_mask: true
   apply_freq_mask: true
@@ -35,7 +36,7 @@ specaug:
   num_freq_mask: 4
   num_time_mask: 2
 
-downstream:
+DOWNSTREAM:
   ckpt: null
   type: RNN
   RNN:

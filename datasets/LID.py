@@ -17,7 +17,7 @@ SAMPLE_RATE = 16000
 HALF_BATCHSIZE_TIME = 2000
 
 class LID_Dataset(Dataset):
-    def __init__(self, splits, bucket_path='./', **kwargs) -> None:
+    def __init__(self, splits, bucket_path='./', data_path='', **kwargs) -> None:
         super(LID_Dataset, self).__init__()
 
         assert os.path.exists(bucket_path), 'Bucket path does not exist.'
@@ -34,8 +34,8 @@ class LID_Dataset(Dataset):
         f_names = table_list['file_path'].tolist()
         f_len = table_list['length'].tolist()
 
-        self.X = [ f.split('.')[0] for f in f_names ]
-        print(self.X)
+        self.X = [ os.path.join(data_path, f.split('.')[0]) for f in tqdm(f_names, total=len(f_names), desc='loading dataset') ]
+        # print(self.X)
 
         
     def _load_wav(self, wav_path):
@@ -48,12 +48,12 @@ class LID_Dataset(Dataset):
 
     def __getitem__(self, index):
         # Load acoustic feature and pad
-        wav = torch.FloatTensor(self._load_wav(self.X[index]+'.wav'))
-        label = torch.LongTensor(torch.load(self.X[index]+'_lid.pt').squeeze())
+        wav = [ self._load_wav(self.X[index]+'.wav').numpy() ]
+        label = [ torch.load(self.X[index]+'_lid.pt').squeeze() ]
         # print(f'wav size: {wav[0].size()}')
         # print(f'label size: {label[0].size()}')
-        return wav, label # bucketing, return ((wavs, labels))
+        return ([wav], [label]) # bucketing, return ((wavs, labels))
     
-    # def collate_fn(self, items):
-    #     assert len(items) == 1
-    #     return items[0][0], items[0][1] # hack bucketing, return (wavs, labels)
+    def collate_fn(self, items):
+        assert len(items) == 1
+        return items[0][0], items[0][1] # hack bucketing, return (wavs, labels)
