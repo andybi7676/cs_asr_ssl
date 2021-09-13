@@ -20,7 +20,7 @@ class Runner():
         self.outdir = f'./results/{self.exp_name}'
         self.init_ckpt = {}
         if not os.path.exists(self.outdir): os.makedirs(self.outdir)
-        writer = SummaryWriter(log_dir=f'{self.exp_name}')
+        self.writer = SummaryWriter(log_dir=f'{self.exp_name}')
         self.config = config
         self.args = args
 
@@ -71,6 +71,7 @@ class Runner():
         gradient_accumulate_steps = self.config['hyperparams']['gradient_accumulate_steps']
         # self.train_dataloader.sampler.set_epoch(epoch)
         avg_acc, avg_loss, total_frames = 0., 0., 0
+        logs = {'steps_acc': [], 'steps_frames':[], 'steps_loss': [] }
         while pbar.n < pbar.total:
             for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader, dynamic_ncols=True, total=len(self.train_dataloader), desc=f'training')):
                 try:
@@ -101,13 +102,13 @@ class Runner():
                     
                     acc, loss, frames = self.downstream(features, labels)
 
+                    loss = loss / gradient_accumulate_steps
+                    loss.backward()
+
                     avg_acc += acc
                     avg_loss += loss.item()
                     total_frames += frames
 
-                    (loss / gradient_accumulate_steps).backward()
-                    # del loss
-                    # assert 1==2
                 except RuntimeError as e:
                     if 'CUDA out of memory' in str(e):
                         print(f'[Runner] - CUDA out of memory at step {global_step}')
@@ -143,17 +144,10 @@ class Runner():
                 if scheduler:
                     scheduler.step()
                 
-                avg_loss /= gradient_accumulate_steps
-                avg_acc /= total_frames
-                print(f' [step: {global_step}] avg_loss= {avg_loss}, avg_acc= {avg_acc}')
-                total_frames = 0
-                avg_acc = 0.
-                avg_loss = 0.
-
                 if global_step % self.config['hyperparams']['save_step']:
                     ckpt = {
-                        'Downstream': self.downstream.state_dict()
-                        'Featurizer': self.featurizer.state_dict()
+                        'Downstream': self.downstream.state_dict(),
+                        'Featurizer': self.featurizer.state_dict(),
                         'Optimizer': optimizer.state_dict(),
                         'Step': global_step,
                         'Epoch': epoch,
@@ -162,11 +156,63 @@ class Runner():
                     out_path = os.path.join(self.outdir, f'state-{global_step}.pt')
                     torch.save(ckpt, out_path)
 
-
-
+                if global_step % self.config['hyperparams']['log_step']:
+                    log_acc = avg_acc / total_frames
+                    log_loss = avg_loss / (self.config['hyperparams']['log_step'])
+                    self.writer.add_scalar(f'acc/train', log_acc, global_step)
+                    self.writer.add_scalar(f'loss/train', log_loss, global_step)
+                
+                if global_step % self.config['hyperparams']['eval_step']:
+                    test_acc, test_loss = self.evaluate_LID()
+                    self.writer.add_scalar(f'acc/test', test_acc, global_step)
+                    self.writer.add_scalar(f'loss/test', test_loss, global_step)
 
                 pbar.update(1)
             epoch += 1
+
+    def evaluate_LID(self):
+        if not hasattr(self, 'test_dataset'):
+            self.test_dataset = LID_Dataset('test', **self.config['dataset'])
+            self.test_dataloader = DataLoader(self.test_dataset, batch_size=1, collate_fn=self.test_dataset.collate_fn, shuffle=False)
+        
+        self.featurizer.eval()
+        self.downstream.eval()
+        total_acc, total_loss, total_frames = 0., 0., 0
+        for batch, (wavs, labels) in enumerate(tqdm(self.test_dataloader, total=len(self.test_dataloader), desc='evaluating...')):
+            wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ]
+            # wavs => list(tensor(length))
+            
+            with torch.no_grad():
+                features = self.upstream(wavs)
+                features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
+
+                features = self.featurizer(features) # features => tensor(N,T,C)
+                # if self.specaug:
+                features = list(features)
+                #     features, _ = self.specaug(features)  # features => list(tensor_1(T,C), ...tensor_n(T, C))
+                # revise label length
+                assert len(features) == len(labels), 'length of features and labels not consistent'
+                for idx, lb in enumerate(labels):
+                    diff = lb.size()[0] - features[idx].size()[0]
+                    assert diff >= 0, 'Unexpected event happened, ' 
+                    q, r = diff // 2, diff % 2
+                    if q > 0 :
+                        labels[idx] = lb[q+r: -q]
+                    else:
+                        labels[idx] = lb[r:]
+                
+                acc, loss, frames = self.downstream(features, labels)
+                total_acc += acc
+                total_loss += loss.item()
+                total_frames += frames
+
+        avg_acc = acc / total_frames
+        avg_loss = total_loss / len(self.test_dataloader)
+
+        return avg_acc, avg_loss
+
+
+
 
 
 def main():
