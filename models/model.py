@@ -100,7 +100,7 @@ class RNNs(nn.Module):
         dropout,
         layer_norm,
         proj,
-        output_size=4,
+        output_size,
         module='LSTM',
         bidirection=True,
         **kwargs

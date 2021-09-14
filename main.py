@@ -17,51 +17,55 @@ config_path = './configs/w2v2_base.yml'
 class Runner():
     def __init__(self, config, args=None):
         
-        self.exp_name = '-'.join([config['UPSTREAM']['name'], config['mission'], config['id']])
+        self.mission = config['mission']
+        self.task = config['task']
+        self.exp_name = '/'.join([config['UPSTREAM']['name'], config['mission'], config['id']])
         self.outdir = f'./results/{self.exp_name}'
         self.init_ckpt = {}
         if not os.path.exists(self.outdir): os.makedirs(self.outdir)
         self.writer = SummaryWriter(log_dir=self.outdir)
         self.config = config
+        self.config_lid = config.get('LID')
+        self.config_asr = config.get('ASR')
         self.args = args
-
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        self.upstream = torch.hub.load('s3prl/s3prl', self.config['UPSTREAM']['name']).to(self.device)
-        self.featurizer = Featurizer(self.upstream, self.device, **self.config['FEATURIZER']).to(self.device)
-        self.downstream = Downstream(self.featurizer.upstream_dim, **self.config['DOWNSTREAM']).to(self.device)
-        self.specaug = None
-        if self.config.get('SPECAUG'):
-            from tools.specaug import SpecAug
-            self.specaug = SpecAug(**self.config["SPECAUG"])
-            self.specaug.to(self.device)
+        if self.mission == 'LID':
+            self.upstream_lid = torch.hub.load('s3prl/s3prl', self.config_lid['UPSTREAM']['name']).to(self.device)
+            self.featurizer_lid = Featurizer(self.upstream_lid, self.device, **self.config_lid['FEATURIZER']).to(self.device)
+            self.downstream_lid = Downstream(self.featurizer_lid.upstream_dim, **self.config_lid['DOWNSTREAM']).to(self.device)
+            self.specaug_lid = None
+            if self.config_lid.get('SPECAUG'):
+                from tools.specaug import SpecAug
+                self.specaug_lid = SpecAug(**self.config_lid["SPECAUG"])
+                self.specaug_lid.to(self.device)
         self.first_round = True
         print('[ RUNNER ] - Initialized')
 
-    def _get_optimizer(self, trainable_models):
+    def _get_optimizer(self, trainable_models, mission='lid'):
         optimizer = get_optimizer(
             trainable_models, 
-            self.config['hyperparams']['total_steps'],
-            self.config['optimizer']
+            eval(f'self.config_{mission}')['runner']['total_steps'],
+            eval(f'self.config_{mission}')['optimizer']
         )
         # self._load_weight(optimizer, 'Optimizer')
         return optimizer
 
     def train_LID(self):
 
-        dataset_config = self.config['DATASET']
+        dataset_config = self.config_lid['DATASET']
         splits = dataset_config['train']
-        self.train_dataset = LID_Dataset(splits, **dataset_config)
-        self.train_dataloader = DataLoader(self.train_dataset, batch_size=1, collate_fn=self.train_dataset.collate_fn, shuffle=True)
+        self.train_dataset_lid = LID_Dataset(splits, **dataset_config)
+        self.train_dataloader_lid = DataLoader(self.train_dataset_lid, batch_size=1, collate_fn=self.train_dataset_lid.collate_fn, shuffle=True)
         
-        pbar = tqdm(total=self.config['hyperparams']['total_steps'], dynamic_ncols=True, desc='overall')
+        pbar = tqdm(total=self.config_lid['runner']['total_steps'], dynamic_ncols=True, desc='LID overall')
         
-        self.upstream.eval()
-        self.featurizer.train()
-        self.downstream.train()
-        trainable_models = [self.featurizer, self.downstream]
-        trainable_params = list(self.featurizer.parameters()) + list(self.downstream.parameters())
+        self.upstream_lid.eval()
+        self.featurizer_lid.train()
+        self.downstream_lid.train()
+        trainable_models = [self.featurizer_lid, self.downstream_lid]
+        trainable_params = list(self.featurizer_lid.parameters()) + list(self.downstream_lid.parameters())
 
-        optimizer = self._get_optimizer(trainable_models)
+        optimizer = self._get_optimizer(trainable_models, mission='lid')
         # print(optimizer)
         if self.config.get('scheduler'):
             scheduler = self._get_scheduler(optimizer)
@@ -70,12 +74,12 @@ class Runner():
         
         epoch = 0
         backward_steps = 0
-        gradient_accumulate_steps = self.config['hyperparams']['gradient_accumulate_steps']
+        gradient_accumulate_steps = self.config_lid['runner']['gradient_accumulate_steps']
         # self.train_dataloader.sampler.set_epoch(epoch)
         avg_acc, avg_loss, total_frames = 0., 0., 0
         logs = {'steps_acc': [], 'steps_frames':[], 'steps_loss': [] }
         while pbar.n < pbar.total:
-            for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader, dynamic_ncols=True, total=len(self.train_dataloader), desc=f'training')):
+            for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader_lid, dynamic_ncols=True, total=len(self.train_dataloader_lid), desc=f'training')):
                 try:
                     if pbar.n >= pbar.total:
                         break
@@ -85,12 +89,14 @@ class Runner():
                     # wavs => list(tensor(length))
                     
                     with torch.no_grad():
-                        features = self.upstream(wavs)
+                        features = self.upstream_lid(wavs)
                         features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
 
-                    features = self.featurizer(features) # features => tensor(N,T,C)
-                    if self.specaug:
-                        features, _ = self.specaug(features)  # features => list(tensor_1(T,C), ...tensor_n(T, C))
+                    features = self.featurizer_lid(features) # features => tensor(N,T,C)
+                    if self.specaug_lid:
+                        features, _ = self.specaug_lid(features)  # features => list(tensor_1(T,C), ...tensor_n(T, C))
+                    else:
+                        features = list(features)
                     # revise label length
                     assert len(features) == len(labels), 'length of features and labels not consistent'
                     for idx, lb in enumerate(labels):
@@ -102,7 +108,7 @@ class Runner():
                         else:
                             labels[idx] = lb[r:]
                     
-                    acc, loss, frames, pred = self.downstream(features, labels)
+                    acc, loss, frames, pred = self.downstream_lid(features, labels)
 
                     loss = loss / gradient_accumulate_steps
                     loss.backward()
@@ -132,7 +138,7 @@ class Runner():
 
                 # gradient clipping
                 grad_norm = torch.nn.utils.clip_grad_norm_(
-                    trainable_params, self.config['hyperparams']['gradient_clipping'])
+                    trainable_params, self.config_lid['runner']['gradient_clipping'])
 
                 # optimize
                 if math.isnan(grad_norm):
@@ -145,9 +151,9 @@ class Runner():
                 if scheduler:
                     scheduler.step()
                 
-                if global_step % self.config['hyperparams']['save_step'] == 0:
+                if global_step % self.config_lid['runner']['save_step'] == 0:
                     def check_ckpt_num(directory):
-                        max_keep = self.config['hyperparams']['max_keep']
+                        max_keep = self.config_lid['runner']['max_keep']
                         ckpt_pths = glob.glob(f'{directory}/states-*.ckpt')
                         if len(ckpt_pths) >= max_keep:
                             ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
@@ -156,21 +162,22 @@ class Runner():
                                 os.remove(ckpt_pth)
                     check_ckpt_num(self.outdir)
                     ckpt = {
-                        'Downstream': self.downstream.state_dict(),
-                        'Featurizer': self.featurizer.state_dict(),
+                        'Upstream_name': self.config_lid['UPSTREAM']['name'],
+                        'Downstream_lid': self.downstream_lid.state_dict(),
+                        'Featurizer_lid': self.featurizer_lid.state_dict(),
                         'Optimizer': optimizer.state_dict(),
                         'Step': global_step,
                         'Epoch': epoch,
-                        'Config': self.config
+                        'Config': self.config_lid
                     }
                     ckpt_name = f'states-{global_step}.ckpt'
                     out_path = os.path.join(self.outdir, ckpt_name)
                     torch.save(ckpt, out_path)
                     tqdm.write(f'[ SAVE ] - ckpt \'{ckpt_name}\' saved at \'{self.outdir}\'')
 
-                if global_step % self.config['hyperparams']['log_step'] == 0:
+                if global_step % self.config_lid['runner']['log_step'] == 0:
                     log_acc = avg_acc / total_frames
-                    log_loss = avg_loss / (self.config['hyperparams']['log_step'])
+                    log_loss = avg_loss / (self.config_lid['runner']['log_step'])
                     tqdm.write(f'[ TRAIN ] - LOSS: {log_loss:8f}, ACC: {log_acc:8f}, STEP={global_step}')
                     self.writer.add_scalar(f'acc/train', log_acc, global_step)
                     self.writer.add_scalar(f'loss/train', log_loss, global_step)
@@ -178,7 +185,7 @@ class Runner():
                     avg_loss = 0.
                     total_frames = 0
                 
-                if global_step % self.config['hyperparams']['eval_step'] == 0:
+                if global_step % self.config_lid['hyperparams']['eval_step'] == 0:
                     test_acc, test_loss = self.evaluate_LID()
                     tqdm.write(f'[ TEST ] - LOSS: {test_loss:8f}, ACC: {test_acc:8f}, STEP={global_step}')
                     self.writer.add_scalar(f'acc/test', test_acc, global_step)
@@ -188,23 +195,23 @@ class Runner():
             epoch += 1
 
     def evaluate_LID(self):
-        if not hasattr(self, 'test_dataset'):
-            eval_name = self.config['hyperparams']['eval_dataloader']
-            self.test_dataset = LID_Dataset(self.config['DATASET'][eval_name], **self.config['DATASET'])
-            self.test_dataloader = DataLoader(self.test_dataset, batch_size=1, collate_fn=self.test_dataset.collate_fn, shuffle=False)
+        if not hasattr(self, 'test_dataset_lid'):
+            eval_name = self.config_lid['hyperparams']['eval_dataloader']
+            self.test_dataset_lid = LID_Dataset(self.config_lid['DATASET'][eval_name], **self.config_lid['DATASET'])
+            self.test_dataloader_lid = DataLoader(self.test_dataset_lid, batch_size=1, collate_fn=self.test_dataset_lid.collate_fn, shuffle=False)
         
-        self.featurizer.eval()
-        self.downstream.eval()
+        self.featurizer_lid.eval()
+        self.downstream_lid.eval()
         total_acc, total_loss, total_frames = 0., 0., 0
-        for batch, (wavs, labels) in enumerate(tqdm(self.test_dataloader, total=len(self.test_dataloader), desc='evaluating...')):
+        for batch, (wavs, labels) in enumerate(tqdm(self.test_dataloader_lid, total=len(self.test_dataloader_lid), desc='evaluating...')):
             wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ]
             # wavs => list(tensor(length))
             
             with torch.no_grad():
-                features = self.upstream(wavs)
+                features = self.upstream_lid(wavs)
                 features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
 
-                features = self.featurizer(features) # features => tensor(N,T,C)
+                features = self.featurizer_lid(features) # features => tensor(N,T,C)
                 # if self.specaug:
                 features = list(features)
                 #     features, _ = self.specaug(features)  # features => list(tensor_1(T,C), ...tensor_n(T, C))
@@ -219,15 +226,15 @@ class Runner():
                     else:
                         labels[idx] = lb[r:]
                 
-                acc, loss, frames, pred = self.downstream(features, labels)
+                acc, loss, frames, pred = self.downstream_lid(features, labels)
                 total_acc += acc
                 total_loss += loss.item()
                 total_frames += frames
 
         avg_acc = total_acc / total_frames
-        avg_loss = total_loss / len(self.test_dataloader)
-        self.downstream.train()
-        self.featurizer.train()
+        avg_loss = total_loss / len(self.test_dataloader_lid)
+        self.downstream_lid.train()
+        self.featurizer_lid.train()
 
         return avg_acc, avg_loss
 
@@ -239,10 +246,9 @@ def main():
     with open(config_path, 'r') as yml_f:
         config = yaml.safe_load(yml_f)
     
-    runner = Runner(config)
     
     if config['mission'] == 'LID':
-        runner.train_LID()
+        runner = Runner(config)
 
 if __name__ == '__main__':
     main()

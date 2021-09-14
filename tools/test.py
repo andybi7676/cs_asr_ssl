@@ -1,3 +1,4 @@
+from models.model import Downstream
 import numpy as np
 import torch
 import glob
@@ -7,4 +8,4 @@ ckpts = glob.glob(f'{exp_path}/states-*.ckpt')
 print(ckpts)
 for ckpt in ckpts:
     ckpt = torch.load(ckpt)
-    print(ckpt)
+    print(ckpt['Downstream'])
