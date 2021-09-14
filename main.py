@@ -8,6 +8,7 @@ from models.model import Downstream, Featurizer
 from torch.utils.tensorboard import SummaryWriter
 import os
 import math
+import glob
 
 from tools.optim import get_optimizer
 
@@ -20,7 +21,7 @@ class Runner():
         self.outdir = f'./results/{self.exp_name}'
         self.init_ckpt = {}
         if not os.path.exists(self.outdir): os.makedirs(self.outdir)
-        self.writer = SummaryWriter(log_dir=f'{self.exp_name}')
+        self.writer = SummaryWriter(log_dir=self.outdir)
         self.config = config
         self.args = args
 
@@ -34,6 +35,7 @@ class Runner():
             self.specaug = SpecAug(**self.config["SPECAUG"])
             self.specaug.to(self.device)
         self.first_round = True
+        print('[ RUNNER ] - Initialized')
 
     def _get_optimizer(self, trainable_models):
         optimizer = get_optimizer(
@@ -60,7 +62,7 @@ class Runner():
         trainable_params = list(self.featurizer.parameters()) + list(self.downstream.parameters())
 
         optimizer = self._get_optimizer(trainable_models)
-        print(optimizer)
+        # print(optimizer)
         if self.config.get('scheduler'):
             scheduler = self._get_scheduler(optimizer)
         else:
@@ -100,7 +102,7 @@ class Runner():
                         else:
                             labels[idx] = lb[r:]
                     
-                    acc, loss, frames = self.downstream(features, labels)
+                    acc, loss, frames, pred = self.downstream(features, labels)
 
                     loss = loss / gradient_accumulate_steps
                     loss.backward()
@@ -121,15 +123,14 @@ class Runner():
                         # continue
                     else:
                         raise
-                # whether to accumulate gradient
                 
+                # whether to accumulate gradient
                 backward_steps += 1
                 if backward_steps % gradient_accumulate_steps > 0:
                     # pbar.update(1)
                     continue
 
                 # gradient clipping
-                # print(trainable_params)
                 grad_norm = torch.nn.utils.clip_grad_norm_(
                     trainable_params, self.config['hyperparams']['gradient_clipping'])
 
@@ -144,7 +145,16 @@ class Runner():
                 if scheduler:
                     scheduler.step()
                 
-                if global_step % self.config['hyperparams']['save_step']:
+                if global_step % self.config['hyperparams']['save_step'] == 0:
+                    def check_ckpt_num(directory):
+                        max_keep = self.config['hyperparams']['max_keep']
+                        ckpt_pths = glob.glob(f'{directory}/states-*.ckpt')
+                        if len(ckpt_pths) >= max_keep:
+                            ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
+                            for ckpt_pth in ckpt_pths[:len(ckpt_pths) - max_keep + 1]:
+                                tqdm.write(f'[ SAVE ] - remove ckpt \'{ckpt_pth}\'')
+                                os.remove(ckpt_pth)
+                    check_ckpt_num(self.outdir)
                     ckpt = {
                         'Downstream': self.downstream.state_dict(),
                         'Featurizer': self.featurizer.state_dict(),
@@ -153,17 +163,24 @@ class Runner():
                         'Epoch': epoch,
                         'Config': self.config
                     }
-                    out_path = os.path.join(self.outdir, f'state-{global_step}.pt')
+                    ckpt_name = f'states-{global_step}.ckpt'
+                    out_path = os.path.join(self.outdir, ckpt_name)
                     torch.save(ckpt, out_path)
+                    tqdm.write(f'[ SAVE ] - ckpt \'{ckpt_name}\' saved at \'{self.outdir}\'')
 
-                if global_step % self.config['hyperparams']['log_step']:
+                if global_step % self.config['hyperparams']['log_step'] == 0:
                     log_acc = avg_acc / total_frames
                     log_loss = avg_loss / (self.config['hyperparams']['log_step'])
+                    tqdm.write(f'[ TRAIN ] - LOSS: {log_loss:8f}, ACC: {log_acc:8f}, STEP={global_step}')
                     self.writer.add_scalar(f'acc/train', log_acc, global_step)
                     self.writer.add_scalar(f'loss/train', log_loss, global_step)
+                    avg_acc = 0.
+                    avg_loss = 0.
+                    total_frames = 0
                 
-                if global_step % self.config['hyperparams']['eval_step']:
+                if global_step % self.config['hyperparams']['eval_step'] == 0:
                     test_acc, test_loss = self.evaluate_LID()
+                    tqdm.write(f'[ TEST ] - LOSS: {test_loss:8f}, ACC: {test_acc:8f}, STEP={global_step}')
                     self.writer.add_scalar(f'acc/test', test_acc, global_step)
                     self.writer.add_scalar(f'loss/test', test_loss, global_step)
 
@@ -172,7 +189,8 @@ class Runner():
 
     def evaluate_LID(self):
         if not hasattr(self, 'test_dataset'):
-            self.test_dataset = LID_Dataset('test', **self.config['dataset'])
+            eval_name = self.config['hyperparams']['eval_dataloader']
+            self.test_dataset = LID_Dataset(self.config['DATASET'][eval_name], **self.config['DATASET'])
             self.test_dataloader = DataLoader(self.test_dataset, batch_size=1, collate_fn=self.test_dataset.collate_fn, shuffle=False)
         
         self.featurizer.eval()
@@ -201,13 +219,15 @@ class Runner():
                     else:
                         labels[idx] = lb[r:]
                 
-                acc, loss, frames = self.downstream(features, labels)
+                acc, loss, frames, pred = self.downstream(features, labels)
                 total_acc += acc
                 total_loss += loss.item()
                 total_frames += frames
 
-        avg_acc = acc / total_frames
+        avg_acc = total_acc / total_frames
         avg_loss = total_loss / len(self.test_dataloader)
+        self.downstream.train()
+        self.featurizer.train()
 
         return avg_acc, avg_loss
 

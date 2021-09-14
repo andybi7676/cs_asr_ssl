@@ -6,8 +6,8 @@ from tqdm import tqdm
 # from textgrid import TextGrid
 bucket_path = '/home/b07502072/cs_ssl/iven/hubert_asr/len_for_bucket/SEAME'
 data_path = ''
-out_path = '../data/valid_names/SEAME/'
-split = 'dev-sge'
+out_path = './data/valid_names/SEAME/'
+split = 'train'
 
 table_list = []
 df = pd.read_csv(os.path.join(bucket_path, f'{split}.csv'))

@@ -1,4 +1,5 @@
 from numpy import log
+import numpy as np
 from datasets.LID import SAMPLE_RATE
 import torch.nn as nn
 import torch
@@ -140,7 +141,7 @@ class RNNs(nn.Module):
 class Downstream(nn.Module):
     def __init__(self, upstream_dim, model_type='RNNs', **downstream_config):
         super().__init__()
-        print(downstream_config)
+        # print(downstream_config)
         self.projector = nn.Linear(upstream_dim, downstream_config['proj_dim'])
         model_cls = eval(model_type)
         model_conf = downstream_config[model_type]
@@ -160,20 +161,20 @@ class Downstream(nn.Module):
         labels = pad_sequence(labels, batch_first=True).to(device)
 
         features = self.projector(features)
-        logits, log_probs_len = self.model(features, features_len)
-        log_probs = nn.functional.log_softmax(logits, dim=-1)
+        logits, log_probs_len = self.model(features, features_len) # tensor(N, T, C)
+        # log_probs = nn.functional.log_softmax(logits, dim=-1)
         # print(log_probs.size())
 
         loss = self.objective(
-                log_probs.transpose(-1, 1),
+                logits.transpose(-1, 1), # tensor(N, C, T)
                 labels,
             )
         
-        loss = loss / log_probs.size()[1]
-
-        acc = (log_probs.transpose(-1, 1).argmax(dim=1) == labels).type(torch.float).sum().item()
+        # loss = loss / logits.size()[1]
+        pred = logits.transpose(-1, 1).argmax(dim=1).tolist() # list(N, T)
+        acc = (pred == labels).type(torch.float).sum().item()
         
-        return acc, loss, log_probs.size()[1]
+        return acc, loss, logits.size()[1], pred
 
 
 
