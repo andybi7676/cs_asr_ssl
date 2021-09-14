@@ -63,7 +63,7 @@ class LID_Dataset(Dataset):
     def __getitem__(self, index):
         # Load acoustic feature and pad
         wav = [ self._load_wav(self.valid_names[index]+'.wav').numpy() ]
-        label = [ torch.load(self.valid_names[index].replace('SEAME', 'SEAME_LID')+'_lid.pt').squeeze() ]
+        label = [ torch.load(self.valid_names[index].replace('SEAME', 'SEAME_LID')+'_lid.pt').squeeze() - 1 ]
         return (wav, label) # bucketing, return ((wavs, labels))
     
     def collate_fn(self, items):

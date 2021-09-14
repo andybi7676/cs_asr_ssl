@@ -161,20 +161,21 @@ class Downstream(nn.Module):
         labels = pad_sequence(labels, batch_first=True).to(device)
 
         features = self.projector(features)
-        logits, log_probs_len = self.model(features, features_len) # tensor(N, T, C)
+        logits, logits_len = self.model(features, features_len) # tensor(N, T, C)
         # log_probs = nn.functional.log_softmax(logits, dim=-1)
         # print(log_probs.size())
+        return logits, labels, logits_len, labels_len
 
-        loss = self.objective(
-                logits.transpose(-1, 1), # tensor(N, C, T)
-                labels,
-            )
+        # loss = self.objective(
+        #         logits.transpose(-1, 1), # tensor(N, C, T)
+        #         labels,
+        #     )
         
-        # loss = loss / logits.size()[1]
-        pred = logits.transpose(-1, 1).argmax(dim=1).tolist() # list(N, T)
-        acc = (pred == labels).type(torch.float).sum().item()
+        # # loss = loss / logits.size()[1]
+        # pred = logits.transpose(-1, 1).argmax(dim=1) # tensor(N, T)
+        # acc = (pred == labels).type(torch.float).sum().item()
         
-        return acc, loss, logits.size()[1], pred
+        # return acc, loss, logits.size()[1], pred.tolist()
 
 
 
