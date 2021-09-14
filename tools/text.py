@@ -1,7 +1,3 @@
-import numpy as np
-import torch
-import glob
-
 """Modified from tensorflow_datasets.features.text.*
 
 Reference: https://www.tensorflow.org/datasets/api_docs/python/tfds/features/text_lib
@@ -237,12 +233,3 @@ def load_text_encoder(mode, vocab_file):
         return BertTextEncoder.load_from_file(mode)
     else:
         raise NotImplementedError("`{}` is not yet supported.".format(mode))
-
-
-dict_path = '/home/b07502072/cs_ssl/cs_asr_ssl/dicts/dict_10k.model'
-out_path = './dict_id_to_text.txt'
-dictionary = load_text_encoder('subword', dict_path)
-
-with open(out_path, 'w') as outf:
-    for i in range(10000):
-        outf.write(dictionary.decode([i]) + '\n')
