@@ -206,7 +206,7 @@ class CNN(nn.Module):
         super().__init__()
 
         self.net = nn.ModuleList()
-        self.net.append(nn.Conv2d(1, filter_num, (3, input_dim), padding=(width//2, 0) ) )
+        self.net.append(nn.Conv2d(1, filter_num, (width, input_dim), padding=(width//2, 0) ) )
         if filter_num != output_size:
             self.linear = nn.Linear(filter_num, output_size)
         else: self.linear = None
@@ -214,13 +214,16 @@ class CNN(nn.Module):
     
     def forward(self, X, X_len):
         N, T, C = X.size()[0], X.size()[1], X.size()[2]
+        # print(X.size())
         X = X.view(N, 1, T, C)
         for layer in self.net:
             X = layer(X)
             # print(X)
-        X = X.transpose(1, 2)
+        X = X.transpose(1, 2).squeeze(dim=-1)
+        # print(X.size())
         if self.linear:
             X = self.linear(X)
+            # print(X.size())
         
         logits = X.view(N, T, self.out_dim)
         return logits, None

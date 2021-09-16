@@ -9,8 +9,6 @@ DATASET:
   - train
 DOWNSTREAM:
   CNN:
-    filter_num: 3
-    output_size: 3
     width: 3
   Linear:
     act:
@@ -42,12 +40,14 @@ DOWNSTREAM:
     proj:
     - false
     - false
-  model_type: CNN
+  ckpt: true
+  model_type: Linear
   proj_dim: 512
 FEATURIZER:
   type: weighted-sum
 UPSTREAM:
   name: wav2vec2_base_960
+load_ckpt: last
 optimizer:
   lr: 6.0e-05
   name: TorchOptim

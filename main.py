@@ -8,6 +8,8 @@ from datasets.LID import LID_Dataset
 from datasets.ASR import ASR_Dataset
 from models.model import Downstream, Featurizer
 from torch.utils.tensorboard import SummaryWriter
+from sklearn.metrics import f1_score
+import torch.nn.functional as F
 import os
 import math
 import glob
@@ -19,7 +21,14 @@ from tools.optim import get_optimizer
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-config_path = './configs/w2v2_base_004.yml'
+config_path = './configs/w2v2_base_005.yml'
+
+class f1score():
+    def __init__(self):
+        self.tp = 0.
+        self.fp = 0.
+        self.fp = 0.
+        self.fn = 0.
 
 class Runner():
     def __init__(self, config, args=None):
@@ -43,6 +52,7 @@ class Runner():
             self.featurizer_lid = Featurizer(self.upstream_lid, self.device, **self.config_lid['FEATURIZER']).to(self.device)
             self.downstream_lid = Downstream(self.featurizer_lid.upstream_dim, **self.config_lid['DOWNSTREAM']).to(self.device)
             self.specaug_lid = None
+            self.records = defaultdict(list)
             if self.config_lid.get('SPECAUG'):
                 from tools.specaug import SpecAug
                 self.specaug_lid = SpecAug(**self.config_lid["SPECAUG"])
@@ -99,7 +109,7 @@ class Runner():
                 best_ckpt_pths = glob.glob(f'{self.outdir}/best*.ckpt')
                 assert len(ckpt_pths) == 1
                 self.load_ckpt = torch.load(best_ckpt_pths[0])
-        self.config_all = self.config['ALL']
+        self.config_all = self.config.get('ALL')
         if self.mission == 'ALL':
             self.exp_name = '/'.join([self.config_lid['UPSTREAM']['name'], self.id, self.mission])
             self.outdir = f'./results/{self.exp_name}'
@@ -202,6 +212,7 @@ class Runner():
         # self.train_dataloader.sampler.set_epoch(epoch)
         avg_acc, avg_loss, total_frames = 0., 0., 0
         logs = {'steps_acc': [], 'steps_frames':[], 'steps_loss': [] }
+        self.load_ckpt = False
         while pbar.n < pbar.total:
             for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader_lid, dynamic_ncols=True, total=len(self.train_dataloader_lid), desc=f'training')):
                 try:
@@ -241,6 +252,10 @@ class Runner():
                     )
                     # loss = loss / logits.size()[1]
                     pred = logits.transpose(-1, 1).argmax(dim=1) # tensor(N, T)
+                    # assert len(pred.squeeze().tolist()) == len(labels[0].tolist())
+                    self.records['pred'] += pred.squeeze().tolist()
+                    self.records['labels'] += labels[0].tolist()
+
                     acc = (pred == padded_labels).type(torch.float).sum().item()
                     
                     loss = loss / gradient_accumulate_steps
@@ -311,18 +326,29 @@ class Runner():
                 if global_step % self.config_lid['runner']['log_step'] == 0:
                     log_acc = avg_acc / total_frames
                     log_loss = avg_loss / (self.config_lid['runner']['log_step'])
-                    tqdm.write(f'[ TRAIN ] - LOSS: {log_loss:8f}, ACC: {log_acc:8f}, STEP={global_step}')
                     self.writer.add_scalar(f'acc/train', log_acc, global_step)
                     self.writer.add_scalar(f'loss/train', log_loss, global_step)
+                    f1scores = f1_score(self.records['labels'], self.records['pred'], labels=[0, 1, 2], average=None)
+                    class_names = ['silence', 'chinese', 'english']
+                    # if len(f1scores)
+                    f1scores_str = f'<sil>: {f1scores[0]:.8f}, <chi>: {f1scores[1]:.8f}, <eng>: {f1scores[2]:.8f}'
+                    for i, cls_name in enumerate(class_names):
+                        self.writer.add_scalar(f'f1score/train/{cls_name}', f1scores[i])
+                    tqdm.write(f'[ TRAIN ] - LOSS: {log_loss:8f}, ACC: {log_acc:8f}, f1_scores: [ {f1scores_str} ], STEP={global_step}')
+                    self.records = defaultdict(list)
                     avg_acc = 0.
                     avg_loss = 0.
                     total_frames = 0
                 
                 if global_step % self.config_lid['runner']['eval_step'] == 0:
-                    test_acc, test_loss = self.evaluate_LID()
-                    tqdm.write(f'[ TEST ] - LOSS: {test_loss:8f}, ACC: {test_acc:8f}, STEP={global_step}')
+                    test_acc, test_loss, f1scores = self.evaluate_LID()
                     self.writer.add_scalar(f'acc/test', test_acc, global_step)
                     self.writer.add_scalar(f'loss/test', test_loss, global_step)
+                    class_names = ['slience', 'chinese', 'english']
+                    for i, cls_name in enumerate(class_names):
+                        self.writer.add_scalar(f'f1score/test/{cls_name}', f1scores[i])
+                    f1scores_str = f'<sil>: {f1scores[0]:.8f}, <chi>: {f1scores[1]:.8f}, <eng>: {f1scores[2]:.8f}'
+                    tqdm.write(f'[ TEST ] - LOSS: {test_loss:8f}, ACC: {test_acc:8f}, f1_scores: [ {f1scores_str} ], STEP={global_step}')
 
                 pbar.update(1)
             epoch += 1
@@ -336,6 +362,7 @@ class Runner():
         self.featurizer_lid.eval()
         self.downstream_lid.eval()
         total_acc, total_loss, total_frames = 0., 0., 0
+        records = defaultdict(list)
         for batch, (wavs, labels) in enumerate(tqdm(self.test_dataloader_lid, total=len(self.test_dataloader_lid), desc='evaluating...')):
             wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ]
             # wavs => list(tensor(length))
@@ -367,6 +394,10 @@ class Runner():
                     )
                 # loss = loss / logits.size()[1]
                 pred = logits.transpose(-1, 1).argmax(dim=1) # tensor(N, T)
+
+                records['pred'] += pred.squeeze().tolist()
+                records['labels'] += labels[0].tolist()
+
                 acc = (pred == padded_labels).type(torch.float).sum().item()
                 pred = pred.tolist()
 
@@ -376,6 +407,8 @@ class Runner():
 
         avg_acc = total_acc / total_frames
         avg_loss = total_loss / len(self.test_dataloader_lid)
+        f1scores = f1_score(self.records['labels'], self.records['pred'], labels=[0, 1, 2], average=None)
+
         self.downstream_lid.train()
         self.featurizer_lid.train()
 
@@ -475,6 +508,7 @@ class Runner():
         # self.train_dataloader.sampler.set_epoch(epoch)
         avg_acc, avg_loss, total_frames = 0., 0., 0
         logs = {'steps_acc': [], 'steps_frames':[], 'steps_loss': [] }
+        self.load_ckpt = False
         while pbar.n < pbar.total:
             for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader_asr, dynamic_ncols=True, total=len(self.train_dataloader_asr), desc=f'training')):
                 try:
@@ -861,6 +895,35 @@ class Runner():
         self.records = defaultdict(list)
         return save_names
 
+    def draw_featurizer(self, mission):
+        def parse_l2_norm_data(l2_norm_path):
+            norms = []
+            with open(l2_norm_path, 'r') as f:
+                data = f.readlines()
+                for line in data:
+                    line = line.strip()
+                    if line != '':
+                        norms.append(float(line))
+            return norms
+        if mission == 'lid':
+
+            if self.load_ckpt:
+                assert self.config_lid['UPSTREAM']['name'] == self.load_ckpt['Upstream_name']
+                self.featurizer_lid.load_state_dict(self.load_ckpt['Featurizer_lid'])
+            upstream_name = self.config_lid['UPSTREAM']['name']
+            l2_norm_path = f'./data/l2_norm/{upstream_name}.txt'
+            norms = np.array(parse_l2_norm_data(l2_norm_path))
+            norm_weights = F.softmax(self.featurizer_lid.weights, dim=-1)
+            norm_weights = np.array(norm_weights.tolist())
+            real_weights = norms * norm_weights
+            print(real_weights)
+            fig, ax = plt.subplots()
+            ax.plot(real_weights)
+            downstream_name = self.config_lid['DOWNSTREAM']['model_type']
+            ax.set_title(downstream_name)
+            fig.savefig(f'{self.outdir}/featurizer_weights.png')
+            
+
 def main():
     with open(config_path, 'r') as yml_f:
         config = yaml.safe_load(yml_f)
@@ -873,6 +936,8 @@ def main():
         runner.train_ASR()
     if config['mission'] == 'ALL':
         runner.evaluate_jointly()
+    if config['mission'] == 'LID' and config['task'] == 'draw_featurizer':
+        runner.draw_featurizer('lid')
 
 if __name__ == '__main__':
     main()
