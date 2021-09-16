@@ -19,7 +19,7 @@ from tools.optim import get_optimizer
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-config_path = './configs/w2v2_base_002.yml'
+config_path = './configs/w2v2_base_004.yml'
 
 class Runner():
     def __init__(self, config, args=None):
@@ -52,8 +52,11 @@ class Runner():
             if self.config_lid['load_ckpt'] == 'last':
                 ckpt_pths = glob.glob(f'{self.outdir}/states-*.ckpt')
                 ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
-                last_ckpt_pth = ckpt_pths[-1]
-                self.load_ckpt = torch.load(last_ckpt_pth)
+                if len(ckpt_pths) == 0:
+                    print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.outdir}\'')
+                else:
+                    last_ckpt_pth = ckpt_pths[-1]
+                    self.load_ckpt = torch.load(last_ckpt_pth)
             if self.config_lid['load_ckpt'] == 'best':
                 best_ckpt_pths = glob.glob(f'{self.outdir}/best*.ckpt')
                 assert len(ckpt_pths) == 1
@@ -96,7 +99,7 @@ class Runner():
                 best_ckpt_pths = glob.glob(f'{self.outdir}/best*.ckpt')
                 assert len(ckpt_pths) == 1
                 self.load_ckpt = torch.load(best_ckpt_pths[0])
-        
+        self.config_all = self.config['ALL']
         if self.mission == 'ALL':
             self.exp_name = '/'.join([self.config_lid['UPSTREAM']['name'], self.id, self.mission])
             self.outdir = f'./results/{self.exp_name}'
@@ -121,6 +124,28 @@ class Runner():
                 zero_infinity = self.config_asr['DATASET']['zero_infinity']
             )
             self.decoder = None
+            if self.config_all['load_ckpt'] == 'last':
+                ckpt_pths = glob.glob(f'{self.load_lid}/states-*.ckpt')
+                ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
+                if len(ckpt_pths) == 0:
+                    print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.load_lid}\'')
+                else:
+                    last_ckpt_pth = ckpt_pths[-1]
+                    self.lid_ckpt = torch.load(last_ckpt_pth)
+                ckpt_pths = glob.glob(f'{self.load_asr}/states-*.ckpt')
+                ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
+                if len(ckpt_pths) == 0:
+                    print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.load_asr}\'')
+                else:
+                    last_ckpt_pth = ckpt_pths[-1]
+                    self.asr_ckpt = torch.load(last_ckpt_pth)
+            if self.config_lid['load_ckpt'] == 'best':
+                best_ckpt_pths = glob.glob(f'{self.load_lid}/best*.ckpt')
+                assert len(ckpt_pths) == 1
+                self.lid_ckpt = torch.load(best_ckpt_pths[0])
+                best_ckpt_pths = glob.glob(f'{self.load_asr}/best*.ckpt')
+                assert len(ckpt_pths) == 1
+                self.asr_ckpt = torch.load(best_ckpt_pths[0])
 
         
         self.first_round = True
@@ -654,19 +679,15 @@ class Runner():
             # whether to accumulate gradient
     def evaluate_jointly(self, split='test'):
         if self.load_asr:
-            asr_ckpt = torch.load(self.load_asr)
-            # assert self.config_asr['UPSTREAM']['name'] == self.load_ckpt['Upstream_name']
-            self.featurizer_asr.load_state_dict(asr_ckpt['Featurizer_asr'])
+            self.featurizer_asr.load_state_dict(self.asr_ckpt['Featurizer_asr'])
             tqdm.write(f'[ LOAD ] - loaded featurizer_asr')
-            self.downstream_asr.load_state_dict(asr_ckpt['Downstream_asr'], strict=False)
+            self.downstream_asr.load_state_dict(self.asr_ckpt['Downstream_asr'], strict=False)
             tqdm.write(f'[ LOAD ] - loaded downstream_asr')
         
         if self.load_lid:
-            lid_ckpt = torch.load(self.load_lid)
-            # assert self.config_lid['UPSTREAM']['name'] == self.load_ckpt['Upstream_name']
-            self.featurizer_lid.load_state_dict(lid_ckpt['Featurizer_lid'])
+            self.featurizer_lid.load_state_dict(self.lid_ckpt['Featurizer_lid'])
             tqdm.write(f'[ LOAD ] - loaded featurizer_lid')
-            self.downstream_lid.load_state_dict(lid_ckpt['Downstream_lid'])
+            self.downstream_lid.load_state_dict(self.lid_ckpt['Downstream_lid'])
             tqdm.write(f'[ LOAD ] - loaded downstream_lid')
 
         if not hasattr(self, f'test_dataset_asr'):
@@ -697,9 +718,10 @@ class Runner():
 
                     logits_lid, _, _, _ = self.downstream_lid(lid_features, labels)  # tensor(N, T, 3)
                     logits_asr, padded_labels, log_probs_len, labels_len = self.downstream_asr(asr_features, labels) # tensor(N, T, C)
-                    # print(logits_asr.size())
+                    print(logits_asr.size())
                     pred_asr = logits_asr.argmax(dim=-1)
                     pred_asr = pred_asr[0].tolist()
+                    print(pred_asr[0:20])
                     logits = []
                     logits_asr = logits_asr[0]
                     logits_lid = logits_lid[0]
@@ -714,6 +736,9 @@ class Runner():
 
                     logits = [logits]
                     logits = torch.FloatTensor(logits).to(self.device)
+                    print(logits.argmax(dim=-1)[0].tolist()[0:20])
+                    assert 1==2
+                    # logits = logits_asr
                     
                     log_probs = nn.functional.log_softmax(logits, dim=-1)
                     loss = self.asr_loss(

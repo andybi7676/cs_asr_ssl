@@ -178,6 +178,52 @@ class Downstream(nn.Module):
         # return acc, loss, logits.size()[1], pred.tolist()
 
 
+class Linear(nn.Module):
+    def __init__(self, input_dim, dim, batch_norm, act, output_size, **kwargs):
+        super().__init__()
+
+        prev_dim = input_dim
+        self.net = nn.ModuleList()
+        for i in range(len(dim)):
+            if batch_norm[i]:
+                self.net.append(nn.BatchNorm1d(prev_dim))
+            self.net.append(nn.Linear(prev_dim, dim[i]))
+            self.net.append(eval(f'nn.{act[i]}()'))
+            prev_dim = dim[i]
+        self.net.append(nn.Linear(prev_dim, output_size))
+        self.out_dim = output_size
+
+    def forward(self, X, X_len):
+        N, T, C = X.size()[0], X.size()[1], X.size()[2]
+        X = X.view(N*T, C)
+        for layer in self.net:
+            X = layer(X)
+        logits = X.view(N, T, self.out_dim)
+        return logits, None
+
+class CNN(nn.Module):
+    def __init__(self, input_dim, filter_num, output_size, width, **kwargs):
+        super().__init__()
+
+        self.net = nn.ModuleList()
+        self.net.append(nn.Conv2d(1, filter_num, (3, input_dim), padding=(width//2, 0) ) )
+        if filter_num != output_size:
+            self.linear = nn.Linear(filter_num, output_size)
+        else: self.linear = None
+        self.out_dim = output_size
+    
+    def forward(self, X, X_len):
+        N, T, C = X.size()[0], X.size()[1], X.size()[2]
+        X = X.view(N, 1, T, C)
+        for layer in self.net:
+            X = layer(X)
+            # print(X)
+        X = X.transpose(1, 2)
+        if self.linear:
+            X = self.linear(X)
+        
+        logits = X.view(N, T, self.out_dim)
+        return logits, None
 
 class Classifier(nn.Module):
     def __init__(self, input_dim=1024, **kwargs):
