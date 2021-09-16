@@ -32,7 +32,7 @@ class Featurizer(nn.Module):
             raise ValueError('Invalid feature!')
 
         if layer_norm:
-            self.layer_norm = nn.LayerNorm(self.upstream_dim)
+            self.layer_norm = nn.LayerNorm(self.upstream_dim, elementwise_affine=False)
         else:
             self.layer_norm = False
 

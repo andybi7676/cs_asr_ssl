@@ -21,7 +21,7 @@ from tools.optim import get_optimizer
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-config_path = './configs/w2v2_xlsr_001.yml'
+config_path = './configs/w2v2_xlsr_002.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -49,7 +49,7 @@ class Runner():
             self.outdir = f'./results/{self.exp_name}'
             if not os.path.exists(self.outdir): os.makedirs(self.outdir)
             with open(self.outdir+'/config_lid.yml', 'w') as yml_f:
-                yaml.dump(self.config_lid, yml_f, default_flow_style=True)
+                yaml.dump(self.config_lid, yml_f, default_flow_style=False)
             self.writer = SummaryWriter(log_dir=self.outdir)
             self.upstream_lid = torch.hub.load('s3prl/s3prl', self.config_lid['UPSTREAM']['name']).to(self.device)
             self.featurizer_lid = Featurizer(self.upstream_lid, self.device, **self.config_lid['FEATURIZER']).to(self.device)
@@ -341,7 +341,7 @@ class Runner():
                     # if len(f1scores)
                     f1scores_str = f'<sil>: {f1scores[0]:.8f}, <chi>: {f1scores[1]:.8f}, <eng>: {f1scores[2]:.8f}'
                     for i, cls_name in enumerate(class_names):
-                        self.writer.add_scalar(f'f1score/train/{cls_name}', f1scores[i])
+                        self.writer.add_scalar(f'f1score/train/{cls_name}', f1scores[i], global_step)
                     tqdm.write(f'[ TRAIN ] - LOSS: {log_loss:8f}, ACC: {log_acc:8f}, f1_scores: [ {f1scores_str} ], STEP={global_step}')
                     self.records = defaultdict(list)
                     avg_acc = 0.
@@ -354,7 +354,7 @@ class Runner():
                     self.writer.add_scalar(f'loss/test', test_loss, global_step)
                     class_names = ['slience', 'chinese', 'english']
                     for i, cls_name in enumerate(class_names):
-                        self.writer.add_scalar(f'f1score/test/{cls_name}', f1scores[i])
+                        self.writer.add_scalar(f'f1score/test/{cls_name}', f1scores[i], global_step)
                     f1scores_str = f'<sil>: {f1scores[0]:.8f}, <chi>: {f1scores[1]:.8f}, <eng>: {f1scores[2]:.8f}'
                     tqdm.write(f'[ TEST ] - LOSS: {test_loss:8f}, ACC: {test_acc:8f}, f1_scores: [ {f1scores_str} ], STEP={global_step}')
                     f_weights = np.array(F.softmax(self.featurizer_lid.weights, dim=-1).tolist())
