@@ -21,7 +21,7 @@ from tools.optim import get_optimizer
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-config_path = './configs/w2v2_base_007.yml'
+config_path = './configs/w2v2_xlsr_001.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
