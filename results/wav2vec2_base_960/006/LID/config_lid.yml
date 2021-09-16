@@ -9,9 +9,9 @@ DATASET:
   - train
 DOWNSTREAM:
   CNN:
-    filter_num: 12
+    filter_num: 3
     output_size: 3
-    width: 5
+    width: 7
   Linear:
     act:
     - ReLU
@@ -22,7 +22,7 @@ DOWNSTREAM:
     - true
     - true
     dim:
-    - 512
+    - 256
     - 128
     - 32
     output_size: 3
@@ -43,11 +43,12 @@ DOWNSTREAM:
     - false
     - false
   model_type: CNN
-  proj_dim: 1024
+  proj_dim: 512
 FEATURIZER:
+  layer-norm: true
   type: weighted-sum
 UPSTREAM:
-  name: wav2vec2_xlsr
+  name: wav2vec2_base_960
 load_ckpt: last
 optimizer:
   lr: 6.0e-05

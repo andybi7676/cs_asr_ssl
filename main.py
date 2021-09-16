@@ -21,14 +21,17 @@ from tools.optim import get_optimizer
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-config_path = './configs/w2v2_base_005.yml'
+config_path = './configs/w2v2_base_007.yml'
 
-class f1score():
-    def __init__(self):
-        self.tp = 0.
-        self.fp = 0.
-        self.fp = 0.
-        self.fn = 0.
+def parse_l2_norm_data(l2_norm_path):
+    norms = []
+    with open(l2_norm_path, 'r') as f:
+        data = f.readlines()
+        for line in data:
+            line = line.strip()
+            if line != '':
+                norms.append(float(line))
+    return norms
 
 class Runner():
     def __init__(self, config, args=None):
@@ -46,7 +49,7 @@ class Runner():
             self.outdir = f'./results/{self.exp_name}'
             if not os.path.exists(self.outdir): os.makedirs(self.outdir)
             with open(self.outdir+'/config_lid.yml', 'w') as yml_f:
-                yaml.dump(self.config_lid, yml_f, default_flow_style=False)
+                yaml.dump(self.config_lid, yml_f, default_flow_style=True)
             self.writer = SummaryWriter(log_dir=self.outdir)
             self.upstream_lid = torch.hub.load('s3prl/s3prl', self.config_lid['UPSTREAM']['name']).to(self.device)
             self.featurizer_lid = Featurizer(self.upstream_lid, self.device, **self.config_lid['FEATURIZER']).to(self.device)
@@ -57,7 +60,12 @@ class Runner():
                 from tools.specaug import SpecAug
                 self.specaug_lid = SpecAug(**self.config_lid["SPECAUG"])
                 self.specaug_lid.to(self.device)
-            self.lid_loss = nn.CrossEntropyLoss()
+            if self.config_lid.get('Loss'):
+                self.lid_loss = nn.CrossEntropyLoss(
+                    weight=torch.FloatTensor(self.config_lid['Loss']['weights']).to(self.device)
+                )
+            else:
+                self.lid_loss = nn.CrossEntropyLoss()
             self.load_ckpt = False
             if self.config_lid['load_ckpt'] == 'last':
                 ckpt_pths = glob.glob(f'{self.outdir}/states-*.ckpt')
@@ -328,7 +336,7 @@ class Runner():
                     log_loss = avg_loss / (self.config_lid['runner']['log_step'])
                     self.writer.add_scalar(f'acc/train', log_acc, global_step)
                     self.writer.add_scalar(f'loss/train', log_loss, global_step)
-                    f1scores = f1_score(self.records['labels'], self.records['pred'], labels=[0, 1, 2], average=None)
+                    f1scores = f1_score(self.records['labels'], self.records['pred'], labels=[0, 1, 2], zero_division=0, average=None)
                     class_names = ['silence', 'chinese', 'english']
                     # if len(f1scores)
                     f1scores_str = f'<sil>: {f1scores[0]:.8f}, <chi>: {f1scores[1]:.8f}, <eng>: {f1scores[2]:.8f}'
@@ -349,6 +357,21 @@ class Runner():
                         self.writer.add_scalar(f'f1score/test/{cls_name}', f1scores[i])
                     f1scores_str = f'<sil>: {f1scores[0]:.8f}, <chi>: {f1scores[1]:.8f}, <eng>: {f1scores[2]:.8f}'
                     tqdm.write(f'[ TEST ] - LOSS: {test_loss:8f}, ACC: {test_acc:8f}, f1_scores: [ {f1scores_str} ], STEP={global_step}')
+                    f_weights = np.array(F.softmax(self.featurizer_lid.weights, dim=-1).tolist())
+                    if self.config_lid['FEATURIZER'].get('layer-norm', False):
+                        real_weights = f_weights
+                    else:
+                        upstream_name = self.config_lid['UPSTREAM']['name']
+                        l2_norm_path = f'./data/l2_norm/{upstream_name}.txt'
+                        norms = np.array(parse_l2_norm_data(l2_norm_path))
+                        real_weights = norms * f_weights
+                    fig, ax = plt.subplots()
+                    ax.plot(real_weights)
+                    downstream_name = self.config_lid['DOWNSTREAM']['model_type']
+                    ax.set_title(downstream_name)
+                    self.writer.add_figure('Featurizer-weights', fig, global_step=global_step)
+
+                    
 
                 pbar.update(1)
             epoch += 1
@@ -407,12 +430,12 @@ class Runner():
 
         avg_acc = total_acc / total_frames
         avg_loss = total_loss / len(self.test_dataloader_lid)
-        f1scores = f1_score(self.records['labels'], self.records['pred'], labels=[0, 1, 2], average=None)
+        f1scores = f1_score(records['labels'], records['pred'], labels=[0, 1, 2], zero_division=0, average=None)
 
         self.downstream_lid.train()
         self.featurizer_lid.train()
 
-        return avg_acc, avg_loss
+        return avg_acc, avg_loss, f1scores
 
     def _decode(self, log_probs, input_lens):
         """Decoder that take log probabilities as input and outputs decoded seq"""
@@ -820,36 +843,6 @@ class Runner():
 
     def log_records(self, split, global_step, **kwargs):
         """
-        Args:
-            split: string
-                'train':
-                    records and batchids contain contents for `log_step` batches
-                    `log_step` is defined in your downstream config
-                    eg. downstream/example/config.yaml
-
-                'dev' or 'test-clean' or 'test-other' :
-                    records and batchids contain contents for the entire evaluation dataset
-
-            records:
-                defaultdict(list), contents already prepared by self.forward
-
-            self.writer:
-                Tensorboard SummaryWriter
-                please use f'{your_task_name}/{split}-{key}' as key name to log your contents,
-                preventing conflict with the logging of other tasks
-
-            global_step:
-                The global_step when training, which is helpful for Tensorboard logging
-
-            batch_ids:
-                The batches contained in records when enumerating over the dataloader
-
-            total_batch_num:
-                The total amount of batches in the dataloader
-
-            featurizer_weights:
-                The weight of each layer of upstream
-            
         Return:
             a list of string
                 Each string is a filename we wish to use to save the current model
@@ -895,26 +888,17 @@ class Runner():
         self.records = defaultdict(list)
         return save_names
 
-    def draw_featurizer(self, mission):
-        def parse_l2_norm_data(l2_norm_path):
-            norms = []
-            with open(l2_norm_path, 'r') as f:
-                data = f.readlines()
-                for line in data:
-                    line = line.strip()
-                    if line != '':
-                        norms.append(float(line))
-            return norms
+    
+    def draw_featurizer(self, mission, loaded=False):
+        
         if mission == 'lid':
-
-            if self.load_ckpt:
+            if not loaded:
                 assert self.config_lid['UPSTREAM']['name'] == self.load_ckpt['Upstream_name']
                 self.featurizer_lid.load_state_dict(self.load_ckpt['Featurizer_lid'])
             upstream_name = self.config_lid['UPSTREAM']['name']
             l2_norm_path = f'./data/l2_norm/{upstream_name}.txt'
+            norm_weights = np.array(F.softmax(self.featurizer_lid.weights, dim=-1).tolist())
             norms = np.array(parse_l2_norm_data(l2_norm_path))
-            norm_weights = F.softmax(self.featurizer_lid.weights, dim=-1)
-            norm_weights = np.array(norm_weights.tolist())
             real_weights = norms * norm_weights
             print(real_weights)
             fig, ax = plt.subplots()

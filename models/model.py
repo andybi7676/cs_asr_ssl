@@ -18,8 +18,11 @@ class Featurizer(nn.Module):
         paired_wavs = [torch.randn(SAMPLE_RATE).to(device)]
         paired_features = upstream(paired_wavs)
 
+        layer_norm = kwargs.get('layer-norm', False)
+
         feature = paired_features['hidden_states']
         self.upstream_dim = feature[0].size(-1)
+        
         if isinstance(feature, (list, tuple)):
             self.layer_num = len(feature)
             print(
@@ -28,21 +31,28 @@ class Featurizer(nn.Module):
         else:
             raise ValueError('Invalid feature!')
 
+        if layer_norm:
+            self.layer_norm = nn.LayerNorm(self.upstream_dim)
+        else:
+            self.layer_norm = False
+
         self.weights = nn.Parameter(torch.zeros(self.layer_num))
 
     def _weighted_sum(self, feature):
-        assert self.layer_num == len(feature), f"{self.layer_num} != {len(feature)}"
-        stacked_feature = torch.stack(feature, dim=0)
 
-        _, *origin_shape = stacked_feature.shape
-        stacked_feature = stacked_feature.view(self.layer_num, -1)
+        _, *origin_shape = feature.shape
+        feature = feature.view(self.layer_num, -1)
         norm_weights = F.softmax(self.weights, dim=-1)
-        weighted_feature = (norm_weights.unsqueeze(-1) * stacked_feature).sum(dim=0)
+        weighted_feature = (norm_weights.unsqueeze(-1) * feature).sum(dim=0)
         weighted_feature = weighted_feature.view(*origin_shape)
 
         return weighted_feature
     
     def forward(self, feature):
+        assert self.layer_num == len(feature), f"{self.layer_num} != {len(feature)}"
+        feature = torch.stack(feature, dim=0)
+        if self.layer_norm:
+            feature = self.layer_norm(feature)
         return self._weighted_sum(feature)
 
 class RNNLayer(nn.Module):
@@ -202,13 +212,18 @@ class Linear(nn.Module):
         return logits, None
 
 class CNN(nn.Module):
-    def __init__(self, input_dim, filter_num, output_size, width, **kwargs):
+    def __init__(self, input_dim, filter_nums, output_size, widths, **kwargs):
         super().__init__()
 
         self.net = nn.ModuleList()
-        self.net.append(nn.Conv2d(1, filter_num, (width, input_dim), padding=(width//2, 0) ) )
-        if filter_num != output_size:
-            self.linear = nn.Linear(filter_num, output_size)
+        filter_total_nums = 0
+        for i in range(len(widths)):
+            filter_num = filter_nums[i]
+            filter_total_nums += filter_num
+            width = widths[i]
+            self.net.append(nn.Conv2d(1, filter_num, (width, input_dim), padding=(width//2, 0) ) )
+        if filter_total_nums != output_size:
+            self.linear = nn.Linear(filter_total_nums, output_size)
         else: self.linear = None
         self.out_dim = output_size
     
@@ -216,16 +231,19 @@ class CNN(nn.Module):
         N, T, C = X.size()[0], X.size()[1], X.size()[2]
         # print(X.size())
         X = X.view(N, 1, T, C)
-        for layer in self.net:
-            X = layer(X)
+        Y = [ conv_net(X) for conv_net in self.net ]
+        if len(Y) > 1:
+            Y = torch.stack(Y, dim=1)
+            Y = Y.view(Y.shape[0], Y.shape[1]*Y.shape[2], Y.shape[3], Y.shape[4])
+            # print(Y.shape)
+        else:
+            Y = Y[0]
             # print(X)
-        X = X.transpose(1, 2).squeeze(dim=-1)
-        # print(X.size())
+        Y = Y.transpose(1, 2).squeeze(dim=-1)
         if self.linear:
-            X = self.linear(X)
-            # print(X.size())
+            Y = self.linear(Y)
         
-        logits = X.view(N, T, self.out_dim)
+        logits = Y.view(N, T, self.out_dim)
         return logits, None
 
 class Classifier(nn.Module):
