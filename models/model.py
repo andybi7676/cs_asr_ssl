@@ -18,28 +18,47 @@ class Featurizer(nn.Module):
         paired_wavs = [torch.randn(SAMPLE_RATE).to(device)]
         paired_features = upstream(paired_wavs)
 
-        layer_norm = kwargs.get('layer-norm', False)
 
         feature = paired_features['hidden_states']
-        self.upstream_dim = feature[0].size(-1)
-        
+        self.model_type = kwargs['type']
+        self.layer_norm = kwargs.get('layer-norm', False)
+
+
         if isinstance(feature, (list, tuple)):
             self.layer_num = len(feature)
+            print(f'[ Featurizer ] - layer-norm: {self.layer_norm}')
             print(
-                f"[ Featurizer ] - Take a list of {self.layer_num} features and weighted sum them."
+                f"[ Featurizer ] - Take a list of {self.layer_num} features and do {self.model_type} on them."
             )
         else:
             raise ValueError('Invalid feature!')
+        self.upstream_dim = feature[0].size(-1)
+        
+        self.net_names = []
 
-        if layer_norm:
+        if self.layer_norm:
             self.layer_norm = nn.LayerNorm(self.upstream_dim, elementwise_affine=False)
-        else:
-            self.layer_norm = False
-
-        self.weights = nn.Parameter(torch.zeros(self.layer_num))
+            self.net_names.append('layer_norm')
+        
+        if kwargs.get('type') == 'weighted-sum':
+            self.f_type = 'weighted-sum'
+            self.weights = nn.Parameter(torch.zeros(self.layer_num))
+            self.net_names.append('_weighted_sum')
+        
+        if kwargs.get('type') == 'DNN':
+            self.f_type = 'DNN'
+            dnn_config = kwargs['DNN']
+            self.dnn = DNN(
+                self.upstream_dim,
+                self.layer_num,
+                **dnn_config
+            )
+            self.net_names.append('dnn')
+        
+        print(f'[ Featurizer ] - nets: {self.net_names}')
 
     def _weighted_sum(self, feature):
-
+            
         _, *origin_shape = feature.shape
         feature = feature.view(self.layer_num, -1)
         norm_weights = F.softmax(self.weights, dim=-1)
@@ -50,10 +69,46 @@ class Featurizer(nn.Module):
     
     def forward(self, feature):
         assert self.layer_num == len(feature), f"{self.layer_num} != {len(feature)}"
-        feature = torch.stack(feature, dim=0)
-        if self.layer_norm:
-            feature = self.layer_norm(feature)
-        return self._weighted_sum(feature)
+        B, T, C = feature[0].size()
+        if self.f_type == 'weighted-sum':
+            feature = torch.stack(feature, dim=0)
+        else:
+            feature = torch.stack(feature, dim=2)
+        for net_name in self.net_names:
+            feature = eval(f'self.{net_name}')(feature)
+        # if self.layer_norm:
+        #     feature = self.layer_norm(feature)
+        # return self._weighted_sum(feature)
+        assert tuple(feature.size()[0:2]) == (B, T)
+        return feature
+
+class DNN(nn.Module):
+    def __init__(self, upstream_dim, layer_num, dims, batch_norm, act, **kwargs):
+        super().__init__()
+
+        prev_dim = upstream_dim * layer_num
+        self.net = nn.ModuleList()
+        for i in range(len(dims)):
+            if batch_norm[i]:
+                self.net.append(nn.BatchNorm1d(prev_dim))
+            self.net.append(nn.Linear(prev_dim, dims[i]))
+            self.net.append(eval(f'nn.{act[i]}()'))
+            prev_dim = dims[i]
+        self.net.append(nn.Linear(prev_dim, upstream_dim))
+        self.out_dim = upstream_dim
+    
+    def forward(self, X):
+        # print(X.shape)
+        B, T, L, C = tuple(X.size())
+        X = X.view(B*T, L*C)
+        for layer in self.net:
+            X = layer(X)
+            # print(X.size())
+        X = X.view(B, T, self.out_dim)
+        # print(X.shape)
+        # assert 1==2
+        return X
+
 
 class RNNLayer(nn.Module):
     ''' RNN wrapper, includes time-downsampling'''

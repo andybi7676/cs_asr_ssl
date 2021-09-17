@@ -32,15 +32,15 @@ class _BaseTextEncoder(abc.ABC):
     @property
     def pad_idx(self):
         return 0
-    @property
-    def bos_idx(self):
-        return 1
+    # @property
+    # def bos_idx(self):
+    #     return 1
     @property
     def eos_idx(self):
-        return 2
+        return 1
     @property
     def unk_idx(self):
-        return 3
+        return 2
 
     def __repr__(self):
         return "<{} vocab_size={}>".format(type(self).__name__, self.vocab_size)
@@ -96,7 +96,8 @@ class CharacterTextEncoder(_BaseTextEncoder):
 
 class SubwordTextEncoder(_BaseTextEncoder):
     def __init__(self, spm):
-        if spm.pad_id() != 0 or spm.bos_id() != 1 or spm.eos_id() != 2 or spm.unk_id() != 3:
+        # if spm.pad_id() != 0 or spm.bos_id() != 1 or spm.eos_id() != 2 or spm.unk_id() != 3:
+        if spm.pad_id() != 0 or spm.eos_id() != 1 or spm.unk_id() != 2:
             raise ValueError(
                 "Please train sentencepiece model with following argument:\n"
                 "--pad_id=0 --bos_id=1 --eos_id=2 --unk_id=3 --model_type=bpe --eos_piece=<eos>")

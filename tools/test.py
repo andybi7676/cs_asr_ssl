@@ -239,10 +239,11 @@ def load_text_encoder(mode, vocab_file):
         raise NotImplementedError("`{}` is not yet supported.".format(mode))
 
 
-dict_path = '/home/b07502072/cs_ssl/cs_asr_ssl/dicts/dict_10k.model'
-out_path = './dict_id_to_text.txt'
+dict_path = '/home/b07502072/cs_ssl/cs_asr_ssl/dicts/dict_9k.model'
+out_path = './dicts/dict_9k_id_to_text.txt'
 dictionary = load_text_encoder('subword', dict_path)
 
-with open(out_path, 'w') as outf:
-    for i in range(10000):
-        outf.write(dictionary.decode([i]) + '\n')
+print(dictionary.decode([112, 113]))
+# with open(out_path, 'w') as outf:
+#     for i in range(9000):
+#         outf.write(dictionary.decode([i]) + '\n')

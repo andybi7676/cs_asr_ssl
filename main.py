@@ -18,10 +18,11 @@ import editdistance
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence, pad_sequence
 from datasets.text import load_text_encoder
 from tools.optim import get_optimizer
+from tools.schedulers import get_scheduler
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-config_path = './configs/w2v2_xlsr_002.yml'
+config_path = './configs/w2v2_base_008.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -98,7 +99,7 @@ class Runner():
                 from tools.specaug import SpecAug
                 self.specaug_asr = SpecAug(**self.config_asr["SPECAUG"])
                 self.specaug_asr.to(self.device)
-            self.blank = self.dictionary.bos_idx
+            self.blank = self.dictionary.pad_idx
             self.asr_loss = nn.CTCLoss(
                 blank=self.blank,
                 zero_infinity = self.config_asr['DATASET']['zero_infinity']
@@ -111,8 +112,11 @@ class Runner():
             if self.config_asr['load_ckpt'] == 'last':
                 ckpt_pths = glob.glob(f'{self.outdir}/states-*.ckpt')
                 ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
-                last_ckpt_pth = ckpt_pths[-1]
-                self.load_ckpt = torch.load(last_ckpt_pth)
+                if len(ckpt_pths) == 0:
+                    print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.outdir}\'')
+                else:
+                    last_ckpt_pth = ckpt_pths[-1]
+                    self.load_ckpt = torch.load(last_ckpt_pth)
             if self.config_asr['load_ckpt'] == 'best':
                 best_ckpt_pths = glob.glob(f'{self.outdir}/best*.ckpt')
                 assert len(ckpt_pths) == 1
@@ -136,7 +140,7 @@ class Runner():
             self.load_lid = self.config['ALL']['lid_ckpt']
             self.records = defaultdict(list)
             self.best_score = 0.
-            self.blank = self.dictionary.bos_idx
+            self.blank = self.dictionary.pad_idx
             self.asr_loss = nn.CTCLoss(
                 blank=self.blank,
                 zero_infinity = self.config_asr['DATASET']['zero_infinity']
@@ -179,6 +183,17 @@ class Runner():
         )
         # self._load_weight(optimizer, 'Optimizer')
         return optimizer
+    
+    def _get_scheduler(self, optimizer, mission='asr'):
+        total_steps = eval(f'self.config_{mission}')['runner']['total_steps']
+        scheduler_conf = eval(f'self.config_{mission}')['scheduler']
+        scheduler = get_scheduler(
+            optimizer,
+            total_steps,
+            scheduler_conf
+        )
+        # self._load_weight(scheduler, 'Scheduler')
+        return scheduler
 
     def train_LID(self):
 
@@ -513,7 +528,10 @@ class Runner():
             pbar.update(self.load_ckpt['Step'])
         # print(optimizer)
         if self.config_asr.get('scheduler'):
-            scheduler = self._get_scheduler(optimizer)
+            scheduler = self._get_scheduler(optimizer, mission='asr')
+            if self.load_ckpt:
+                scheduler.load_state_dict(self.load_ckpt['Scheduler'])
+                tqdm.write(f'[ LOAD ] - loaded scheduler')
         else:
             scheduler = None
         
@@ -657,6 +675,8 @@ class Runner():
                         'Epoch': epoch,
                         'Config': self.config_asr
                     }
+                    if scheduler:
+                        ckpt['Scheduler'] = scheduler.state_dict()
                     ckpt_name = f'states-{global_step}.ckpt'
                     out_path = os.path.join(self.outdir, ckpt_name)
                     torch.save(ckpt, out_path)
@@ -775,27 +795,30 @@ class Runner():
 
                     logits_lid, _, _, _ = self.downstream_lid(lid_features, labels)  # tensor(N, T, 3)
                     logits_asr, padded_labels, log_probs_len, labels_len = self.downstream_asr(asr_features, labels) # tensor(N, T, C)
-                    print(logits_asr.size())
-                    pred_asr = logits_asr.argmax(dim=-1)
-                    pred_asr = pred_asr[0].tolist()
-                    print(pred_asr[0:20])
-                    logits = []
-                    logits_asr = logits_asr[0]
-                    logits_lid = logits_lid[0]
-                    for i, pred in enumerate(pred_asr):
-                        logit_l = logits_asr[i].tolist()
-                        cls_l = logits_lid[i].tolist()
-                        if pred < 4:
-                            logits.append(logit_l)
-                        else:
-                            logit_l = [0.*e for e in logit_l[0:4]] + [en*cls_l[2] for en in logit_l[4:5194]] + [zh*cls_l[1] for zh in logit_l[5194:]]
-                            logits.append(logit_l)
+                    # print(logits_asr.size())
+                    # pred_asr = logits_asr.argmax(dim=-1)
+                    # pred_lid = logits_lid.argmax(dim=-1)
+                    # pred_asr = pred_asr[0].tolist()
+                    # print(pred_lid[0].tolist()[0:100])
+                    # print(pred_asr[0:100])
+                    # logits = []
+                    # logits_asr = logits_asr[0]
+                    # logits_lid = logits_lid[0]
+                    # for i, pred in enumerate(pred_asr):
+                    #     logit_l = logits_asr[i].cpu().numpy()
+                    #     cls_l = logits_lid[i].tolist()
+                    #     if pred < 4 or pred == 5164:
+                    #         logits.append(logit_l)
+                    #     else:
+                    #         logit_l = [-float('inf')]*4 + (cls_l[2] + logit_l[4:5164]).tolist() + (cls_l[1]+logit_l[5164:]).tolist()
+                    #         logit_l[5164] = -float('inf')
+                    #         logits.append(logit_l)
 
-                    logits = [logits]
-                    logits = torch.FloatTensor(logits).to(self.device)
-                    print(logits.argmax(dim=-1)[0].tolist()[0:20])
-                    assert 1==2
-                    # logits = logits_asr
+                    # logits = [logits]
+                    # logits = torch.FloatTensor(logits).to(self.device)
+                    # print(logits.argmax(dim=-1)[0].tolist()[0:100])
+                    # assert 1==2
+                    logits = logits_asr
                     
                     log_probs = nn.functional.log_softmax(logits, dim=-1)
                     loss = self.asr_loss(
@@ -862,9 +885,10 @@ class Runner():
         self.writer.add_scalar(f'asr/{split}-loss', loss, global_step=global_step)
         self.writer.add_scalar(f'asr/{split}-uer', uer, global_step=global_step)
         self.writer.add_scalar(f'asr/{split}-wer', wer, global_step=global_step)
-        if self.featurizer_asr != None:
+        if self.featurizer_asr != None and hasattr(self.featurizer_asr, 'weights'):
             fig, ax = plt.subplots()
-            ax.plot(self.featurizer_asr.weights.detach().cpu().numpy())
+            f_weights = F.softmax(self.featurizer_asr.weights, dim=-1)
+            ax.plot(f_weights.detach().cpu().numpy())
             self.writer.add_figure('Featurizer-weights', fig, global_step=global_step)
         tqdm.write(f'[ {split.upper()} ] - UER: {uer:8f}, WER: {wer:8f}')
         # print(f'[ {split.upper()} ] ')

@@ -96,6 +96,7 @@ class CharacterTextEncoder(_BaseTextEncoder):
 
 class SubwordTextEncoder(_BaseTextEncoder):
     def __init__(self, spm):
+
         if spm.pad_id() != 0 or spm.bos_id() != 1 or spm.eos_id() != 2 or spm.unk_id() != 3:
             raise ValueError(
                 "Please train sentencepiece model with following argument:\n"
