@@ -22,7 +22,7 @@ from tools.schedulers import get_scheduler
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-config_path = './configs/w2v2_base_008.yml'
+config_path = './configs/w2v2_base_009.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -508,6 +508,7 @@ class Runner():
 
     def train_ASR(self):
 
+        pbar = tqdm(total=self.config_asr['runner']['total_steps'], dynamic_ncols=True, desc='ASR overall')
         if self.load_ckpt:
             # assert self.config_asr['UPSTREAM']['name'] == self.load_ckpt['Upstream_name']
             self.featurizer_asr.load_state_dict(self.load_ckpt['Featurizer_asr'])
@@ -515,7 +516,6 @@ class Runner():
             self.downstream_asr.load_state_dict(self.load_ckpt['Downstream_asr'], strict=False)
             tqdm.write(f'[ LOAD ] - loaded downstream')
         
-        pbar = tqdm(total=self.config_asr['runner']['total_steps'], dynamic_ncols=True, desc='ASR overall')
         
 
         trainable_models = [self.featurizer_asr, self.downstream_asr]

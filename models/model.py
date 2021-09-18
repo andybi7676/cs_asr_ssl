@@ -205,10 +205,10 @@ class RNNs(nn.Module):
         return logits, x_len 
 
 class Downstream(nn.Module):
-    def __init__(self, upstream_dim, model_type='RNNs', **downstream_config):
+    def __init__(self, feature_dim, model_type='RNNs', **downstream_config):
         super().__init__()
         # print(downstream_config)
-        self.projector = nn.Linear(upstream_dim, downstream_config['proj_dim'])
+        self.projector = nn.Linear(feature_dim, downstream_config['proj_dim'])
         model_cls = eval(model_type)
         model_conf = downstream_config[model_type]
 
