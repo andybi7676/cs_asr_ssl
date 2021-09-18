@@ -92,7 +92,8 @@ class DNN(nn.Module):
             if batch_norm[i]:
                 self.net.append(nn.BatchNorm1d(prev_dim))
             self.net.append(nn.Linear(prev_dim, dims[i]))
-            self.net.append(eval(f'nn.{act[i]}()'))
+            if act[i]:
+                self.net.append(eval(f'nn.{act[i]}()'))
             prev_dim = dims[i]
         self.net.append(nn.Linear(prev_dim, upstream_dim))
         self.out_dim = upstream_dim
