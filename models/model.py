@@ -82,6 +82,9 @@ class Featurizer(nn.Module):
         assert tuple(feature.size()[0:2]) == (B, T)
         return feature
 
+# class Conv(nn.Module):
+#     def __init__(self, upstream_dim, layer_num, )
+
 class DNN(nn.Module):
     def __init__(self, upstream_dim, layer_num, dims, batch_norm, act, **kwargs):
         super().__init__()
