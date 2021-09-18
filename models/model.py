@@ -27,17 +27,29 @@ class Featurizer(nn.Module):
         if isinstance(feature, (list, tuple)):
             self.layer_num = len(feature)
             print(f'[ Featurizer ] - layer-norm: {self.layer_norm}')
-            print(
-                f"[ Featurizer ] - Take a list of {self.layer_num} features and do {self.model_type} on them."
-            )
+            chosen_layers = kwargs.get('choose_layer', False)
+            if chosen_layers:
+                start_idx, end_idx = chosen_layers
+                assert start_idx > 0 and end_idx <= self.layer_num
+                self.start_idx, self.end_idx = start_idx, end_idx
+                print(
+                    f"[ Featurizer ] - Take a list from layer{self.start_idx} to layer{self.end_idx}(exclusive) of features and do {self.model_type} on them."
+                )
+                self.layer_num = self.end_idx - self.start_idx
+            else:
+                print(
+                    f"[ Featurizer ] - Take a list of {self.layer_num} features and do {self.model_type} on them."
+                )
+                self.start_idx = False
         else:
             raise ValueError('Invalid feature!')
         self.upstream_dim = feature[0].size(-1)
-        
+
+
         self.net_names = []
 
         if self.layer_norm:
-            self.layer_norm = nn.LayerNorm(self.upstream_dim, elementwise_affine=False)
+            self.layer_norm = nn.LayerNorm(self.upstream_dim, elementwise_affine=not (kwargs.get('type') == 'weighted-sum'))
             self.net_names.append('layer_norm')
         
         if kwargs.get('type') == 'weighted-sum':
@@ -68,6 +80,8 @@ class Featurizer(nn.Module):
         return weighted_feature
     
     def forward(self, feature):
+        if self.start_idx:
+            feature = feature[self.start_idx:self.end_idx]
         assert self.layer_num == len(feature), f"{self.layer_num} != {len(feature)}"
         B, T, C = feature[0].size()
         if self.f_type == 'weighted-sum':
@@ -94,11 +108,13 @@ class DNN(nn.Module):
         for i in range(len(dims)):
             if batch_norm[i]:
                 self.net.append(nn.BatchNorm1d(prev_dim))
+            self.net.append(nn.Dropout(p=0.1))
             self.net.append(nn.Linear(prev_dim, dims[i]))
             if act[i]:
                 self.net.append(eval(f'nn.{act[i]}()'))
             prev_dim = dims[i]
-        self.net.append(nn.Linear(prev_dim, upstream_dim))
+        if prev_dim != upstream_dim:
+            self.net.append(nn.Linear(prev_dim, upstream_dim))
         self.out_dim = upstream_dim
     
     def forward(self, X):
