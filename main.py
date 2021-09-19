@@ -685,7 +685,14 @@ class Runner():
                 pbar.update(1)
             epoch += 1
     
-    def evaluate_ASR(self, split='test'):
+    def evaluate_ASR(self, load=False, mission='dev'):
+        if load:
+            assert self.load_ckpt, 'No ckpt to be loaded'
+            self.featurizer_asr.load_state_dict(self.load_ckpt['Featurizer_asr'])
+            tqdm.write(f'[ LOAD ] - loaded featurizer')
+            self.downstream_asr.load_state_dict(self.load_ckpt['Downstream_asr'], strict=False)
+            tqdm.write(f'[ LOAD ] - loaded downstream')
+        
         if not hasattr(self, f'test_dataset_asr'):
             dataset_config = copy.deepcopy(self.config_asr['DATASET'])
             # splits = dataset_config[split]
@@ -751,6 +758,9 @@ class Runner():
                     # continue
                 else:
                     raise
+        if mission == 'test':
+            self.log_records('test', 1)
+        
         self.featurizer_asr.train()
         self.downstream_asr.train()
             # whether to accumulate gradient
@@ -946,6 +956,8 @@ def main():
         runner.evaluate_jointly()
     if config['mission'] == 'LID' and config['task'] == 'draw_featurizer':
         runner.draw_featurizer('lid')
+    if config['mission'] == 'ASR' and config['task'] == 'evaluate':
+        runner.evaluate_asr(load=True, mission='test')
 
 if __name__ == '__main__':
     main()
