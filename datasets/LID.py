@@ -18,7 +18,7 @@ SAMPLE_RATE = 16000
 HALF_BATCHSIZE_TIME = 2000
 
 class LID_Dataset(Dataset):
-    def __init__(self, splits, bucket_path='./', data_path='', **kwargs) -> None:
+    def __init__(self, splits, bucket_path='./', data_path='', bucket_size=1, **kwargs) -> None:
         super(LID_Dataset, self).__init__()
 
         assert os.path.exists(bucket_path), 'Bucket path does not exist.'
