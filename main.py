@@ -16,6 +16,7 @@ import math
 import glob
 import copy
 import editdistance
+import torchaudio
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence, pad_sequence
 from datasets.text import load_text_encoder
 from tools.optim import get_optimizer
@@ -23,7 +24,7 @@ from tools.schedulers import get_scheduler
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-config_path = './configs/w2v2_base/w2v2_base_001.yml'
+config_path = './configs/w2v2_base/w2v2_base_007.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -395,7 +396,15 @@ class Runner():
                 pbar.update(1)
             epoch += 1
 
-    def evaluate_LID(self, split='test'):
+    def evaluate_LID(self, split='test', load=False, output=False):
+        if load:
+            assert self.load_ckpt
+            assert self.config_lid['UPSTREAM']['name'] == self.load_ckpt['Upstream_name']
+            self.featurizer_lid.load_state_dict(self.load_ckpt['Featurizer_lid'])
+            tqdm.write(f'[ LOAD ] - loaded featurizer')
+            self.downstream_lid.load_state_dict(self.load_ckpt['Downstream_lid'])
+            tqdm.write(f'[ LOAD ] - loaded downstream')
+
         if not hasattr(self, f'test_dataset_lid'):
             eval_name = self.config_lid['runner']['eval_dataloader']
             self.test_dataset_lid = LID_Dataset(self.config_lid['DATASET'][eval_name], **self.config_lid['DATASET'])
@@ -453,6 +462,8 @@ class Runner():
 
         self.downstream_lid.train()
         self.featurizer_lid.train()
+        if output:
+            print(avg_acc, avg_loss, f1scores)
 
         return avg_acc, avg_loss, f1scores
 
@@ -1169,6 +1180,7 @@ class Runner():
             
 
 def main():
+    torchaudio.set_audio_backend('sox_io')
     with open(config_path, 'r') as yml_f:
         config = yaml.safe_load(yml_f)
     
@@ -1187,6 +1199,8 @@ def main():
         runner.draw_featurizer('lid')
     if config['mission'] == 'ASR' and config['task'] == 'evaluate':
         runner.evaluate_ASR(load=True, mission='test')
+    if config['mission'] == 'LID' and config['task'] == 'evaluate':
+        runner.evaluate_LID(load=True, output=True)
 
 if __name__ == '__main__':
     main()

@@ -3,7 +3,6 @@ DATASET:
   data_path: ''
   load_valid: ./data/valid_names/SEAME
   test:
-  - dev-man
   - dev-sge
   train:
   - train

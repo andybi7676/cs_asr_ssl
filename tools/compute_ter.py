@@ -52,20 +52,20 @@ def normalize(txt_pth, ignore_noise=False, trans_adverbial=False, rm_minor_token
 
 
 if __name__ == '__main__':
-    hyp_pth = './results/wav2vec2_xlsr/003/ASR/dev-sge/dev-sge-hyp.ark'
-    ref_pth = './results/wav2vec2_xlsr/003/ASR/dev-sge/dev-sge-ref.ark'
-    hyp_out = './results/wav2vec2_xlsr/003/ASR/dev-sge/dev-sge-hyp-norm.ark'
-    ref_out = './results/wav2vec2_xlsr/003/ASR/dev-sge/dev-sge-ref-norm.ark'
-    # normalized_hyp = normalize(hyp_pth)
-    # normalized_ref = normalize(ref_pth)
+    hyp_pth = './results/wav2vec2_base_960/010/ASR/dev-all/dev-all-hyp.ark'
+    ref_pth = './results/wav2vec2_base_960/010/ASR/dev-all/dev-all-ref.ark'
+    hyp_out = './results/wav2vec2_base_960/010/ASR/dev-all/dev-all-hyp-norm.ark'
+    ref_out = './results/wav2vec2_base_960/010/ASR/dev-all/dev-all-ref-norm.ark'
+    normalized_hyp = normalize(hyp_pth)
+    normalized_ref = normalize(ref_pth)
 
-    # with open(hyp_out, 'w') as fw:
-    #     for line in normalized_hyp:
-    #         fw.write(line + '\n')
-    # with open(ref_out, 'w') as fw:
-    #     for line in normalized_ref:
-    #         fw.write(line + '\n')
-    ComputeTER(ref_out, hyp_out, 'eng', False)
+    with open(hyp_out, 'w') as fw:
+        for line in normalized_hyp:
+            fw.write(line + '\n')
+    with open(ref_out, 'w') as fw:
+        for line in normalized_ref:
+            fw.write(line + '\n')
+    ComputeTER(ref_out, hyp_out, 'all', False)
     print('=' * 20)
 
 

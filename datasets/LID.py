@@ -33,7 +33,7 @@ class LID_Dataset(Dataset):
         for split in self.splits:
             if os.path.isfile(os.path.join(valid_path, f'{split}.npy')):
                 valids_in_split = np.load(os.path.join(valid_path, f'{split}.npy')).tolist()
-                if 'dev' in split: valids_in_split = valids_in_split[0:1000]
+                # if 'dev' in split: valids_in_split = valids_in_split
                 tqdm.write(f'[ LID_dataset ] - loaded valid names of split {split}, {len(valids_in_split)} valid names were found')
                 self.valid_names += valids_in_split
             else:
