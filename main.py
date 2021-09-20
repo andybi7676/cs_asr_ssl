@@ -23,7 +23,7 @@ from tools.schedulers import get_scheduler
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-config_path = './configs/w2v2_base/w2v2_base_011.yml'
+config_path = './configs/w2v2_large/w2v2_large_960_001.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -85,7 +85,7 @@ class Runner():
                 
         
         if self.mission == 'ASR':
-            self.exp_name = '/'.join([self.config_lid['UPSTREAM']['name'], self.id, self.mission])
+            self.exp_name = '/'.join([self.config_asr['UPSTREAM']['name'], self.id, self.mission])
             self.outdir = f'./results/{self.exp_name}'
             if not os.path.exists(self.outdir): os.makedirs(self.outdir)
             with open(self.outdir+'/config_asr.yml', 'w') as yml_f:
@@ -681,7 +681,7 @@ class Runner():
                     }
                     if scheduler:
                         ckpt['Scheduler'] = scheduler.state_dict()
-                    ckpt_name = f'states-{global_step}.ckpt'
+                    ckpt_name = save_name
                     out_path = os.path.join(self.outdir, ckpt_name)
                     torch.save(ckpt, out_path)
                     tqdm.write(f'[ SAVE ] - ckpt \'{ckpt_name}\' saved at \'{self.outdir}\'')
@@ -896,7 +896,7 @@ class Runner():
                     }
                     if scheduler:
                         ckpt['Scheduler'] = scheduler.state_dict()
-                    ckpt_name = f'states-{global_step}.ckpt'
+                    ckpt_name = save_name
                     out_path = os.path.join(self.outdir, ckpt_name)
                     torch.save(ckpt, out_path)
                     tqdm.write(f'[ SAVE ] - ckpt \'{ckpt_name}\' saved at \'{self.outdir}\'')
@@ -1177,7 +1177,7 @@ def main():
     if config['mission'] == 'LID' and config['task'] == 'train':
         runner.train_LID()
     if config['mission'] == 'ASR' and config['task'] == 'train':
-        if not config['ASR']['jointly-train']:
+        if not config['ASR'].get('jointly-train', False):
             runner.train_ASR()
         else:
             runner.train_ASR_jointly()
