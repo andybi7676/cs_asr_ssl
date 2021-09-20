@@ -52,10 +52,10 @@ def normalize(txt_pth, ignore_noise=False, trans_adverbial=False, rm_minor_token
 
 
 if __name__ == '__main__':
-    hyp_pth = './results/wav2vec2_xlsr/003/ASR/dev-all/dev-hyp.ark'
-    ref_pth = './results/wav2vec2_xlsr/003/ASR/dev-all/dev-ref.ark'
-    hyp_out = './results/wav2vec2_xlsr/003/ASR/dev-all/dev-hyp-norm.ark'
-    ref_out = './results/wav2vec2_xlsr/003/ASR/dev-all/dev-ref-norm.ark'
+    hyp_pth = './results/wav2vec2_xlsr/003/ASR/dev-sge/dev-sge-hyp.ark'
+    ref_pth = './results/wav2vec2_xlsr/003/ASR/dev-sge/dev-sge-ref.ark'
+    hyp_out = './results/wav2vec2_xlsr/003/ASR/dev-sge/dev-sge-hyp-norm.ark'
+    ref_out = './results/wav2vec2_xlsr/003/ASR/dev-sge/dev-sge-ref-norm.ark'
     # normalized_hyp = normalize(hyp_pth)
     # normalized_ref = normalize(ref_pth)
 
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     # with open(ref_out, 'w') as fw:
     #     for line in normalized_ref:
     #         fw.write(line + '\n')
-    ComputeTER(ref_out, hyp_out, 'man', False)
+    ComputeTER(ref_out, hyp_out, 'eng', False)
     print('=' * 20)
 
 

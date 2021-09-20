@@ -23,7 +23,7 @@ from tools.schedulers import get_scheduler
 from collections import defaultdict
 import matplotlib.pyplot as plt
 
-config_path = './configs/w2v2_large/w2v2_large_960_001.yml'
+config_path = './configs/w2v2_base/w2v2_base_001.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -120,8 +120,8 @@ class Runner():
                     last_ckpt_pth = ckpt_pths[-1]
                     self.load_ckpt = torch.load(last_ckpt_pth)
             if self.config_asr['load_ckpt'] == 'best':
-                best_ckpt_pths = glob.glob(f'{self.outdir}/best*.ckpt')
-                assert len(ckpt_pths) == 1
+                best_ckpt_pths = glob.glob(f'{self.outdir}/*best.ckpt')
+                assert len(best_ckpt_pths) == 1
                 self.load_ckpt = torch.load(best_ckpt_pths[0])
         
         self.config_all = self.config.get('ALL')
@@ -1186,7 +1186,7 @@ def main():
     if config['mission'] == 'LID' and config['task'] == 'draw_featurizer':
         runner.draw_featurizer('lid')
     if config['mission'] == 'ASR' and config['task'] == 'evaluate':
-        runner.evaluate_asr(load=True, mission='test')
+        runner.evaluate_ASR(load=True, mission='test')
 
 if __name__ == '__main__':
     main()

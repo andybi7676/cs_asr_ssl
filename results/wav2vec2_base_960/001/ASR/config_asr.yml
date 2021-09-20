@@ -35,12 +35,12 @@ SPECAUG:
   apply_time_warp: true
   freq_mask_width_range:
   - 0
-  - 50
-  num_freq_mask: 4
-  num_time_mask: 2
+  - 30
+  num_freq_mask: 3
+  num_time_mask: 3
   time_mask_width_range:
   - 0
-  - 40
+  - 30
   time_warp_window: 5
 UPSTREAM:
   name: wav2vec2_base_960

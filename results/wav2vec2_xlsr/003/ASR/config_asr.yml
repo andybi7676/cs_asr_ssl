@@ -5,7 +5,6 @@ DATASET:
   dict_mode: subword
   dict_path: ./dicts/dict_seame.model
   test:
-  - dev-man
   - dev-sge
   train:
   - train
@@ -46,7 +45,7 @@ SPECAUG:
   time_warp_window: 5
 UPSTREAM:
   name: wav2vec2_xlsr
-load_ckpt: last
+load_ckpt: best
 optimizer:
   lr: 8.0e-05
   name: TorchOptim
