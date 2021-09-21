@@ -241,6 +241,7 @@ class Downstream(nn.Module):
     def forward(self, features, labels):
         device = features[0].device
         features_len = torch.IntTensor([len(feat) for feat in features]).to('cpu')
+        # print(features_len)
         labels_len = torch.IntTensor([len(lb) for lb in labels]).to('cpu')
         features = pad_sequence(features, batch_first=True).to(device)
         labels = pad_sequence(labels, batch_first=True).to(device)

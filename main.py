@@ -23,8 +23,9 @@ from tools.optim import get_optimizer
 from tools.schedulers import get_scheduler
 from collections import defaultdict
 import matplotlib.pyplot as plt
+from time import localtime, strftime
 
-config_path = './configs/w2v2_base/w2v2_base_007.yml'
+config_path = './configs/w2v2_base/w2v2_base_011.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -52,7 +53,8 @@ class Runner():
             self.exp_name = '/'.join([self.config_lid['UPSTREAM']['name'], self.id, self.mission])
             self.outdir = f'./results/{self.exp_name}'
             if not os.path.exists(self.outdir): os.makedirs(self.outdir)
-            with open(self.outdir+'/config_lid.yml', 'w') as yml_f:
+            time_str = strftime("%Y-%m-%d_%H-%M", localtime())
+            with open(self.outdir+f'/{time_str}_config_lid.yml', 'w') as yml_f:
                 yaml.dump(self.config_lid, yml_f, default_flow_style=False)
             self.writer = SummaryWriter(log_dir=self.outdir)
             self.upstream_lid = torch.hub.load('s3prl/s3prl', self.config_lid['UPSTREAM']['name']).to(self.device)
@@ -89,7 +91,8 @@ class Runner():
             self.exp_name = '/'.join([self.config_asr['UPSTREAM']['name'], self.id, self.mission])
             self.outdir = f'./results/{self.exp_name}'
             if not os.path.exists(self.outdir): os.makedirs(self.outdir)
-            with open(self.outdir+'/config_asr.yml', 'w') as yml_f:
+            time_str = strftime("%Y-%m-%d_%H-%M", localtime())
+            with open(self.outdir+f'/{time_str}_config_asr.yml', 'w') as yml_f:
                 yaml.dump(self.config_asr, yml_f, default_flow_style=False)
             self.writer = SummaryWriter(log_dir=self.outdir)
             self.dictionary = load_text_encoder(self.config_asr['DATASET']['dict_mode'], self.config_asr['DATASET']['dict_path'])
@@ -222,6 +225,8 @@ class Runner():
             pbar.update(self.load_ckpt['Step'])
         if self.config.get('scheduler'):
             scheduler = self._get_scheduler(optimizer)
+            if self.load_ckpt:
+                scheduler = self.load_state_dict(self.load_ckpt['Scheduler'])
         else:
             scheduler = None
 
