@@ -52,10 +52,10 @@ def normalize(txt_pth, ignore_noise=False, trans_adverbial=False, rm_minor_token
 
 
 if __name__ == '__main__':
-    hyp_pth = './results/wav2vec2_base_960/010/ASR/dev-all/dev-all-hyp.ark'
-    ref_pth = './results/wav2vec2_base_960/010/ASR/dev-all/dev-all-ref.ark'
-    hyp_out = './results/wav2vec2_base_960/010/ASR/dev-all/dev-all-hyp-norm.ark'
-    ref_out = './results/wav2vec2_base_960/010/ASR/dev-all/dev-all-ref-norm.ark'
+    hyp_pth = './results/wav2vec2_base_960/011/ASR/dev-all/dev-all-hyp.ark'
+    ref_pth = './results/wav2vec2_base_960/011/ASR/dev-all/dev-all-ref.ark'
+    hyp_out = './results/wav2vec2_base_960/011/ASR/dev-all/dev-all-hyp-norm.ark'
+    ref_out = './results/wav2vec2_base_960/011/ASR/dev-all/dev-all-ref-norm.ark'
     normalized_hyp = normalize(hyp_pth)
     normalized_ref = normalize(ref_pth)
 
