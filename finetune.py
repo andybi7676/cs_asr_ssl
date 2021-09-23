@@ -27,29 +27,6 @@ from time import localtime, strftime
 
 config_path = './configs/finetune/xlsr/xlsr_001.yml'
 
-class Finetune_model(nn.Module):
-    def __init__(self, upstream_name, dictionary_size, specaug=False):
-        super().__init__()
-        self.upstream = torch.hub.load('s3prl/s3prl', upstream_name)
-        for param in self.upstream.model.feature_extractor.parameters():
-            param.requires_grad = False
-        randn_wavs = [ torch.FloatTensor(np.random.rand(100)) ]
-        feature = upstream(randn_wavs)['default']
-        upstream_dim = feature.size()[-1]
-        self.linear = nn.Linear(upstream_dim, dictionary_size)
-        if specaug:
-            from tools.specaug import SpecAug
-            self.specaug = SpecAug(**specaug)
-            # self.specaug
-    
-    def forward(self, wavs):
-        features = self.upstream(wavs)['default']
-        if self.specaug:
-            specaug
-        logits = self.linear(features)
-        return logits
-
-
 class Runner():
     def __init__(self, config):
         self.config = config
@@ -61,12 +38,17 @@ class Runner():
             yaml.dump(self.config, yml_f, default_flow_style=False)
         self.writer = SummaryWriter(log_dir=self.outdir)
         self.dictionary = load_text_encoder(self.config_asr['DATASET']['dict_mode'], self.config_asr['DATASET']['dict_path'])
-        self.model = Finetune_model(config['UPSTREAM']['name'], self.dictionary.vocab_size)
+        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        self.devices = range(torch.cuda.device_count())
+        self.upstream = torch.hub.load('s3prl/s3prl', config['UPSTREAM']['name'])
+        randn_wavs = [ torch.FloatTensor(np.random.rand(100)) ]
+        feature = self.upstream(randn_wavs)['default']
+        self.upstream_dim = feature.size()[-1]
         self.specaug_asr = None
         if self.config_asr.get('SPECAUG'):
             from tools.specaug import SpecAug
-            self.specaug_asr = SpecAug(**self.config_asr["SPECAUG"])
-            self.specaug_asr.to(self.device)
+            self.specaug = SpecAug(**self.config_asr["SPECAUG"])
+        self.linear = nn.Linear(self.upstream_dim, self.dictionary.vocab_size)
         self.blank = self.dictionary.pad_idx
         self.asr_loss = nn.CTCLoss(
             blank=self.blank,
@@ -75,8 +57,6 @@ class Runner():
         self.records = defaultdict(list)
         self.best_score = 100.
         self.decoder = None
-        self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
-        self.devices = range(torch.cuda.device_count())
         self.ckpt = None
         if self.config.get('load_ckpt', False):
             if self.config['load_ckpt'] == 'last':
@@ -92,7 +72,7 @@ class Runner():
                 assert len(ckpt_pths) == 1
                 self.ckpt = torch.load(best_ckpt_pths[0])
     
-     def _get_optimizer(self, trainable_models, config ):
+    def _get_optimizer(self, trainable_models, config ):
         total_steps = config['runner']['total_steps']
         optimizer_conf = config['optimizer']
         optimizer = get_optimizer(
@@ -115,21 +95,27 @@ class Runner():
         return scheduler
 
     def train(self):
+        self.upstream.to(self.device)
+        self.specaug.to(self.device)
+        self.linear.to(self.device)
+        if self.ckpt:
+            self.upstream.load_state_dict(self.ckpt['Upstream'])
+            self.linear.load_state_dict(self.ckpt['Linear'])
+        
+        for param in self.upsteam.model.feature_extractor.parameters():
+            param.requires_grad = False
+
         if not hasattr(self, 'train_dataloader'):
             self.train_dataset = ASR_Dataset('train', self.dictionary, **self.config['DATASET'])
             self.train_dataloader = DataLoader(self.train_dataset, batch_size=1, collate_fn=self.train_dataset.collate_fn, shuffle=True)
         
-        self.model.to(self.device)
-        if self.ckpt:
-            self.model.load_state_dict(self.ckpt['model'])
-        
         if len(self.devices) > 1:
             tqdm.write(f'Using multi gpu, ids: {self.devices}')
-            self.model = nn.DataParallel(self.model)
+            self.upstream = nn.DataParallel(self.upstream)
         
-        # trainable_models = [self.model]
+        trainable_models = [self.upstream, self.linear]
         # trainable_params = list(self.featurizer_asr.parameters()) + list(self.downstream_asr.parameters())
-        optimizer = self._get_optimizer(self.model, self.config)
+        optimizer = self._get_optimizer(trainable_models, self.config)
         if self.ckpt:
             optimizer.load_state_dict(self.ckpt['optimizer'])
         scheduler = None
@@ -141,7 +127,11 @@ class Runner():
         for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader_asr, dynamic_ncols=True, total=len(self.train_dataloader_asr), desc=f'training')):
             
             wavs, labels = [ torch.FloatTensor(wav).to(self.device) for wav in wavs ], [ torch.LongTensor(label).to(self.device) for label in labels ]
-            logits = self.model(wavs)
+            features = self.upstream(wavs)['default']
+            print(features.size())
+            features = self.specaug(features)
+            print(features.size())
+            logits = self.linear(features)
             print(logits)
             print(logits.size())
             assert 1==2
