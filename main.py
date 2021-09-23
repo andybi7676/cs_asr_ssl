@@ -25,7 +25,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
 
-config_path = './configs/w2v2_base/w2v2_base_011.yml'
+config_path = './configs/w2v2_base/w2v2_base_012.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []

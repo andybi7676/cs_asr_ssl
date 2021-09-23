@@ -44,7 +44,8 @@ class Finetune_model(nn.Module):
     
     def forward(self, wavs):
         features = self.upstream(wavs)['default']
-        # self.specaug
+        if self.specaug:
+            specaug
         logits = self.linear(features)
         return logits
 
@@ -118,6 +119,7 @@ class Runner():
             self.train_dataset = ASR_Dataset('train', self.dictionary, **self.config['DATASET'])
             self.train_dataloader = DataLoader(self.train_dataset, batch_size=1, collate_fn=self.train_dataset.collate_fn, shuffle=True)
         
+        self.model.to(self.device)
         if self.ckpt:
             self.model.load_state_dict(self.ckpt['model'])
         
