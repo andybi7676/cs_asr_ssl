@@ -1,6 +1,6 @@
 *.pyc
 *.txt
 data/
-configs/
+# configs/
 # results/
 *.ckpt

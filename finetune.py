@@ -30,24 +30,26 @@ config_path = './configs/finetune/xlsr/xlsr_001.yml'
 class Runner():
     def __init__(self, config):
         self.config = config
-        self.exp_name = '/'.join(['finetune', self.config_lid['UPSTREAM']['name'], self.id])
+        self.id = self.config['id']
+        self.exp_name = '/'.join(['finetune', self.config['UPSTREAM']['name'], self.id])
         self.outdir = f'./results/{self.exp_name}'
         if not os.path.exists(self.outdir): os.makedirs(self.outdir)
         time_str = strftime("%Y-%m-%d_%H-%M", localtime())
         with open(self.outdir+f'/{time_str}_config.yml', 'w') as yml_f:
             yaml.dump(self.config, yml_f, default_flow_style=False)
         self.writer = SummaryWriter(log_dir=self.outdir)
-        self.dictionary = load_text_encoder(self.config_asr['DATASET']['dict_mode'], self.config_asr['DATASET']['dict_path'])
+        self.dictionary = load_text_encoder(self.config['DATASET']['dict_mode'], self.config['DATASET']['dict_path'])
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.devices = range(torch.cuda.device_count())
         self.upstream = torch.hub.load('s3prl/s3prl', config['UPSTREAM']['name'])
-        randn_wavs = [ torch.FloatTensor(np.random.rand(100)) ]
+        randn_wavs = [ torch.FloatTensor(np.random.rand(1000)) ]
+        # print(randn_wavs)
         feature = self.upstream(randn_wavs)['default']
         self.upstream_dim = feature.size()[-1]
         self.specaug_asr = None
-        if self.config_asr.get('SPECAUG'):
+        if self.config.get('SPECAUG'):
             from tools.specaug import SpecAug
-            self.specaug = SpecAug(**self.config_asr["SPECAUG"])
+            self.specaug = SpecAug(**self.config["SPECAUG"])
         self.linear = nn.Linear(self.upstream_dim, self.dictionary.vocab_size)
         self.blank = self.dictionary.pad_idx
         self.asr_loss = nn.CTCLoss(
@@ -63,7 +65,7 @@ class Runner():
                 ckpt_pths = glob.glob(f'{self.outdir}/states-*.ckpt')
                 ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
                 if len(ckpt_pths) == 0:
-                    print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.load_asr}\'')
+                    print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.outdir}\'')
                 else:
                     last_ckpt_pth = ckpt_pths[-1]
                     self.ckpt = torch.load(last_ckpt_pth)
@@ -102,11 +104,11 @@ class Runner():
             self.upstream.load_state_dict(self.ckpt['Upstream'])
             self.linear.load_state_dict(self.ckpt['Linear'])
         
-        for param in self.upsteam.model.feature_extractor.parameters():
+        for param in self.upstream.model.feature_extractor.parameters():
             param.requires_grad = False
 
         if not hasattr(self, 'train_dataloader'):
-            self.train_dataset = ASR_Dataset('train', self.dictionary, **self.config['DATASET'])
+            self.train_dataset = ASR_Dataset('dev', self.dictionary, **self.config['DATASET'])
             self.train_dataloader = DataLoader(self.train_dataset, batch_size=1, collate_fn=self.train_dataset.collate_fn, shuffle=True)
         
         if len(self.devices) > 1:
@@ -124,23 +126,42 @@ class Runner():
             if self.ckpt:
                 scheduler.load_state_dict(self.ckpt['scheduler'])
         
-        for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader_asr, dynamic_ncols=True, total=len(self.train_dataloader_asr), desc=f'training')):
+        for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader, dynamic_ncols=True, total=len(self.train_dataloader), desc=f'training')):
             
             wavs, labels = [ torch.FloatTensor(wav).to(self.device) for wav in wavs ], [ torch.LongTensor(label).to(self.device) for label in labels ]
             features = self.upstream(wavs)['default']
             print(features.size())
-            features = self.specaug(features)
+            features, _ = self.specaug(features)
+
+            features_len = torch.IntTensor([len(feat) for feat in features]).to('cpu')
+            labels_len = torch.IntTensor([len(lb) for lb in labels]).to('cpu')
+            features = pad_sequence(features, batch_first=True).to(self.device)
+            labels = pad_sequence(labels, batch_first=True).to(self.device)
+
             print(features.size())
+            # print(features[1].size())
             logits = self.linear(features)
             print(logits)
             print(logits.size())
+
+            log_probs = nn.functional.log_softmax(logits, dim=-1)
+            loss = self.asr_loss(
+                log_probs.transpose(0, 1), # (N, T, C) -> (T, N, C)
+                padded_labels,
+                log_probs_len,
+                labels_len,
+            )
+            print(loss)
             assert 1==2
 
 
 def main():
     torchaudio.set_audio_backend('sox_io')
     with open(config_path, 'r') as yml_f:
-        yaml.safe_load(yml_f)
+        config = yaml.safe_load(yml_f)
+    runner = Runner(config)
+    if config['task'] == 'train':
+        runner.train()
     
 
 

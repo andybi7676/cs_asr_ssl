@@ -1,0 +1,127 @@
+id: '002'
+mission: LID #{LID, ASR, ALL}
+task: train  #{train, evaluate, null(if no need to specified)}
+
+LID: 
+  load_ckpt: last
+  runner:
+    total_steps: 10000
+    gradient_clipping: 1
+    gradient_accumulate_steps: 128
+    log_step: 5
+    eval_step: 50
+    save_step: 20
+    max_keep: 1
+    eval_dataloader: test
+
+  optimizer: 
+    name: TorchOptim
+    torch_optim_name: Adam
+    lr: 8.0e-5
+
+  DATASET:
+    bucket_path: '/home/b07502072/cs_ssl/iven/hubert_asr/len_for_bucket/SEAME'
+    data_path: ''
+    load_valid: './data/valid_names/SEAME'
+    train: ['train']
+    test: ['dev-man', 'dev-sge']
+
+  UPSTREAM: 
+    name: wav2vec2_xlsr
+
+  FEATURIZER:
+    type: weighted-sum
+    layer-norm: true
+
+  SPECAUG:
+    apply_time_warp: true
+    apply_time_mask: true
+    apply_freq_mask: False
+    time_warp_window: 5
+    time_mask_width_range: [0, 5]
+    freq_mask_width_range: [0, 50]
+    num_freq_mask: 4
+    num_time_mask: 8
+
+  DOWNSTREAM:
+    model_type: CNN
+    proj_dim: 1024
+    RNNs:
+      module: LSTM
+      bidirection: true
+      dim: [512, 128]
+      dropout: [0.2, 0.1]
+      layer_norm: [False, False]
+      proj: [False, False]
+      output_size: 3
+    Linear:
+      batch_norm: [True, True, True]
+      dim: [512, 128, 32]
+      act: ['ReLU', 'ReLU', 'ReLU']
+      output_size: 3
+    CNN:
+      widths: [3, 5, 7, 9, 11]
+      filter_nums: [3, 3, 3, 3, 3]
+      output_size: 3
+  
+  Loss:
+    weights: [0.15, 0.35, 0.5]
+
+ASR:
+  load_ckpt: last
+  runner:
+    total_steps: 100000
+    gradient_clipping: 1
+    gradient_accumulate_steps: 1
+    log_step: 200
+    eval_step: 5000
+    save_step: 100
+    max_keep: 1
+    eval_dataloader: test
+
+  optimizer: 
+    name: TorchOptim
+    torch_optim_name: Adam
+    lr: 6.0e-5
+
+  DATASET:
+    bucket_size: 32
+    bucket_path: '/home/b07502072/cs_ssl/iven/hubert_asr/len_for_bucket/SEAME'
+    data_path: ''
+    dict_path: './dicts/dict_10k.model'
+    dict_mode: 'subword'
+    train: ['train']
+    test: ['dev-man', 'dev-sge']
+    zero_infinity: true
+
+  UPSTREAM: 
+    name: wav2vec2_xlsr
+
+  FEATURIZER:
+    type: weighted-sum
+    layer-norm: true
+
+  SPECAUG:
+    apply_time_warp: true
+    apply_time_mask: true
+    apply_freq_mask: true
+    time_warp_window: 5
+    time_mask_width_range: [0, 40]
+    freq_mask_width_range: [0, 50]
+    num_freq_mask: 4
+    num_time_mask: 2
+
+  DOWNSTREAM:
+    model_type: RNNs
+    proj_dim: 1024
+    RNNs:
+      module: LSTM
+      bidirection: true
+      dim: [1024, 1024]
+      dropout: [0.2, 0.2]
+      layer_norm: [False, False]
+      proj: [False, False]
+
+ALL:
+  asr_ckpt: 
+  lid_ckpt: 
