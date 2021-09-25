@@ -1,4 +1,5 @@
 import torch
+from torch._C import device
 import torch.nn as nn
 from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import DataLoader
@@ -26,17 +27,42 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
 
+from s3prl.utility.helper import zero_mean_unit_var_norm
+
 config_path = './configs/finetune/base_960/base_001.yml'
 
 class wrapped_upstream(nn.Module):
-    def __init__(self, upstream):
+    def __init__(self, upstream, gpus=False):
         super().__init__()
-        self.upstream = upstream
+        self.model = upstream.model
+        if gpus:
+            self.model = nn.DataParrallel(self.model)
+        self.wav_normalize = upstream.wav_normalize
+
+        self.apply_padding_mask = True
+        self.numpy_wav_normalize = False
+
     def forward(self, wavs):
-        features = self.upstream(wavs)
-        # tqdm.write(f'{input.keys()}')
-        tqdm.write(f'features: {features}')
-        return features
+        device = wavs[0].device
+        if self.wav_normalize:
+            if self.numpy_wav_normalize:
+                wavs = zero_mean_unit_var_norm([wav.cpu().numpy() for wav in wavs])
+                wavs = [torch.from_numpy(wav).to(device) for wav in wavs]
+            else:
+                wavs = [F.layer_norm(wav, wav.shape) for wav in wavs]
+
+        wav_lengths = torch.LongTensor([len(wav) for wav in wavs]).to(device)
+        wav_padding_mask = ~torch.lt(
+            torch.arange(max(wav_lengths)).unsqueeze(0).to(device),
+            wav_lengths.unsqueeze(1),
+        )
+        padded_wav = pad_sequence(wavs, batch_first=True)
+
+        results = self.model(
+            padded_wav, wav_padding_mask if self.apply_padding_mask else None
+        )
+        print(results)
+        return results
 
 class Runner():
     def __init__(self, config):
@@ -52,10 +78,11 @@ class Runner():
         self.dictionary = load_text_encoder(self.config['DATASET']['dict_mode'], self.config['DATASET']['dict_path'])
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         self.devices = range(torch.cuda.device_count())
-        self.upstream = torch.hub.load('s3prl/s3prl', config['UPSTREAM']['name'])
+        upstream = torch.hub.load('s3prl/s3prl', config['UPSTREAM']['name']).to(self.device)
+        self.upstream = wrapped_upstream(upstream, len(self.devices)>1)
         randn_wavs = [ torch.FloatTensor(np.random.rand(1000)) ]
         feature = self.upstream(randn_wavs)
-        print(feature.keys())
+        print(feature)
         self.upstream_dim = feature['default'].size()[-1]
         self.specaug_asr = None
         if self.config.get('SPECAUG'):

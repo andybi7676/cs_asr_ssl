@@ -25,7 +25,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
 
-config_path = './configs/w2v2_base/w2v2_base_012.yml'
+config_path = './configs/w2v2_base/w2v2_base_013.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -928,17 +928,18 @@ class Runner():
             self.downstream_asr.load_state_dict(self.load_ckpt['Downstream_asr'], strict=False)
             tqdm.write(f'[ LOAD ] - loaded downstream')
         
-        if not hasattr(self, f'test_dataset_asr'):
+        if not hasattr(self, f'{mission}_dataset_asr'):
             dataset_config = copy.deepcopy(self.config_asr['DATASET'])
             # splits = dataset_config[split]
             dataset_config['bucket_size'] = 1
-            self.test_dataset_asr = ASR_Dataset('test', self.dictionary, **dataset_config)
-            self.test_dataloader_asr = DataLoader(self.test_dataset_asr, batch_size=1, collate_fn=self.test_dataset_asr.collate_fn, shuffle=False)
+            eval(f'self.{mission}_dataset_asr') = ASR_Dataset(mission, self.dictionary, **dataset_config)
+            eval(f'self.{mission}_dataloader_asr') = DataLoader(eval(f'self.{mission}_dataset_asr'), batch_size=1, collate_fn=self.test_dataset_asr.collate_fn, shuffle=False)
         
+        local_dataloader = eval(f'self.{mission}_dataloader_asr')
         self.upstream_asr.eval()
         self.featurizer_asr.eval()
         self.downstream_asr.eval()
-        for batch_id, (wavs, labels) in enumerate(tqdm(self.test_dataloader_asr, dynamic_ncols=True, total=len(self.test_dataloader_asr), desc=f'testing')):
+        for batch_id, (wavs, labels) in enumerate(tqdm(local_dataloader, dynamic_ncols=True, total=len(local_dataloader), desc=f'{mission} progress...')):
             wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ]
             # wavs => list(tensor(length))
             try:
@@ -983,12 +984,11 @@ class Runner():
 
             except RuntimeError as e:
                 if 'CUDA out of memory' in str(e):
-                    print(f'[Runner] - CUDA out of memory at step {global_step}')
+                    print(f'[Runner] - CUDA out of memory during evaluating')
                     # if self.first_round:
                         # raise
                     with torch.cuda.device(self.device):
                         torch.cuda.empty_cache()
-                    optimizer.zero_grad()
                     raise
                     # continue
                 else:
