@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torch.nn.parallel import DistributedDataParallel as DDP
 from torch.utils.data import DataLoader
 import yaml
 import numpy as np
@@ -25,7 +26,17 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
 
-config_path = './configs/finetune/xlsr/xlsr_001.yml'
+config_path = './configs/finetune/base_960/base_001.yml'
+
+class wrapped_upstream(nn.Module):
+    def __init__(self, upstream):
+        super().__init__()
+        self.upstream = upstream
+    def forward(self, wavs):
+        features = self.upstream(wavs)
+        # tqdm.write(f'{input.keys()}')
+        tqdm.write(f'features: {features}')
+        return features
 
 class Runner():
     def __init__(self, config):
@@ -43,9 +54,9 @@ class Runner():
         self.devices = range(torch.cuda.device_count())
         self.upstream = torch.hub.load('s3prl/s3prl', config['UPSTREAM']['name'])
         randn_wavs = [ torch.FloatTensor(np.random.rand(1000)) ]
-        # print(randn_wavs)
-        feature = self.upstream(randn_wavs)['default']
-        self.upstream_dim = feature.size()[-1]
+        feature = self.upstream(randn_wavs)
+        print(feature.keys())
+        self.upstream_dim = feature['default'].size()[-1]
         self.specaug_asr = None
         if self.config.get('SPECAUG'):
             from tools.specaug import SpecAug
@@ -113,13 +124,16 @@ class Runner():
         
         if len(self.devices) > 1:
             tqdm.write(f'Using multi gpu, ids: {self.devices}')
-            self.upstream = nn.DataParallel(self.upstream)
+            self.upstream.model = nn.DataParallel(self.upstream.model)
+        
+        pbar = tqdm(total=self.config['runner']['total_steps'], dynamic_ncols=True, desc='ASR overall')
         
         trainable_models = [self.upstream, self.linear]
         # trainable_params = list(self.featurizer_asr.parameters()) + list(self.downstream_asr.parameters())
         optimizer = self._get_optimizer(trainable_models, self.config)
         if self.ckpt:
             optimizer.load_state_dict(self.ckpt['optimizer'])
+            pbar.update(self.ckpt['Step'])
         scheduler = None
         if self.config.get('scheduler', False):
             scheduler = self._get_scheduler(optimizer, self.config)
@@ -129,20 +143,26 @@ class Runner():
         for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader, dynamic_ncols=True, total=len(self.train_dataloader), desc=f'training')):
             
             wavs, labels = [ torch.FloatTensor(wav).to(self.device) for wav in wavs ], [ torch.LongTensor(label).to(self.device) for label in labels ]
-            features = self.upstream(wavs)['default']
+            # wavs = pad_sequence(wavs, batch_first=True).to(self.device)
+            # wavs = torch.FloatTensor(wavs)
+            # print(wavs.size())
+            features = self.upstream(wavs)['devault']
+            # print(features.keys())
+            # features = features['default']
             print(features.size())
             features, _ = self.specaug(features)
 
-            features_len = torch.IntTensor([len(feat) for feat in features]).to('cpu')
+            log_probs_len = torch.IntTensor([len(feat) for feat in features]).to('cpu')
             labels_len = torch.IntTensor([len(lb) for lb in labels]).to('cpu')
             features = pad_sequence(features, batch_first=True).to(self.device)
-            labels = pad_sequence(labels, batch_first=True).to(self.device)
+            padded_labels = pad_sequence(labels, batch_first=True).to(self.device)
 
-            print(features.size())
+            tqdm.write(f'{features.size()}')
             # print(features[1].size())
             logits = self.linear(features)
-            print(logits)
-            print(logits.size())
+            # print(logits)
+            tqdm.write(f'{logits.size()}')
+            tqdm.write(f'{labels_len}')
 
             log_probs = nn.functional.log_softmax(logits, dim=-1)
             loss = self.asr_loss(
@@ -151,7 +171,7 @@ class Runner():
                 log_probs_len,
                 labels_len,
             )
-            print(loss)
+            tqdm.write(f'{loss}')
             assert 1==2
 
 
