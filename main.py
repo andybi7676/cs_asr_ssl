@@ -25,7 +25,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
 
-config_path = './configs/w2v2_base/w2v2_base_013.yml'
+config_path = './configs/w2v2_base/w2v2_base_017.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -48,6 +48,9 @@ class Runner():
         self.config_asr = config.get('ASR')
         self.args = args
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        device_idx = self.config.get('device_idx', False)
+        if device_idx:
+            self.device = f'cuda:{device_idx}'
 
         if self.mission == 'LID':
             self.exp_name = '/'.join([self.config_lid['UPSTREAM']['name'], self.id, self.mission])
@@ -87,7 +90,7 @@ class Runner():
                 self.load_ckpt = torch.load(best_ckpt_pths[0])
                 
         
-        if self.mission == 'ASR':
+        if self.mission == 'ASR' and not 'double' in self.task :
             self.exp_name = '/'.join([self.config_asr['UPSTREAM']['name'], self.id, self.mission])
             self.outdir = f'./results/{self.exp_name}'
             if not os.path.exists(self.outdir): os.makedirs(self.outdir)
@@ -144,8 +147,8 @@ class Runner():
             self.featurizer_lid = Featurizer(self.upstream_lid, self.device, **self.config_lid['FEATURIZER']).to(self.device)
             self.downstream_lid = Downstream(self.featurizer_lid.upstream_dim, **self.config_lid['DOWNSTREAM']).to(self.device)
             self.specaug_lid = None
-            self.load_asr = self.config['ALL']['asr_ckpt']
-            self.load_lid = self.config['ALL']['lid_ckpt']
+            self.load_asr = self.config['ALL']['asr_dir']
+            self.load_lid = self.config['ALL']['lid_dir']
             self.records = defaultdict(list)
             self.best_score = 0.
             self.blank = self.dictionary.pad_idx
@@ -177,7 +180,54 @@ class Runner():
                 assert len(ckpt_pths) == 1
                 self.asr_ckpt = torch.load(best_ckpt_pths[0])
 
+        if self.mission == 'ASR' and 'double' in self.task:
+            self.exp_name = '/'.join([self.config_asr['UPSTREAM']['name'], self.id, self.mission])
+            self.outdir = f'./results/{self.exp_name}'
+            if not os.path.exists(self.outdir): os.makedirs(self.outdir)
+            time_str = strftime("%Y-%m-%d_%H-%M", localtime())
+            with open(self.outdir+f'/{time_str}_config_asr.yml', 'w') as yml_f:
+                yaml.dump(self.config_asr, yml_f, default_flow_style=False)
+            self.writer = SummaryWriter(log_dir=self.outdir)
+            self.dictionary = load_text_encoder(self.config_asr['DATASET']['dict_mode'], self.config_asr['DATASET']['dict_path'])
+            self.config_asr['DOWNSTREAM1']['RNNs']['output_size'] = self.dictionary.vocab_size
+            self.config_asr['DOWNSTREAM2']['RNNs']['output_size'] = self.dictionary.vocab_size
+            self.upstream_asr = torch.hub.load('s3prl/s3prl', self.config_asr['UPSTREAM']['name']).to(self.device)
+            self.featurizer_asr1 = Featurizer(self.upstream_asr, self.device, **self.config_asr['FEATURIZER1']).to(self.device)
+            self.featurizer_asr2 = Featurizer(self.upstream_asr, self.device, **self.config_asr['FEATURIZER2']).to(self.device)
+            self.downstream_asr1 = Downstream(self.featurizer_asr1.upstream_dim, **self.config_asr['DOWNSTREAM1']).to(self.device)
+            self.downstream_asr2 = Downstream(self.featurizer_asr2.upstream_dim, **self.config_asr['DOWNSTREAM2']).to(self.device)
+            self.specaug_asr1 = None
+            self.specaug_asr2 = None
+            if self.config_asr.get('SPECAUG'):
+                from tools.specaug import SpecAug
+                self.specaug_asr1 = SpecAug(**self.config_asr["SPECAUG"])
+                self.specaug_asr2 = SpecAug(**self.config_asr["SPECAUG"])
+                self.specaug_asr1.to(self.device)
+                self.specaug_asr2.to(self.device)
+            self.blank = self.dictionary.pad_idx
+            self.asr_loss = nn.CTCLoss(
+                blank=self.blank,
+                zero_infinity = self.config_asr['DATASET']['zero_infinity']
+            )
+            self.records = defaultdict(list)
+            self.best_score = 100.
+            self.decoder = None
+
+            self.load_ckpt = False
+            if self.config_asr['load_ckpt'] == 'last':
+                ckpt_pths = glob.glob(f'{self.outdir}/states-*.ckpt')
+                ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
+                if len(ckpt_pths) == 0:
+                    print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.outdir}\'')
+                else:
+                    last_ckpt_pth = ckpt_pths[-1]
+                    self.load_ckpt = torch.load(last_ckpt_pth)
+            if self.config_asr['load_ckpt'] == 'best':
+                best_ckpt_pths = glob.glob(f'{self.outdir}/*best.ckpt')
+                assert len(best_ckpt_pths) == 1
+                self.load_ckpt = torch.load(best_ckpt_pths[0])
         
+        self.config_all = self.config.get('ALL')
         self.first_round = True
         print('[ RUNNER ] - Initialized')
 
@@ -705,6 +755,87 @@ class Runner():
                 pbar.update(1)
             epoch += 1
     
+    def evaluate_ASR(self, load=False, mission='dev'):
+        if load:
+            assert self.load_ckpt, 'No ckpt to be loaded'
+            self.featurizer_asr.load_state_dict(self.load_ckpt['Featurizer_asr'])
+            tqdm.write(f'[ LOAD ] - loaded featurizer')
+            self.downstream_asr.load_state_dict(self.load_ckpt['Downstream_asr'], strict=False)
+            tqdm.write(f'[ LOAD ] - loaded downstream')
+        
+        if not hasattr(self, f'{mission}_dataset_asr'):
+            # tqdm.write(f'{mission}')
+            dataset_config = copy.deepcopy(self.config_asr['DATASET'])
+            # splits = dataset_config[split]
+            dataset_config['bucket_size'] = 1
+            setattr(self, f'{mission}_dataset_asr', ASR_Dataset(mission, self.dictionary, **dataset_config))
+            setattr(self, f'{mission}_dataloader_asr', DataLoader(getattr(self, f'{mission}_dataset_asr'), batch_size=1, collate_fn=getattr(self, f'{mission}_dataset_asr').collate_fn, shuffle=False))
+        
+        local_dataloader = getattr(self, f'{mission}_dataloader_asr')
+        self.upstream_asr.eval()
+        self.featurizer_asr.eval()
+        self.downstream_asr.eval()
+        for batch_id, (wavs, labels) in enumerate(tqdm(local_dataloader, dynamic_ncols=True, total=len(local_dataloader), desc=f'{mission} progress...')):
+            wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ]
+            # wavs => list(tensor(length))
+            try:
+                with torch.no_grad():
+                    features = self.upstream_asr(wavs)
+                    features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
+
+                    features = self.featurizer_asr(features) # feaes => tensor(N,T,C)
+                    features = list(features)
+                    assert len(features) == len(labels), 'length of features and labels not consistent'
+                
+                    logits, padded_labels, log_probs_len, labels_len = self.downstream_asr(features, labels)
+                
+                    log_probs = nn.functional.log_softmax(logits, dim=-1)
+                    loss = self.asr_loss(
+                        log_probs.transpose(0, 1), # (N, T, C) -> (T, N, C)
+                        padded_labels,
+                        log_probs_len,
+                        labels_len,
+                    )
+
+                    target_tokens_batch = []
+                    target_words_batch = []
+                    for label in labels:
+                        label_idx = (label != self.dictionary.pad_idx) & (
+                            label != self.dictionary.eos_idx
+                        )
+                        target_token_ids = label[label_idx].tolist()
+                        target_tokens = self.dictionary.decode(target_token_ids)
+                        target_words = target_tokens.split()
+
+                        target_tokens_batch.append(target_tokens)
+                        target_words_batch.append(target_words)
+                    
+                    pred_tokens_batch, pred_words_batch = self._decode(log_probs.float().contiguous().cpu(), log_probs_len)
+                    
+                    self.records['loss'].append(loss.item())
+                    self.records['target_tokens'] += target_tokens_batch
+                    self.records['target_words'] += target_words_batch
+                    self.records['pred_tokens'] += pred_tokens_batch
+                    self.records['pred_words'] += pred_words_batch
+
+            except RuntimeError as e:
+                if 'CUDA out of memory' in str(e):
+                    print(f'[Runner] - CUDA out of memory during evaluating')
+                    # if self.first_round:
+                        # raise
+                    with torch.cuda.device(self.device):
+                        torch.cuda.empty_cache()
+                    raise
+                    # continue
+                else:
+                    raise
+        if mission == 'test':
+            self.log_records('test', 1)
+        
+        self.featurizer_asr.train()
+        self.downstream_asr.train()
+            # whether to accumulate gradient
+
     def train_ASR_jointly(self):
         alpha = self.config_asr['alpha']
 
@@ -920,25 +1051,221 @@ class Runner():
                 pbar.update(1)
             epoch += 1
 
-    def evaluate_ASR(self, load=False, mission='dev'):
+    def train_double_size_ASR(self):
+
+        pbar = tqdm(total=self.config_asr['runner']['total_steps'], dynamic_ncols=True, desc='ASR overall')
+        if self.load_ckpt:
+            # assert self.config_asr['UPSTREAM']['name'] == self.load_ckpt['Upstream_name']
+            self.featurizer_asr1.load_state_dict(self.load_ckpt['Featurizer_asr1'])
+            self.featurizer_asr2.load_state_dict(self.load_ckpt['Featurizer_asr2'])
+            tqdm.write(f'[ LOAD ] - loaded featurizer 1 & 2')
+            self.downstream_asr1.load_state_dict(self.load_ckpt['Downstream_asr1'], strict=False)
+            self.downstream_asr2.load_state_dict(self.load_ckpt['Downstream_asr2'], strict=False)
+            tqdm.write(f'[ LOAD ] - loaded downstream 1 & 2')
+        
+
+        trainable_models = [self.featurizer_asr1, self.featurizer_asr2, self.downstream_asr1, self.downstream_asr2]
+        trainable_params = list(self.featurizer_asr1.parameters()) + list(self.featurizer_asr2.parameters()) + list(self.downstream_asr1.parameters()) + list(self.downstream_asr2.parameters())
+
+        optimizer = self._get_optimizer(trainable_models, mission='asr')
+        if self.load_ckpt:
+            optimizer.load_state_dict(self.load_ckpt['Optimizer'])
+            tqdm.write(f'[ LOAD ] - loaded optimizer')
+            pbar.update(self.load_ckpt['Step'])
+        # print(optimizer)
+        if self.config_asr.get('scheduler'):
+            scheduler = self._get_scheduler(optimizer, mission='asr')
+            if self.load_ckpt:
+                scheduler.load_state_dict(self.load_ckpt['Scheduler'])
+                tqdm.write(f'[ LOAD ] - loaded scheduler')
+        else:
+            scheduler = None
+        
+        dataset_config = self.config_asr['DATASET']
+        # splits = dataset_config['train']
+        bucket_size = dataset_config['bucket_size']
+        self.train_dataset_asr = ASR_Dataset('train', self.dictionary, **dataset_config)
+        self.train_dataloader_asr = DataLoader(self.train_dataset_asr, batch_size=1, collate_fn=self.train_dataset_asr.collate_fn, shuffle=True)
+        self.upstream_asr.eval()
+        self.featurizer_asr1.train()
+        self.featurizer_asr2.train()
+        self.downstream_asr1.train()
+        self.downstream_asr2.train()
+        epoch = 0
+        backward_steps = 0
+        gradient_accumulate_steps = self.config_asr['runner']['gradient_accumulate_steps']
+        # self.train_dataloader.sampler.set_epoch(epoch)
+        avg_acc, avg_loss, total_frames = 0., 0., 0
+        logs = {'steps_acc': [], 'steps_frames':[], 'steps_loss': [] }
+        self.load_ckpt = False
+        while pbar.n < pbar.total:
+            for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader_asr, dynamic_ncols=True, total=len(self.train_dataloader_asr), desc=f'training')):
+                try:
+                    if pbar.n >= pbar.total:
+                        break
+                    global_step = pbar.n + 1
+                    # print(wavs)
+                    wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ]
+                    # wavs => list(tensor(length))
+                    
+                    with torch.no_grad():
+                        features = self.upstream_asr(wavs)
+                        features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
+
+                    features1 = self.featurizer_asr1(features) # feaes => tensor(N,T,C)
+                    features2 = self.featurizer_asr2(features) # feaes => tensor(N,T,C)
+                    if self.specaug_asr1 :
+                        features1, _ = self.specaug_asr1(features1)  # features => list(tensor_1(T,C), ...tensor_n(T, C))
+                        features2, _ = self.specaug_asr2(features2)  # features => list(tensor_1(T,C), ...tensor_n(T, C))
+                    else:
+                        features1 = list(features1)
+                        features2 = list(features2)
+                    assert len(features1) == len(labels) and len(features2) == len(labels), 'length of features and labels not consistent'
+                    
+                    logits1, padded_labels, log_probs_len1, labels_len = self.downstream_asr1(features1, labels)
+                    logits2, padded_labels, log_probs_len2, labels_len = self.downstream_asr2(features2, labels)
+                    
+                    logits = logits1 + logits2
+                    log_probs_len = log_probs_len1
+
+                    log_probs = nn.functional.log_softmax(logits, dim=-1)
+                    loss = self.asr_loss(
+                        log_probs.transpose(0, 1), # (N, T, C) -> (T, N, C)
+                        padded_labels,
+                        log_probs_len,
+                        labels_len,
+                    )
+
+                    target_tokens_batch = []
+                    target_words_batch = []
+                    for label in labels:
+                        label_idx = (label != self.dictionary.pad_idx) & (
+                            label != self.dictionary.eos_idx
+                        )
+                        target_token_ids = label[label_idx].tolist()
+                        target_tokens = self.dictionary.decode(target_token_ids)
+                        target_words = target_tokens.split()
+
+                        target_tokens_batch.append(target_tokens)
+                        target_words_batch.append(target_words)
+                    with torch.no_grad():
+                        pred_tokens_batch, pred_words_batch = self._decode(log_probs.float().contiguous().cpu(), log_probs_len)
+                    
+                    self.records['loss'].append(loss.item())
+                    self.records['target_tokens'] += target_tokens_batch
+                    self.records['target_words'] += target_words_batch
+                    self.records['pred_tokens'] += pred_tokens_batch
+                    self.records['pred_words'] += pred_words_batch
+
+                    loss = loss / gradient_accumulate_steps
+                    loss.backward()
+
+                except RuntimeError as e:
+                    if 'CUDA out of memory' in str(e):
+                        print(f'[Runner] - CUDA out of memory at step {global_step}')
+                        # if self.first_round:
+                            # raise
+                        with torch.cuda.device(self.device):
+                            torch.cuda.empty_cache()
+                        optimizer.zero_grad()
+                        raise
+                        # continue
+                    else:
+                        raise
+                
+                # whether to accumulate gradient
+                backward_steps += 1
+                if backward_steps % gradient_accumulate_steps > 0:
+                    # pbar.update(1)
+                    continue
+
+                # gradient clipping
+                grad_norm = torch.nn.utils.clip_grad_norm_(
+                    trainable_params, self.config_asr['runner']['gradient_clipping'])
+
+                # optimize
+                if math.isnan(grad_norm):
+                    print(f'[ Runner ] - grad norm is NaN at step {global_step}')
+                else:
+                    optimizer.step()
+                optimizer.zero_grad()
+
+                # adjust learning rate
+                if scheduler:
+                    scheduler.step()
+                
+                save_names = []
+                if global_step % self.config_asr['runner']['save_step'] == 0:
+                    def check_ckpt_num(directory):
+                        max_keep = self.config_asr['runner']['max_keep']
+                        ckpt_pths = glob.glob(f'{directory}/states-*.ckpt')
+                        if len(ckpt_pths) >= max_keep:
+                            ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
+                            for ckpt_pth in ckpt_pths[:len(ckpt_pths) - max_keep + 1]:
+                                tqdm.write(f'[ SAVE ] - remove ckpt \'{ckpt_pth}\'')
+                                os.remove(ckpt_pth)
+                    check_ckpt_num(self.outdir)
+                    save_names.append(f'states-{global_step}.ckpt')
+
+                if global_step % self.config_asr['runner']['log_step'] == 0:
+                    log_save_names = self.log_records('train', global_step)
+                    if len(log_save_names) > 0:
+                        save_names += (log_save_names)
+                if global_step % self.config_asr['runner']['eval_step'] == 0:
+                    self.evaluate_double_size_ASR()
+                    log_save_names = self.log_records('dev', global_step)
+                    if len(log_save_names) > 0:
+                        save_names += (log_save_names)
+                    # tqdm.write(f'[ TEST ] - LOSS: {test_loss:8f}, ACC: {test_acc:8f}, STEP={global_step}')
+                    # self.writer.add_scalar(f'acc/test', test_acc, global_step)
+                    # self.writer.add_scalar(f'loss/test', test_loss, global_step)
+
+                for save_name in save_names:
+                    ckpt = {
+                        'Upstream_name': self.config_asr['UPSTREAM']['name'],
+                        'Downstream_asr1': self.downstream_asr1.state_dict(),
+                        'Downstream_asr2': self.downstream_asr2.state_dict(),
+                        'Featurizer_asr1': self.featurizer_asr1.state_dict(),
+                        'Featurizer_asr2': self.featurizer_asr2.state_dict(),
+                        'Optimizer': optimizer.state_dict(),
+                        'Step': global_step,
+                        'Epoch': epoch,
+                        'Config': self.config_asr
+                    }
+                    if scheduler:
+                        ckpt['Scheduler'] = scheduler.state_dict()
+                    ckpt_name = save_name
+                    out_path = os.path.join(self.outdir, ckpt_name)
+                    torch.save(ckpt, out_path)
+                    tqdm.write(f'[ SAVE ] - ckpt \'{ckpt_name}\' saved at \'{self.outdir}\'')
+
+                pbar.update(1)
+            epoch += 1
+    
+    def evaluate_double_size_ASR(self, load=False, mission='dev'):
         if load:
             assert self.load_ckpt, 'No ckpt to be loaded'
-            self.featurizer_asr.load_state_dict(self.load_ckpt['Featurizer_asr'])
-            tqdm.write(f'[ LOAD ] - loaded featurizer')
-            self.downstream_asr.load_state_dict(self.load_ckpt['Downstream_asr'], strict=False)
-            tqdm.write(f'[ LOAD ] - loaded downstream')
+            self.featurizer_asr1.load_state_dict(self.load_ckpt['Featurizer_asr'])
+            self.featurizer_asr2.load_state_dict(self.load_ckpt['Featurizer_asr'])
+            tqdm.write(f'[ LOAD ] - loaded featurizer 1 & 2')
+            self.downstream_asr1.load_state_dict(self.load_ckpt['Downstream_asr'], strict=False)
+            self.downstream_asr2.load_state_dict(self.load_ckpt['Downstream_asr'], strict=False)
+            tqdm.write(f'[ LOAD ] - loaded downstream 1 & 2')
         
         if not hasattr(self, f'{mission}_dataset_asr'):
+            # tqdm.write(f'{mission}')
             dataset_config = copy.deepcopy(self.config_asr['DATASET'])
             # splits = dataset_config[split]
             dataset_config['bucket_size'] = 1
-            eval(f'self.{mission}_dataset_asr') = ASR_Dataset(mission, self.dictionary, **dataset_config)
-            eval(f'self.{mission}_dataloader_asr') = DataLoader(eval(f'self.{mission}_dataset_asr'), batch_size=1, collate_fn=self.test_dataset_asr.collate_fn, shuffle=False)
+            setattr(self, f'{mission}_dataset_asr', ASR_Dataset(mission, self.dictionary, **dataset_config))
+            setattr(self, f'{mission}_dataloader_asr', DataLoader(getattr(self, f'{mission}_dataset_asr'), batch_size=1, collate_fn=getattr(self, f'{mission}_dataset_asr').collate_fn, shuffle=False))
         
-        local_dataloader = eval(f'self.{mission}_dataloader_asr')
+        local_dataloader = getattr(self, f'{mission}_dataloader_asr')
         self.upstream_asr.eval()
-        self.featurizer_asr.eval()
-        self.downstream_asr.eval()
+        self.featurizer_asr1.eval()
+        self.featurizer_asr2.eval()
+        self.downstream_asr1.eval()
+        self.downstream_asr2.eval()
         for batch_id, (wavs, labels) in enumerate(tqdm(local_dataloader, dynamic_ncols=True, total=len(local_dataloader), desc=f'{mission} progress...')):
             wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ]
             # wavs => list(tensor(length))
@@ -947,12 +1274,17 @@ class Runner():
                     features = self.upstream_asr(wavs)
                     features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
 
-                    features = self.featurizer_asr(features) # feaes => tensor(N,T,C)
-                    features = list(features)
-                    assert len(features) == len(labels), 'length of features and labels not consistent'
+                    features1 = self.featurizer_asr1(features) # feaes => tensor(N,T,C)
+                    features2 = self.featurizer_asr2(features) # feaes => tensor(N,T,C)
+                    features1 = list(features1)
+                    features2 = list(features2)
+                    assert len(features1) == len(labels) and len(features2) == len(labels), 'length of features and labels not consistent'
                 
-                    logits, padded_labels, log_probs_len, labels_len = self.downstream_asr(features, labels)
-                
+                    logits1, padded_labels, log_probs_len1, labels_len = self.downstream_asr1(features1, labels)
+                    logits2, padded_labels, log_probs_len2, labels_len = self.downstream_asr2(features2, labels)
+
+                    log_probs_len = log_probs_len1
+                    logits = logits1 + logits2
                     log_probs = nn.functional.log_softmax(logits, dim=-1)
                     loss = self.asr_loss(
                         log_probs.transpose(0, 1), # (N, T, C) -> (T, N, C)
@@ -996,9 +1328,12 @@ class Runner():
         if mission == 'test':
             self.log_records('test', 1)
         
-        self.featurizer_asr.train()
-        self.downstream_asr.train()
+        self.featurizer_asr1.train()
+        self.featurizer_asr2.train()
+        self.downstream_asr1.train()
+        self.downstream_asr2.train()
             # whether to accumulate gradient
+
     def evaluate_jointly(self, split='test'):
         if self.load_asr:
             self.featurizer_asr.load_state_dict(self.asr_ckpt['Featurizer_asr'])
@@ -1109,6 +1444,167 @@ class Runner():
 
         self.log_records('test', 1)
 
+    def draw_ctc(self):
+        if self.load_asr:
+            self.featurizer_asr.load_state_dict(self.asr_ckpt['Featurizer_asr'])
+            tqdm.write(f'[ LOAD ] - loaded featurizer_asr')
+            self.downstream_asr.load_state_dict(self.asr_ckpt['Downstream_asr'], strict=False)
+            tqdm.write(f'[ LOAD ] - loaded downstream_asr')
+        draw_idx = 4960
+        set_name = 'dev_man'
+        if self.load_lid:
+            self.featurizer_lid.load_state_dict(self.lid_ckpt['Featurizer_lid'])
+            tqdm.write(f'[ LOAD ] - loaded featurizer_lid')
+            self.downstream_lid.load_state_dict(self.lid_ckpt['Downstream_lid'])
+            tqdm.write(f'[ LOAD ] - loaded downstream_lid')
+        
+        if not hasattr(self, f'test_dataset_asr'):
+            dataset_config = copy.deepcopy(self.config_asr['DATASET'])
+            # splits = dataset_config[split]
+            dataset_config['bucket_size'] = 1
+            self.test_dataset_asr = ALL_Dataset('test', self.dictionary, **dataset_config)
+            # self.test_dataloader_asr = DataLoader(self.test_dataset_asr, batch_size=1, collate_fn=self.test_dataset_asr.collate_fn, shuffle=False)
+
+
+        self.upstream_asr.eval()
+        self.featurizer_asr.eval()
+        self.downstream_asr.eval()
+        self.featurizer_lid.eval()
+        self.downstream_lid.eval()
+        wavs, labels, lid_labels = self.test_dataset_asr[draw_idx]
+        wavs, labels, lid_labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ], [ lid_lb.numpy() for lid_lb in lid_labels ]
+        # wavs => list(tensor(length))
+        with torch.no_grad():
+            features = self.upstream_asr(wavs)
+            features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
+
+            features = self.featurizer_asr(features) # feaes => tensor(N,T,C)
+            features = list(features)
+            assert len(features) == len(labels), 'length of features and labels not consistent'
+        
+            logits, padded_labels, log_probs_len, labels_len = self.downstream_asr(features, labels)
+            logits_lid, _, _, _ = self.downstream_lid(features, labels)
+
+            log_probs = nn.functional.log_softmax(logits, dim=-1)
+            loss = self.asr_loss(
+                log_probs.transpose(0, 1), # (N, T, C) -> (T, N, C)
+                padded_labels,
+                log_probs_len,
+                labels_len,
+            )
+
+            target_tokens_batch = []
+            target_words_batch = []
+            for label in labels:
+                label_idx = (label != self.dictionary.pad_idx) & (
+                    label != self.dictionary.eos_idx
+                )
+                target_token_ids = label[label_idx].tolist()
+                target_tokens = self.dictionary.decode(target_token_ids)
+                target_words = target_tokens.split()
+
+                # target_tokens_batch.append(target_tokens)
+                # target_words_batch.append(target_words)
+            probs = nn.functional.softmax(logits, dim=-1)
+            probs_lid = nn.functional.softmax(logits_lid, dim=-1)
+            pred_tokens_batch, pred_words_batch = self._decode(log_probs.float().contiguous().cpu(), log_probs_len)
+            curve_metrix = self._get_curve(probs.float().contiguous().cpu(), log_probs_len, target_token_ids)
+            
+            x = np.array(range(log_probs_len[0]))
+            fig, axs = plt.subplots(2)
+            line_style = {
+                'space': ('densely dashdotted', (0, (3, 1, 1, 1))),
+                'en_tok': ('densely dashed',        (0, (3, 0.5))), 
+                'zh_tok': ('solid', 'solid'), 
+                'other': ('densely dotted',        (0, (1, 1)))
+            }
+            for key in curve_metrix.keys():
+                id = int(key)
+                kind = None
+                if id == 2251:
+                    kind = 'space'
+                elif id < 2282 and id > 2 : 
+                    kind = 'en_tok'
+                elif id >= 2282:
+                    kind = 'zh_tok'
+                else:
+                    kind = 'other'
+                y = curve_metrix[key]
+                if kind == 'other':
+                    axs[0].plot(x, y, linestyle=line_style[kind][-1], linewidth=1.5, alpha=0.5, label=key)
+                else:
+                    axs[0].plot(x, y, linestyle=line_style[kind][-1], linewidth=1.5, label=key)
+            # axs[0].legend(bbox_to_anchor=(1, 1.2),  prop={'size': 6})
+            lid_classes = ['<sil>', '<chi>', '<eng>']
+            for i, lid_class in enumerate(lid_classes):
+                y = [ prob[i].item() for prob in probs_lid[0] ]
+                axs[0].plot(x, y, linestyle='solid', linewidth=0.5, label=f'{lid_class}')
+            # for i, lid_class in enumerate(lid_classes):
+            #     y = [ 1 if int(label) == i else 0 for label in lid_labels[0] ]
+            #     axs[1].plot(x, y, label=f'{lid_class}')
+            axs[0].legend(bbox_to_anchor=(1, 1.05),  prop={'size': 6})
+            axs[0].set_xlabel(' '.join([str(tok_id) for tok_id in target_token_ids]), fontsize=6)
+            fig.savefig(os.path.join(self.outdir, f'ctc_lid_cmp_{set_name}-{draw_idx}.png'), dpi=200)
+            print(target_words)
+            print(pred_words_batch[0])
+            # self.records['loss'].append(loss.item())
+            # self.records['target_tokens'] += target_tokens_batch
+            # self.records['target_words'] += target_words_batch
+            # self.records['pred_tokens'] += pred_tokens_batch
+            # self.records['pred_words'] += pred_words_batch
+
+        
+    def _get_curve(self, probs, input_lens, target_token_ids):
+        """Decoder that take log probabilities as input and outputs decoded seq"""
+        print(probs.size(), input_lens.size())
+        # assert 1==2
+        # input_lens = input_lens.squeeze(-1)
+        assert len(input_lens) == 1, 'Too much sentence to be drawn !'
+
+        focus_ids = [0, 1]
+        for i in target_token_ids:
+            if i not in focus_ids:
+                focus_ids.append(i)
+        tqdm.write(f'Focus on {len(focus_ids)} ids !')
+        focus_words = [ self.dictionary.decode([i], True) for i in focus_ids ]
+        focus_words_to_ids = { self.dictionary.decode([i], True): i for i in focus_ids }
+        curve_metrix = defaultdict(list)
+        probs = probs[0][:input_lens[0]]
+        print(probs.size())
+
+        print(probs[5])
+        for prob in probs:
+            for fci in focus_ids:
+                curve_metrix[f'{fci}'].append(prob[fci])
+        
+        print(curve_metrix.keys())
+        assert len(curve_metrix[list(curve_metrix.keys())[0]]) == len(curve_metrix[list(curve_metrix.keys())[-1]])
+
+        # for log_prob, in_len in zip(log_probs, input_lens):
+        #     log_prob = log_prob[:in_len].unsqueeze(0)
+    
+        #     decoded = None
+        #     if self.decoder is not None and not self.training:
+        #         decoded = self.decoder.decode(log_prob)
+        #         if len(decoded) >= 1:
+        #             decoded = decoded[0]
+        #             decoded = None if len(decoded) < 1 else decoded[0]
+            
+        #     pred_token_ids = log_prob.argmax(dim=-1)
+        #     pred_token_ids = pred_token_ids[pred_token_ids != self.blank].tolist()
+
+        #     pred_tokens = self.dictionary.decode(pred_token_ids, True)
+
+        #     if decoded is not None and "words" in decoded:
+        #         pred_words = decoded["words"]
+        #     else:
+        #         pred_words = pred_tokens.split()
+            
+        #     pred_tokens_batch.append(pred_tokens)
+        #     pred_words_batch.append(pred_words)
+
+        return curve_metrix
+    
     def log_records(self, split, global_step, jointly=False, **kwargs):
         """
         Return:
@@ -1137,11 +1633,23 @@ class Runner():
         self.writer.add_scalar(f'asr/{split}-loss', loss, global_step=global_step)
         self.writer.add_scalar(f'asr/{split}-uer', uer, global_step=global_step)
         self.writer.add_scalar(f'asr/{split}-wer', wer, global_step=global_step)
-        if self.featurizer_asr != None and hasattr(self.featurizer_asr, 'weights'):
-            fig, ax = plt.subplots()
-            f_weights = F.softmax(self.featurizer_asr.weights, dim=-1)
-            ax.plot(f_weights.detach().cpu().numpy())
-            self.writer.add_figure('Featurizer-weights', fig, global_step=global_step)
+        if not 'double' in self.task:
+            if self.featurizer_asr != None and hasattr(self.featurizer_asr, 'weights'):
+                fig, ax = plt.subplots()
+                f_weights = F.softmax(self.featurizer_asr.weights, dim=-1)
+                ax.plot(f_weights.detach().cpu().numpy())
+                self.writer.add_figure('Featurizer-weights', fig, global_step=global_step)
+        else:
+            if self.featurizer_asr1 != None and hasattr(self.featurizer_asr1, 'weights'):
+                fig, ax = plt.subplots()
+                f_weights1 = F.softmax(self.featurizer_asr1.weights, dim=-1)
+                ax.plot(f_weights1.detach().cpu().numpy())
+                self.writer.add_figure('Featurizer1-weights', fig, global_step=global_step)
+            if self.featurizer_asr2 != None and hasattr(self.featurizer_asr2, 'weights'):
+                fig, ax = plt.subplots()
+                f_weights2 = F.softmax(self.featurizer_asr2.weights, dim=-1)
+                ax.plot(f_weights2.detach().cpu().numpy())
+                self.writer.add_figure('Featurizer2-weights', fig, global_step=global_step)
         tqdm.write(f'[ {split.upper()} ] - UER: {uer:8f}, WER: {wer:8f}')
         # print(f'[ {split.upper()} ] ')
 
@@ -1198,8 +1706,12 @@ def main():
             runner.train_ASR()
         else:
             runner.train_ASR_jointly()
-    if config['mission'] == 'ALL':
+    if config['mission'] == 'ASR' and config['task'] == 'train_double':
+        runner.train_double_size_ASR()
+    if config['mission'] == 'ALL' and config['task'] == 'evaluate':
         runner.evaluate_jointly()
+    if config['mission'] == 'ALL' and config['task'] == 'draw_alignment':
+        runner.draw_ctc()
     if config['mission'] == 'LID' and config['task'] == 'draw_featurizer':
         runner.draw_featurizer('lid')
     if config['mission'] == 'ASR' and config['task'] == 'evaluate':

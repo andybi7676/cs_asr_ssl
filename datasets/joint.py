@@ -168,7 +168,7 @@ class ALL_Dataset(Dataset):
         # Load acoustic feature and pad
         wav_batch = [self._load_wav(x_file).numpy() for x_file in self.X[index]]
         label_batch = [np.array(self.Y[self._parse_x_name(x_file)], dtype=np.float32) for x_file in self.X[index]]
-        lid_batch = [ torch.load(self.Z[self._parse_x_name(x_file)] + '_lid.pt').squeeze() for x_file in self.X[index] ]
+        lid_batch = [ torch.load(self.Z[self._parse_x_name(x_file)] + '_balanced_lid.pt') for x_file in self.X[index] ]
         return wav_batch, label_batch, lid_batch # bucketing, return ((wavs, labels))
 
     def collate_fn(self, items):

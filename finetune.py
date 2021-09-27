@@ -27,16 +27,32 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
 
+import torch.distributed as dist
+import torch.multiprocessing as mp
+
 from s3prl.utility.helper import zero_mean_unit_var_norm
 
 config_path = './configs/finetune/base_960/base_001.yml'
+
+def setup(rank, world_size):
+    os.environ['MASTER_ADDR'] = 'localhost'
+    os.environ['MASTER_PORT'] = '12355'
+
+    # initialize the process group
+    dist.init_process_group("gloo", rank=rank, world_size=world_size)
+
+def cleanup():
+    dist.destroy_process_group()
 
 class wrapped_upstream(nn.Module):
     def __init__(self, upstream, gpus=False):
         super().__init__()
         self.model = upstream.model
-        if gpus:
-            self.model = nn.DataParrallel(self.model)
+        for param in self.model.feature_extractor.parameters():
+            param.requires_grad = False
+        # if gpus:
+        #     self.model.encoder = nn.DataParallel(self.model.encoder)
+        print(self.model)
         self.wav_normalize = upstream.wav_normalize
 
         self.apply_padding_mask = True
@@ -56,12 +72,16 @@ class wrapped_upstream(nn.Module):
             torch.arange(max(wav_lengths)).unsqueeze(0).to(device),
             wav_lengths.unsqueeze(1),
         )
+        print(wav_padding_mask)
         padded_wav = pad_sequence(wavs, batch_first=True)
+        print(padded_wav.size())
 
-        results = self.model(
+        results = self.model.extract_features(
             padded_wav, wav_padding_mask if self.apply_padding_mask else None
         )
-        print(results)
+        results = results['x']
+        # print(results)
+        print(results.size())
         return results
 
 class Runner():
@@ -80,10 +100,10 @@ class Runner():
         self.devices = range(torch.cuda.device_count())
         upstream = torch.hub.load('s3prl/s3prl', config['UPSTREAM']['name']).to(self.device)
         self.upstream = wrapped_upstream(upstream, len(self.devices)>1)
-        randn_wavs = [ torch.FloatTensor(np.random.rand(1000)) ]
-        feature = self.upstream(randn_wavs)
-        print(feature)
-        self.upstream_dim = feature['default'].size()[-1]
+        randn_wavs = [ torch.randn(16000).to(self.device), torch.randn(16000).to(self.device) ]
+        features = self.upstream(randn_wavs)
+        # print(feature)
+        self.upstream_dim = features.size()[-1]
         self.specaug_asr = None
         if self.config.get('SPECAUG'):
             from tools.specaug import SpecAug
@@ -134,24 +154,27 @@ class Runner():
         # self._load_weight(scheduler, 'Scheduler')
         return scheduler
 
-    def train(self):
-        self.upstream.to(self.device)
-        self.specaug.to(self.device)
-        self.linear.to(self.device)
+    def train(self, rank, world_size):
+        print(f"Running basic DDP example on rank {rank}.")
+        setup(rank, world_size)
+        self.upstream.to(rank)
+        self.specaug.to(rank)
+        self.linear.to(rank)
         if self.ckpt:
             self.upstream.load_state_dict(self.ckpt['Upstream'])
             self.linear.load_state_dict(self.ckpt['Linear'])
         
-        for param in self.upstream.model.feature_extractor.parameters():
-            param.requires_grad = False
+        # for param in self.upstream.model.feature_extractor.parameters():
+        #     param.requires_grad = False
 
         if not hasattr(self, 'train_dataloader'):
             self.train_dataset = ASR_Dataset('dev', self.dictionary, **self.config['DATASET'])
             self.train_dataloader = DataLoader(self.train_dataset, batch_size=1, collate_fn=self.train_dataset.collate_fn, shuffle=True)
         
         if len(self.devices) > 1:
-            tqdm.write(f'Using multi gpu, ids: {self.devices}')
-            self.upstream.model = nn.DataParallel(self.upstream.model)
+            self.upstream = DDP(self.upstream, device_ids=[rank])
+        #     tqdm.write(f'Using multi gpu, ids: {self.devices}')
+        #     self.upstream.model = nn.DataParallel(self.upstream.model)
         
         pbar = tqdm(total=self.config['runner']['total_steps'], dynamic_ncols=True, desc='ASR overall')
         
@@ -173,7 +196,7 @@ class Runner():
             # wavs = pad_sequence(wavs, batch_first=True).to(self.device)
             # wavs = torch.FloatTensor(wavs)
             # print(wavs.size())
-            features = self.upstream(wavs)['devault']
+            features = self.upstream(wavs)
             # print(features.keys())
             # features = features['default']
             print(features.size())
@@ -199,6 +222,7 @@ class Runner():
                 labels_len,
             )
             tqdm.write(f'{loss}')
+            cleanup()
             assert 1==2
 
 
@@ -207,8 +231,14 @@ def main():
     with open(config_path, 'r') as yml_f:
         config = yaml.safe_load(yml_f)
     runner = Runner(config)
+    n_gpus = torch.cuda.device_count()
+    world_size = n_gpus
     if config['task'] == 'train':
-        runner.train()
+        mp.spawn(runner.train,
+             args=(world_size,),
+             nprocs=world_size,
+             join=True)
+        # runner.train()
     
 
 

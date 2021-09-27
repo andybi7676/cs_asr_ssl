@@ -47,8 +47,8 @@ class ASR_Dataset(Dataset):
         X = table_list['file_path'].tolist()
         X_lens = table_list['length'].tolist()
         # if split == 'test' or split == 'dev':
-        #     X = X[:1000]
-        #     X_lens = X_lens[:1000]
+        #     X = X[:100]
+        #     X_lens = X_lens[:100]
 
         assert len(X) != 0, f"0 data found for {split}"
 
