@@ -1,0 +1,146 @@
+id: '015'
+mission: ASR_LIDB #{LID, ASR, ALL}
+task: train  #{train, evaluate, null(if no need to specified)}
+
+LID: 
+  load_ckpt: last
+  runner:
+    total_steps: 10000
+    gradient_clipping: 1
+    gradient_accumulate_steps: 128
+    log_step: 5
+    eval_step: 50
+    save_step: 20
+    max_keep: 1
+    eval_dataloader: test
+
+  optimizer: 
+    name: TorchOptim
+    torch_optim_name: Adam
+    lr: 8.0e-5
+
+  DATASET:
+    bucket_path: '/home/b07502072/cs_ssl/iven/hubert_asr/len_for_bucket/SEAME'
+    data_path: ''
+    load_valid: './data/valid_names/SEAME'
+    train: ['train']
+    test: ['dev-man', 'dev-sge']
+
+  UPSTREAM: 
+    name: wav2vec2_base_960
+
+  FEATURIZER:
+    type: weighted-sum
+    layer-norm: true
+
+  SPECAUG:
+    apply_time_warp: true
+    apply_time_mask: true
+    apply_freq_mask: false
+    time_warp_window: 4
+    time_mask_width_range: [0, 5]
+    freq_mask_width_range: [0, 50]
+    num_freq_mask: 4
+    num_time_mask: 8
+
+  DOWNSTREAM:
+    model_type: CNN
+    proj_dim: 1024
+    RNNs:
+      module: LSTM
+      bidirection: true
+      dim: [512, 128]
+      dropout: [0.2, 0.1]
+      layer_norm: [False, False]
+      proj: [False, False]
+      output_size: 3
+    Linear:
+      batch_norm: [True, True, True]
+      dim: [256, 128, 32]
+      act: ['ReLU', 'ReLU', 'ReLU']
+      output_size: 4
+    CNN:
+      widths: [9]
+      filter_nums: [4]
+      output_size: 4
+  
+  Loss:
+    weights: [0., 0.2, 0.35, 0.45]
+
+
+ASR:
+  load_ckpt: best
+  runner:
+    total_steps: 200000
+    gradient_clipping: 1
+    gradient_accumulate_steps: 1
+    log_step: 200
+    eval_step: 2500
+    save_step: 500
+    max_keep: 1
+    eval_dataloader: dev
+
+  optimizer: 
+    name: TorchOptim
+    torch_optim_name: Adam
+    lr: 6.0e-5
+
+  scheduler:
+    name: costum_scheduler
+    num_warmup_steps: 10000
+    num_decay_steps: 50000
+
+  DATASET:
+    bucket_size: 32
+    bucket_path: '/home/b07502072/cs_ssl/cs_asr_ssl/data/len_for_bucket/splitted-seame'
+    data_path: ''
+    load_valid: './data/valid_names/splitted-seame'
+    dict_path: './dicts/dict_seame.model'
+    dict_mode: 'subword'
+    train: ['train']
+    dev: ['dev']
+    test: ['dev-sge']
+    zero_infinity: true
+
+  UPSTREAM: 
+    name: wav2vec2_base_960
+
+  FEATURIZER:
+    type: weighted-sum
+    layer-norm: true
+  
+  SPECAUG:
+    apply_time_warp: true
+    apply_time_mask: true
+    apply_freq_mask: true
+    time_warp_window: 5
+    time_mask_width_range: [0, 40]
+    freq_mask_width_range: [0, 50]
+    num_freq_mask: 4
+    num_time_mask: 2
+
+  DOWNSTREAM1:
+    model_type: RNNs
+    proj_dim: 1024
+    RNNs:
+      module: LSTM
+      bidirection: true
+      dim: [1024, 1024]
+      dropout: [0.2, 0.2]
+      layer_norm: [False, False]
+      proj: [False, False]
+  
+  DOWNSTREAM2:
+    model_type: RNNs
+    proj_dim: 128
+    RNNs:
+      module: LSTM
+      bidirection: true
+      dim: [128]
+      dropout: [0.2]
+      layer_norm: [False]
+      proj: [False]
+
+ALL:
+  asr_ckpt: /home/b07502072/cs_ssl/cs_asr_ssl/results/wav2vec2_base_960/002/ASR/states-96100.ckpt
+  lid_ckpt: /home/b07502072/cs_ssl/cs_asr_ssl/results/wav2vec2_base_960/001/LID/states-940.ckpt

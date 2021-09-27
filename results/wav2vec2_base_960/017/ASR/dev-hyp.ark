@@ -1,4371 +1,5971 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-的
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+嗎
+華 WHEN
+
+不樣
+EN
+這
+OKAY
+THEN
+
+對 THEY且
+
+還 有
+要
+
+
+
+一 該 是 那 個 也 是IT HIGH BE HARD TO REACH C號
+對 我 不 要 興 興 就 去 J 間 天 在 回 來 風 記 了 我 樣 種 經 SYSTEM 麼 THEY 的 東 西
+有 點 想 年 他 因 為 他 是 我 蠻 好 的 一 個 朋 然 後 以 前 直 奇 部 就
+因 為 它 是 好 像 很 香 下 這 樣 好 像 你 經 去 裡 面 只 是 四 西 他 風 罷
+第 天 第 天他 讓 你 有蠻多 的 這 樣 的 一 個 SYSTEM 可 是三 時 天 就 是 過 後 就 是 你 自 己 LIFE
+CAP OKAY
+不 是 這 個 STORY 是 跟 我 們 我 是 要 帶 我 要 講 是 MORE EXPERIENCE SO HOW YOU
+OTHER會 STAY GO THEN ALL THE GIRLS NEVER ALL THE GIRLSION THEN ALL THE開
+些 哪 一 些跑 TOPIC 是 以 以 做 THEN 我 覺 得 最 一 個 MALAY 的
+我 去 那 些 才 OKAY 因 為 我 玩 那 些 好 像 有跟 後 以 你跟出 來很 GIVE 的
+在 是 有 來有來亂 對 可 是 是 還 是 概以 還 是
+對 而 且 這 己 前 我 買 一 個 BOOK TEST 你 們 的 很 多 多 THEN 我 我 沒 有 是 有 時 JURONG 華 HALL 好 話
+然 然 後 有 些 些 可 是 可 能 是 在 從 樣 正 府 到 便 也 是 有 他 問 題 的 出 在
+對 還 用 懂 那 些 對 所 有 錢 人 他 們 他 們 是 外 面 賺 一 比 後 幾 個 然 很禮 面 直 家 種
+VERY GOING RIGHT CANNOT GO YOU CANNOT TO MUCH CAN TO MUCH THAT
+新 加 坡 電 是 他 重 文 電 他 的 EIGHT全 U 然 後
+我 爸 爸 還 有 在 做 THEN 我大 地已 經 在 做 工 了 現 在 兩 個弟 地讀 書罷 了 所 所 以 還 好
+也 不 是單 說 如 果 有 到 後 就 會 有 分 書 就 是 要 PARTATE 就 是
+THAT I FRIEND TO IN MY GROUP G 去 在 一 個 GOOD JOB GET GOOD PAY
+MOST THE 就 是 樣 他 們ATE錯 或 者 是 有 些 CONTRACT要 多 工 間 要 最 是 CAPING 樣
+這 個 其 實 我 覺 得 是 說 樣 的 FRESH 的 比 較 好
+然 後 後 開 始 就 那 個 腦那些不 朋 要 背 他 講 穿 樣 CHARGE 面 那 些 那 種
+所 以 有 那 十 個有跑 TO RECOMM 會 可 是 I THINK 機 會 忙 有 忙 的 我 在 HALL 沒 有 沒 有 很 多 東 西
+TWO 覺 的 是 很 多 這 種 很 很 INTERESTING 的 THE 點
+因 我 媽 媽 每 次 過 我 講ENT 那 爸 爸 不 不 會 跟 我 講 HOKKIEN 對
+不 是 清 楚來 對 過 果 回 去 在 跟 名 看 講 就 是 那 帶 進 的 YEAH
+ING 然後 晚 上 六 點 多拍 PARTY 拍 到 晚 上 十 間 是 一 點 來 個用 ONE THREE
+要 它 的 我 們 的 的 為 是ICAL 然 後買 你 在 面 的
+樣 子 就 是 這 樣 我 們 的 SCHOOL 那 邊 有 做 好 歡 家 或 就 是 他 們 做 是 比 較 很 傳 同
+對 YOUR FIRST TIME TO THINK DO WITH SHO THEIR OTHER TIME
+要 講有 給 十 如 很 恐 怖 那 邊 沒 有 華 三 的 YOU CAN 整 個 校 遠 裡 面 面 整 的 CAN全 部 是 買 餐
+那 時 候 他 已 經 是 住 在 美 國 WITH他 的 對 就 是 要 在 他 只 的 PASS
+便 要 們 教 THEN THE PEOPLE SCHOOL
+YEAH I THINK MOST GIRLS 都 是 有 BASIC讀 的
+這 個 我 他 心 楚
+BUT THEN GAME 我 覺 得 我 會 有 是 個 很 沒 有 之 男 生
+新 的 屋 子 多 講 所 以 他 很 多 人 多 買 就
+THEN 時 話他 要 人 幫 然 做
+這 樣 還 是 可 以 為 什 麼 我 沒 有 看 我 回 歡 兩 三 點 THEN 歲
+去 還 人 人 這 個
+怎 不 要 ACTUALLY話 以 話
+就 是 但 是 現 是 就 是 的 人 不 是 種 想 法
+他 是 也 是
+生 有 的 我 他 們 特 地 還華的 華 的
+友 多 我 就
+我 想ON 在 想 看 那 個
+你 會 大 過 你 要 VERY ENT的
+一 想 能 些 時 用 人 都 是 他 別 的
+THEY WE IT I LIKE THE DOOR THERE JUST THREE PERSON THERE TAKE TURN THEN GO OF STUFF BACK THAN
+YEAH THEN IT' S LIKE THREE STOP TO WAY GOT THE BUT 很考近
+LIKE IT' GOING NOT BE ONE LIFE TIME IT校 HIGH SO I MEAN IT GO GUESS AND I FRIENDS THERE SO
+HAVEIZE因 他 們 也 沒 怎 麼 講 我 真 的 不 不 算 臺 的 THEN 我 APPLY 在 大 的 拍 THEN 他 朋 我 就 幫 蠻 臺
+T 我 跟 來 講 種 且 別 他 們 記 有 不 是 好 個 十 重 年 有 關 係 他 們 重 一 個我 不 是 他 個 人
+J OKAY
+然 後 就 好 樣 這 樣 打 我 就 去 一 個 地 因 為 我 們 有 買 那 個算 是 TRAVEL
+或 是 TRANSLATION ENGINE TO 做 那 個 TAX 過 後 在 你 自 己 本 身 在 去 的
+沒 有 NO THE FOUR IS BUY YOU CANNOT A TALK
+會 保 過 我 們 的 QUESTION 跟 那 個 BE USE
+因 為 去 天 他 早 超 風 大 們 就 問 能 費 就 TRY 工 講說 多 住 兩 天 看 能 不 能 做 到 就 還 是 到
+要 要 看 AREA 因 為 之 前 我 住 去 沒 有 然 後 如 果 不 重 那 邊 是 很 怖 P 是 很怖 的 是
+那 個的 跟 他 們 就 跟 他 講 些 那 些 你 要 對 他 一 生 一 四 全 不 這 樣
+OKAY 就 是 我 們果 就 是 我 GEN 不 就 是 在 表 我 們 的 政 府 的
+就 是 會現 加 都 就 不 同 現 在 的 他 們 就 是 他 們 的三 月 水 間 他 們 會 去那 TRAINING
+到 裡 是 是 個 EXPECTATION IS JUST A REAL GROUP OF THE COMPANY ITSELF
+我 是 以
+我 我 覺得 得 我 很 難去 因 我 我 重 你 做 我 是 喜 開 THEM帥 種
+YA CANNOT TELL OTHER THAT YOU GOING UP AGAIN SO YOU 看 是 活 ALSO
+他 們 第 是 上 間 時 候 RIGHT 高 就 覺 得 聽 是 很 很帥
+THEN 我 是等 差 坡後 辦 分 我 才 開 始 在 個 心 文 就 同
+他 是 看 到 很 多 DIFFERENT 多
+那 時 們 都 做 工 做 工 THEN 有 節 婚 了
+THEY THEN我 GET USE 東 西 好 像 現 在 的 下 孩 子
+是 年 天 就 只 有 UNDER的 去 過
+個 SPEAK 回 蠻 快 SO AS A RESULT
+對 會 跳 我 懂 你 的 頭 我 講 子 他 就 會
+你 們 你 是 差 的 ENGLISH的 SERVER在 哪 裡
+IT' LIKE我 也 OVERSEAS ACTUALLY 是 LIKE ABOUT OF FRIENDS
+就 I DON' T KNOW果這 SEM真 的 是 很 水
+THEN 你 會 YOUR MAKE UP ONE你 MAKE UP SO 很
+ONE你 的 BOOK 有 二 十 四 個 沒 有 不 是 也 是 是
+THEN' ACTUALLY THING
+樣 做
+
+
+SPECIAL
+
+
+THE BEST AT THE我們
+YEAH
+才 EXCHANGE 先
+THINK 他 們 的
+尤 些 工 放 大 P
+還
+
+TER
+我 來 講
+YEAH AFTER我去 BIT 我 要 幫 開給
+然 很 大 去 K 那 些 NEW CODE 了買 的 沒 沒 有
+我飛 到 NORMALLY TRAINING 候 概飛 三 是 分 種點 WAY BAD 概
+我 還有 IN ENOUGH MONEY TOATE LAST ONLY CHOOSE TO THE SCHOOL START
+THEN 有 沒 THEN WHO SAY的 SAME SOMETHING LIKE HE FROM OVER OVERSEAS COME BACK A JUST TO GO
+他 們 沒 有 LIKE 他 們 用 那 個 國 家 那 個 家 的你 CUR
+就 他 是 EXPERIENCE THEN 會 LIKE 我 們 而 且 我 們 的 C RIGHT 我 們 有
+通 常 JAPANESE 他 們 吃 都 是 公 是 P 的
+所 以 我 們 我 們 讀 的 候 需 要 也 要 以
+我 們 他 因 為 公 司 都 是 從 IN跳 父 千 給 他 們 他 們 才 以 心 了
+THE TEACHING 三 快 錢 可 能 是 一 個 太 太 O 了關 的 一 個
+然 後 他 是 就 是 有 點 像 PATION 什 麼說他 很 就 什 麼 西 多 有
+還 ELECTIVE什麼 AS IN J C EVENT 然 後 就 好 像 沒 有什 麼 了
+你 有 吃 肉 不 可 以 你 要 了 OKAY 樣 我 不 會 吃 我 就 是 在 那
+那 個 DIFFERENT WHICH IS 一 百 快 就 是 那 個買人
+ACTUALLY OTHER YOU NEED THEY I THINK THEIR ALL GOT西 ONE MY WHY
+很 多 很 好 像 先 的 那 種 進 頭
+如 果 你 點 ONE 你 吃 西 你 就 會 跟 費
+THEN 對 你 看 他 們 就 去 種 就 是 很 大 看 好 什 麼 平 從 問 D 地拜
+THEN 如 可 以 SA粉 因 去 PART 多 NEED TO SPEND知 道
+
+JUST RIGHT CAUSE HE DON' T RUN THEN HOW YOU GO TO HALL SO MUST RUN BACK TO HALL
+那 現 在 你 的 TIME 就 是 很 SLACK 對
+為 什 麼 因 為 覺 得 去
+通 後 我 們 不 有 學 然 然後 過 候 時 間 的 關 西 為 演 吃 的 識 就 兩 個 進 去
+有 有 不 在 上 沒 的 事 體 沒 去 懂 現 在 THEN 個 照 朋 我 不 懂
+ONE後 亂 樣 的 候 去 SOCIAL去
+他 們很 C 因 為 沒 有 人 要 做 每 個 要 去 ARY 做ING
+然 後全 部 都 是 給 較 ANSWER 的 P 的 人 八 玩
+在 那 個 時 候 就 兩 年 可 是 那 年 聽 好 玩 的
+一 起 然 後 可 是 ONE 了 後 會 講 到 其 實 我 學 的 什 麼
+然 然 過 後 他 講 做 什 麼 過 後 我 覺 要 走 然 後 他 就 在
+YEAH
+對
+SAY
+YEAH
+YEAH
+YEAH
+YEAH
+就
+YEAH
+對
+對
+YEAH
+OKAY
+就
+
+YEAH
+BUT 奶 比 較 想 去 A BUT MARKETED
+I THINK AS應 該 不 會 很 不 懂 BUT 因 為 我 就 覺得 可能 的 候
+就 跟 來 他 回 的 媽 媽 家 然 後 又 吃 他 們 媽 做 人 樣 東 西
+不 出 們 不 用 玩 COMPUTER THAT 做
+因 為 FORARY 它 是 沒 有 一 LETE的
+SO 那 邊 玩 然 後 對 大 BUS 去手
+有 沒 什 麼 錢 男 朋 友 IS THERE WHAT YOU CALL IT FOUR FRIEND 男朋友
+就 是 那 個 SCREEN 可 以 HALF HALF 然 後 一 半 是 就 突 間 ACTUALLY 的 點 出 現 在 那 SCREEN 好 面
+中 間 就 那 種AT 兩 個 中 間 到 我 BACK 面 的 個
+不 你 上 感 心 你 不 要 比 他 們 你 的MENT 看 有
+YEAH
+清 況 他 沒 有 看 到 因 為 有 一 個 人 被 的 時 候
+THEN THEN 我 每 是 看 們 的 THEN 就 懂 THEN I DON' T LIKE TO CLOSE BECAUSE CLOSE 有
+他 買 的 全 部 都 是 的 上 還 是 是IC的
+可 是 是 他 你 們 NIGHT 你 們 一 是 說 很 不 是 讀 很 多 東 西 的
+T MORE THAN你 你 是 TAKE什 麼 COURSE OKAY
+SO
+知 道
+在 TAKE
+IT SAY RECING
+兩 所
+因 他 很 TRAVEL 講 SIXTEEN
+
+我 是
+就
+I THINK SO
+
+FIRST STUDENT
+THEN 是
+說
+OKAY
+那 個 別 那 個
+就 是 那 時 那 個 LIKE
+SO THEM 他 們 全 部 下 去 拍 找 我 都 沒 有 看 過 起 來 的 時 候 就
+ING 這 們 就 去ING 然 後 C 是臺 一 間 很 FAIL的 CLUB
+個 人 講 話 然 後 另 外 一 個 人 然 同 司 講 他 那 邊 他 有
+不 過 較 貴 的 來KET 種 可 能 會 會 比 較 貴 一 點
+我 知 道 很 好 因 為
+沒 有 他 是 LIKE 他 MISS 那 個 他 不 一 個 他 們 樣
+我 就 不 道 會 什 麼 然 後 像 要 麼 A 西 玩
+因 為 他 要 開 回 來 SO 他 家 THEN THAT SET 在 我 就 就
+THE PROBLEM MAYBE SIX YOUR THIS IS SHE JUST SAME MY
+BUT DOESN IT REQUIRE你歌 SKILL 才 是 MUSIC全部 不 了
+CAN PASS TO PROM TO YEAR TO
+你 還 是 不 喜 歡 男 人 問 他 們 東 西 LIKE
+打 然 就 是 講 好 在 那 個 我 PROJECT 裡 面 有 一 有 一 個 一 個 TEST 就 是 要 做
+ABOUT FRIEND MY 我 就 跟 你 講 過 我 的 個 FRIEND的 他 開 一 個 RESTAURANT
+就 得 幾 個 我 們 比 較 就 一起ENT 是 了 過 後
+我 們現 CARAGE 就 我 們 不 做 我 們 不 家 TEACHER
+有 四 個 經 演 DRAMA 的 MAINLY 力 機 還 演 那 在 做 買
+ANT 游 有 有 是 是 去ING 這 樣 玩 一 下
+我 也 不 清 楚 的 BUT THE COMMON IS THAT 會 換 蠻 大 的 先 心 然 後 去 那 邊
+ACTUALLY THAT大 他 們 講 的嗎 SUPPOSED TO BE 幾 FIVE
+他 們 會ATE 他 們 就 一 些 媽 在 的 PROCESS 會 STOP FROM 好 像
+老 他 還 應 該 是 點三 法 出 來 還 有 真 時 會 CONTROL
+為 是 自 己 CRE 那 個 SINGAPORE 就 後 過 他 解
+就 是 比 較 多 今 年 比 較 多OS YEAH
+BUT M EXAM FRIENDS I INTERESTING
+MOSTLY福 他 BOOK 那 BEFORE THAT 我 們 有 靠 去 然 後 他 講 說
+是 樣 我 是 己 去 沒 有 DEPENDS OTHER的 OR 別 的 這 樣
+我 這 很 多 東 西 照 片 什 麼 THEN 他 我 都 主 生 在 裡 面 THEN 出 然 好 像 一 直
+HE THE HE A DANCE THERE WHY HE THERE TO MO THEN HE A QUITE NICE
+ALL ALTHOUGH OUT RESULT IN有 EXAM SEMESTER ONE TWO YOU T WOR THAN 是
+因 為 我 昨 天 RIGHT 在 讀 那 個 SCH EXAM PAPER 很 人 真 的 想 好
+EXPECT 你 要 國 人電 也 要 給 那 些 給 你 前 那 些 心 那 些 給 你 去 你 回 家 去 什 麼
+然 後 到 我 我 買 那 個 地 三 個 SO 開 始 讀 過 那 個 第 一 個 書讀的 MEM
+不 不 中 工 好 說 到 可 能 做 到 種 國 的 不 很 快 的 你 在 們 前 一 個 那 個 那 個 IN 到 全 們 的 那 個 那 個 他 現 到 四 五 五 年 不 好 那 種
+跳 在 我 們 的 我 們 的 傳 他來跳 去 然 後 那 個 孩 子 的 看 到 我 的 我 的 比 較 家 看 色 他
+他 像 不 是 我 們 自 己 的ION 他 好 像 是 同 過 那 個 INTERNET 那 邊 去 的 另 外 一 個ATION的 SYSTEM
+然 玩 THOUSAND 後 如 果 你 去 那 邊果 你 他 以 你 我 THOUSAND FIVE 你 如 果 成 TIMES 這 邊 的 兩 快 是 兩 塊 班 多 錢 了
+所 以 們 那 天 我 奇 過 了 不 懂 做 麼 講 他 們 是 我 人 地了 他 們 普 懂 買 SERVER 三 年 個 EXAM 多 一 年 應 該 是 多 多 幾錢 其 時 錢了
+我 不 懂 我 不 要 去 個三 SUNDAY 的LY 因 為 我 蠻 回 來 學 校來 有 DISCUSSION FOR ASSIGNMENT
+紅 書 零 兩 GROUP 他 那 個 跟 他 的 數 很 高 然 後 的 跟 也 很 高 他 近 拿 爬 到 那 個 最 上 面 的 跟 那 邊
+後 張 如 什 麼
+一 到 有 些 人 正 的 是 那 些 八 去 來 那 種 氣 C LIKE CONTROL 會 怕 自 己 的 那 個 男 正 強的
+那 些 然 後 他 媽 就 很 好 喜 忘 記 來 放 在 新 加 坡 只 是 有 那 種 FOR TO START 的 P 這 樣 罷 很 後 放 那 邊
+VERY FOR FIRST 他 們 選 的 C 是 他 會 把 正 平 讓 他 自 己 所 以 他 會 GROUP BACK
+對 過 候 他 沒 不 是 很 喜 歡 我 那 些 太 多 會都們 TEN便 之 類 就 是 要他 們 講 把 那 個 做 中 點 學 出 來的
+機 去 讀 書 要 FOOD都 我 的 PTEEN SO 就 就 回 來 U SENSE 早 找 LECTURER的 這 樣
+因 為全部 的 唱 全 部 的 第 點 都 不 能 進 去 的 就 是 在 外 面 拍 幾 講 裡 都 是 CUR THEN就 NOT N COUNTRY
+THE WAY THEY THEIR ENGLISH LIKEING LANGUAGE LIKE THERE
+我 我 那 那 的 時 候 的 FRIEND NO NOT SEM MULT RIGHT
+工 兩年 SO WAS VERY TIME
+所 然 他 叫 你 先 多他 那 些IP 這 些 不 很 很 多
+在我 沒 然 後 之 前 參 家
+我 真 的是跟 THAT I
+他 就 OKAY BETTER RO下 十 以 練 快 也 飛 去
+對 THINK ABOUT較 STAND OUT
+所 以 到 是 是 過 後 是 是 過 後 他 們 的 CAP 很 會 真 真
+THEN CATCH ATTION THEN THE WAY他 STAND東 西 是 很
+然 有 你 年 的 全 部 都 很 然 有 什 麼 大 子 的BO 生 小 是
+可 是 心 一 直 給覺他 HAS BEEN
+SO 你 可 以 說 他 已 經 START WITH A BIT J CAMP了
+然 後 AFTER THAT 你 去 買 那 些 送 粒 的
+他 就 說 為 很 多 他 有 些 公 司
+好 如 果 你 在 不 可 是 你 很 腦會 少 壞 掉
+天 在 你 在 人 做 工 後IDE你
+有 現 在 是 比 較 少 C 上 我 覺 得
+不 會 BETWEEN THE 他 又 便 WHAT AND ACTUALLY ON THE SHORT 我 樣
+有 沒 有 比 較比較 比 較 IF WAY OF
+參 家 是 MOST 好 像 C OR跟 TRAVEL
+THE LIKE WENT TALK TO THEN GOT THE AND EVERYTHING THEN LIKE THEN SAD
+他 們 也 知 道 他 們 不 只 是 不 會 自 己的打 IS
+沒 有 有 些 沒 有 種 友 已 經 種 SOFT
+SO 樣 女 天你 MOVE 因 為現 在 的 玩ATE 他 們 要 去 話
+對 隨 不 果 你 下 在 如 果 在 新加 坡 打 去 SOFTWARE的
+就 只 有 他 最 有 新 要 做 就 然 他 要 做 我 們 單 們 是 SUPPORT他
+沒 有 OKAY 我 沒 我 本 是 沒 就 去 邊 唱 了
+其 實 那 好 像 好 小 LIKE LOOKS VERY小 聲
+I THINK IS TWO DISCUSSING TO GO IN INTO P PHYSICS
+那 個 我 覺 得 是 比 較 比 較 好 玩 的 是
+BUT THAT REMEMBER ALSO LIKE I DON T KNOW WHY REMEMBER THINGS ISAY SO LIKE
+那 個 現 講 就 是 ENT 做 住 那 後 像
+就 會 你 做 PARENTS 戲 BUT 我 在 想
+很 多 地 方 都 有 這 在 故 就 好 像 邊 到 那 個 地
+DEPENDS AND THE PLACE I GUESS YEAH
+THIS YEAR 是 就 是 BAD 別 們 沒 有 用 穿 因 我 們 沒 有 穿
+SO 他 們 的 DIERS就
+會 沒 有 樣 點 重
+THEN I LIKE C DOWN THEN MAIN聽 YEAH
+他 們 講 很 難 做 的 到 了 其 實 學 是 五 巴 現 在 那 邊 跑 跑 去 跑 來 跑 去罷
+要 選 那 個 CHRISTMAS PROJECT KEEPANT JURONG POINT 有 一 點
+POLY 這 樣 多 該 那 拿 那 FIVE是 為 用 回 下 在 的 在 POLY 都 下
+THEN 你 要 什 麼ATION 你 就 PART 在 你 的 那 會 做 一 個 家 給 你
+為 講 本 身 模 進 去 去 網比 較 的 十
+好 像空 跟 還 去 大 多 是
+YA 我 現 這 怎 做
+還 好 不 是 是 兩 是該 NOT THE PROBLEM
+我 不 會 講
+OKAY SO
+SHE JOIN
+對 就 是點
+SOME THE FOUR
+
+YA ALSO LUCKY
+他
+
+重
+對
+NO WHAT YOU KNOW THE BAD
+WHETHER對 YOU
+不是
+AGAIN
+東 西 晚 上
+THOSE DANCE CLUB還 是 什 麼 I KNOW
+我 THE FRIENDAGE 這 DO KNOW JO
+GETING會 LIKE
+為 面 長 話 穿 給
+你 會 會 怎 PLAN你 的 EXAM
+他 FOR 我 拍 說 的 做 便 都 很
+就 很 像我現 現 教 的 十
+就 是 去 英
+THEN打上然 就 整 是ITIES
+有 樣 國 THEN 是
+SO 我 就 較 這 個我 們 就 說 才 可 以 對
+他 像 遇 到 一 些 零 意 時 間
+SO THE 過
+CAUSE I GOT THEN 我 就 點 生 氣 LIKE
+BUT現 在 想 想 好 像 是 因 為 PROBLEM CULTURE
+是 就 是 一 書 知 道
+就 很 怪
+
+沒 有 這 樣 好 看
+那裡 邊
+可 以
+ER
+DON T YOU FEEL THE壓
+FORM
+後
+對 是的
+
+什 麼 之 院
+很 多 FRIEND
+我 我 還 有 去 SPORTS CAMP
+對
+THEN YOU以 STEP的
+
+要 就 沒 有 了
+THEN ABOUT YOU
+NOT
+THEN THEM WHAT
+後 口課
+那 個 實
+便 錢
+BUT
+年
+
+講 話 灣 點 下
+GOODNESS
+BUT是講
+SEE
+KIND YA
+THEN 會 也 是 看到少 OPEN
+上
+是
+THEN 他 講 去 那 個 FUN
+GO
+
+THAT
+多
+THAT THING
+是少
+他 就 很 對
+他 在
+ATE
+TWENTY ONE
+我 就 回 記
 
 OKAY
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+對
+YEAH
+
+YEAH
+對
+NO
+THIS
+什麼
+YEAH
+GOD
+YEAH
+YEAH
+YEAH
 OKAY
 
+SINGAPOREARY COMPANY
+他 可 以 在 外 面 I MEAN 我 不 懂 他 的 CLICK 是三男三 女
+在 在 校 很 多 人 講很 費
+可 是 是 那 個 BUSINESS ASSIGNMENT的 都 是
+就 會 辛 苦 後來 可 以 帶 概 給 講 後 來 會 比 較 老 力
+我 們 只 一 起 看 過 一 電 你 YOU KNOW ONE SINGLE MOVIE你 AND THAT ONE IS
+THEN I THINK SOMETHING DO我 THEING BIT 還 是 什 麼
+對 早 上 就 是 講 我 蠻 找 就 WHICH THE PLAY THEN I
+如 果 一ATE 他 進 來 可 能 他 的 不 道ION 的 樣 子 做
+就 以 經 一 點 多 在 一 懂 了 話 出 這 SYSTEM 餐 THEN
+那難有 U也 是要 看年 有 數 不 是 很 多 人 的
+JOB FOR EVERYONEERS OF VERY
+THE GO OR 我們 SEE CAN CARE OF THE FIVE AND THEN
+CAN GET CAN TWO才 FIND CAN在 FUN ANY OTHER PLACE AS
+YEAH MIND SHE FOR LIKE PRESENTATIONS
+後 如果人 你是 MEM二 十 八 現 就 他 些 三 百 出 這 樣
+下你 不 要 這 樣 怎 正 存
+對 對 很 少 聽 他 他 講
+因 因為 那 個
+NO果是 STUDENT DAYS
+所 國
+沒 有 SO
+BUT
+怎 麼 全 部 是
+WHY NOT IS FUN
+懂 西 就 是 很
+BUT 過 就 好 的
+YOU玩那
+THAT RESULTS BUT
+對
+那 個 也 是 多 BUT
+沒 就 自 己 買
+
+對
+
+NO
+YEAH
+對
+IT
+你 看 我 之 的 這 樣
+SO
+OKAY
+T THERE
+YEAH
+對
+
+對
+
+我 THEN LIKE THAT MAKEJECT NEW REAL ALREADY TO SAY
+整 樣 的ER 部 不 同 樣 的 他 的 CAMP幫有 什 麼這 樣 子
+你 覺 得 不 錯 還 是 你放上 人 家 會MENT 的 NORMALLY BAD 你 不 可 能 拍 到 一 樣 的
+THEN 就 寫 THEN因為而 而 且 為 歡 拿
+然 後 那 個 子 間 是 穿 那 個 幫 個 天 視 的 就全生把 變 子 辦 成部 來 裡
+對 我 就 覺 LIKE 其 實 I NOT DIFFERENT TO U 我 就 不 可 以講 樣 廢 話就 LIKE
+SO 他 們 最 對 對 去 到 那 邊 對 好 吃 的 東 西 是 BE BUT I
+我 我 講 什 麼 以 講 多 天 不 是 新 講 說 昨 天 NOW 那 個 去 的 間
+我 們 大 我 們 他 我 們 候 說 的很 以 前 是 不 是 道 不 是 一 天 之 掉 已 前 是 對
+你應 該 是 一 天 該 時 月 二 十 八 我 們 跳出 I
+不 便 對 不 過 OKAY 保一 下
+都 沒 有 說 人 就 是 那 些 人 最 做 很 樣 子 不 是 很 好 可 能
+因 為 有 是 很 多 東 西 都 需要 跟 多 的 前 書 這 些 東 西
+就 是 是 有 一 點 他 只 是 可能 第 一 這 在 這 樣 多人 面 前 講 話
+那些 DEGREE LEVEL的 LECTURER MORE TO GET
+不 知 辦 法 家辦法在 是 SHOPPING另 外 一 個的 還 是 我 們 的
+種
+這 己 就 就 說
+因 為 都 不 懂 己
+NO 為 覺 STAY
+BECAUSE
+AT DO YOU TAKE
+後 有 朋在 那 裡
+為 點 悶的
+跟 我不 好 像 很
+我 的 朋 友 是 做的
+全部
+BY EVERY EVERYTHING
+BUT
+HALF MINUTES
+玩 那 的
+
+THEN 我 今天 就 問 你 是
+MY HALL GOT AIRCON THEN THE UP
+對我 IN I THINK 我 只 是 該 比 較 STUDY SAD
+NOW SO SUPPOSED是 HAVE MY SINGAPOREOT CLUB MY COACH
+我 是 做 的 我 跟 另 外 兩 個
+這 種 我不是 這 這 個 這 個 種 我 不 清 楚
+DON' T KNOW 我 就 在 想 FRIENDS 不 是 RIGHT
+THEN 心 那 個 我 不 懂 那 個 他 是 是
+REALLY NOT WHAT YOUR KINDING ONE
+那 個 LUCKY的 人 幫 的
+所 他 清 要 給 要 高 不 有 有 問題 話 講 考
+為 他 們 那 邊 為 我 們 去 拿 國 要 那 邊
+對 如 感 看 過 了 很 工 然 那 邊
+對 WHY SHE你 常 少
+三年電 多 我們本 來 三 加 進 情 貴物了
+THEN LIKE INTERNSHIP RIGHT G P THOSE KIND THEN
+我在想ED ENGINEERING OKAY
+我 就 很 悶 就
+OKAY MAN T IS NOT FROM RIGHT
+我 不 懂 完 做 什 麼 沒 我 看
+要 樣 做了就
+THEN 他 就 PART SHE ATTACH
+然後要看 到就問 我 們 是 誰
+
+BACK 是
+M C M START U
+FOUR考 CULTURE THEN
+ASATE 那 個 ROOM 樣 子了 那 個
+不 以 TWENTY去也 是
+我 是 那 個 較
+THAT IS SOMETHING LIKE THAT
+是 一二
+HOW THE CAMPING 多
+TWO 最 重的 REASONTEEN IN HALL
+外 國 的 老 師
+SO CAN OF JOIN ABOUT YOU LOOKING FOR現在
+SCHOOL 沒 有 是 我 的聲 是 不 道 我
+P是以跟 AABLE
+THEN 後 人 就 講 找 不 到 我 就 開有 要
+SO 我 不 LIKE WITH 那 些 成 績 很 好 的人
+THE LAST 什 麼 經ONE
+THEN IT S LIKE我 SO 沒 沒 有 講來
+CAP LIKE IF WE OUT TELL TO
+THEN UNTIL THE CHRISTMAS DAY我們 去 他 的 CHURCH
+BUSINESS沒做 什
+如 果 你 把 那 個 子 教 那 個人
+TO BEER VERY LONG TIME
+很 多 其 才 都 是 關 你 這
+從 中 學 就 學 了
+THEN你 LAUGHING ALSO
+ARY很的 那 些
+你 前是 SCHOOL
+OKAY
+看 真 那 些 只 是
+EVEN對
+BECAUSE新 懂
+十 做
+
+HOW SIX I AM GOOD CAN
+TO PLACE YOUR FRIENDS
+對 所
+沒 有 真 的 沒 有 畢 我 知 道 會
+該大
+講 英 文 話 就
+DIFFERENT
+他 們 不 覺得 他 們 的CTION 會
+有 RESEARCH 你
+是
+THINK
+我 蠻 你 LIMIT
+是 賺
+
+YEAH 對邊
+沒 他 上 起來
+那 個
+THEN THE ONE YET
+你 THE
+YA
+FIVE 了我 這邊
+好 好
+你 有 要 個 LEARNING TALK
+
+YA
+可 我 是 說就 LIKE
+THE 很 FRIEND
+IS S 他 該 是 YOUR TRY 要 少 心
+
+這
+那 個 像 十 多
+朋 友 有 七 用 玩 了 要
+THAT就
+很 好 講
+T U
+THE
+BUT YOU GOT RUN NOW
+想 出
+最 會 一 沒 有 剛 張 心
+他 是 很 GO AND FOUR THEN GO IN INSIDE THEN
+THEN很 Q的 THEN 我 就買 一 個 CASE 我
+THEN
+NOT ACTUALLY
+不 知 道 他 的ION如 HER 了
+IT IS' I GO I THINK BECAUSE RIGHT TALK TOPIC
+而 樣 就 很 奇一 怪 BUT OKAY 你 不 是
+因 為 的對 WITH校 是的 還蠻 分 開 的
+BUT NOW IS NEED TO USE C CAUSE OF STATISTICS
+就做BO 那 個 UP REPORT 的 EXPERIENCE
+很 高 THEN
+為 前 的 關 你 的 都 是 四 罷 了
+剛 才 那 個 UP 蠻 那 個 O C弟
+看 實 CAMP 真 那 裡 CAMP 又 為 現 在
+你 講你 所 一 一 的 PROFESSOR 看 去 的
+幾個 人 做 是 做 這 是 有力 學 可 是 我 們 的
+就是 是 FOR 就 睡 要 罷 就 這 樣
+你 有 們 聽 他 到 講 說 們 一 半 半 去 講 們 三
+你 喜 歡 是 你 這 你 看 一 喜 歡 跟 在 起 所 才 一 這
+臺 要 我 們 MAN 去 FROM THE不 OF LIST
+所 以
+之 類 FOR EXAMPLE 的 候 我 是 的 話
+因 為 很 久 很 久 沒 的 的
+THEN 我在 MONEY他 LET HE LIKE 不 剛 考 THEN
+LIKE 我 的 THE BATCH FOR ME 就 是 他 們 的 開 到 是
+沒 有 好 BUT 我 不 要 在 起 了 因 為
+我 只 是 我 SO 空 你 CAP UP THE SENIORARY
+QUITE FUN BECAUSE
+你 的 G P BIT A STUN
+THEN 為 我 覺 得 我 自 己 沒 有 那 個 時 間 去 BEFORE 做 這 東 西
+我 就 只 接 在 CLASS的裡面人 那 個 東 西就 掉
+你 很賣 那 個 便 也 可 樣
+BAD TO NOW IS 很 不
+過 我 又 想 到 他 們 在 工 常 做 工 的 可 能 是 真 的 是 需 要 這 樣 子 這 樣
+YEAH AND PLAY GIVEATE AND NUMBER
+OKAY YOUR SAY THE ONE
+I CHOOSE MY CAUSE BECAUSE FIRST MY FIRST WAS A
+其 實 我 們 怕 我 媽 不 是 喜 歡 歡 張 和
+該 我 們 做 SOME PART 的 是 我 們 就 講隨 變 十 他 什麼
+如 我 他 們 弄 跟 我 都 不 大 不 不 大
+我 IN MO IN THREE覺 得
+DIFFERENT 話 看 接 就 是 不 是 很 好
+好 像 你 講 對 對 所 以 不 知 道
+以 比 已 經 三 很 好 的
+除了 EUROPE 是 外
+VERY CLOSE TO US NEVER SENIORS AND對 IN ENOUGH 我 們 覺 得 LIKE
+就 是 跟 晚 差 不 多 一 樣
 
 
+THEN 是
+
+是 他
+HELLO
+去
+
+你 會
+比 較 多 FRIEND
+他 不 懂
+的
+好 像
+沒 少
+OKAY
+現沒 有 問 題
+有 高 就 是 較 出 那 種很 對 就 我 覺得
+NO BUT YOU KNOW IS' VERY INTERESTING YEAR TO PUT A THE AND DESIGN ON RELAX ALSO WE THINK IT NOT LIKE ONE
+忙 這 個 五 做那 我 最 喜 歡 的 是 他 個 很小 的 我 真 那 很 好
+對 THEN THE C 是 他 買 的 THEN 到 他 個 看 他 講 THAT IS THEING TO DO因 為 就 又 果 THEN 有 什 麼 什 WHAT 他 買 一
+I THINK說 YOU CANNOT DO LIFE PERSON THE是 BE LIKE IN LIKE DI THAT KIND THEN CAN DO
+BUT WE HAVENUDED THE FACT THAT SPEND QUITE LOT AND P AND P ALSO THEY WILL BIT OVER BUDGET FOR THEIR FOLLOWOS FOOD
+然 後 你 真 正少 SP 了 就 會 要 球 你 去 因 為 去 那 些 GENER 政 府 一 人 去 做 比 較 想 戲 的 間 車
+YEAH SHOULD WHEN EAT ALSO AND IS ALSO VERY PASS SHE我 YA SPEND FIVE HUNDRED THAT TO Q TRIP SO
+一 S A 一我 很 十 現 給 為 麼 過 時 間 你 為 講 會 錯 沒 有 到
+所 我 們 很 真 的 很 心因 為 因 為 整 參 P 是 最 經 幾 年 因 為 我 在讀 CHINA HIS THREE
+他 的第 P 的 J C R C 很 像 不 清 出 要 做 什 麼 SOMETHING LIKE的 LIKE 有SHIP BOND
+是 前 的ATION 是 很 吃 四 點 的 你 要不 的 很 好 所 以 以 說 沒 有 說 PLAN這樣 東 西
+THINK TO RESEARCH PEOPLE FOUND TO THE RIGHT HAND AND THEN EXCHANGE GET THE LEFT
+對
+YEAH SO ACTUALLY QUITE AND JOIN THE COURSE BECAUSE IS NOT LIKE JUST ENGINEERING
+YEAH YA去 IN COMPUTER ENGINEERING I THINK 就 THEN 我 一 聽 到 我 就 知 道 最 可 應 該 是 我 會 對 的
+ING
+ONE
+臺 灣 DRAMA 我 候 很
+是 什 麼 CAN色
+己這 樣
+多 人 是 比 有 FIELD
+過
+EVERYTHING較到
+跟 玩 的
+然後
+
+DOWN
+教
+GOING
+
+AFTER
+你 看 這 種
+GOT OF THETEEN OVERSEAS DOWN THERE
+SO是END的
+THE WHAT LIKE VERY
+你 們 多 還 是 BEFORE EXAM
+YA THAT 去買 ANDOSE POINT
+他 後 那 個 的 很 好
+IN A BLOCK
+他 講 DOESN 是 S A THING
+孩 子 華語 RIGHT
+可 能 所 以 他心
+我 就差 TO TRY 比 較
+對 是 是 RESULT老 G
+THEN然 後 家 你 要去點後
+去個去過 就個 BACK
+為 講 話 的 候 很 吃 然 的
+COME
+ACTUALLY 東 西 LIKE
+YA 然 然 後我 的
+OKAY WANT個 BE PEOPLE GOING DI
+因 為 就 時候 那 邊 的 那 個
+好 像 那 個 FINAL戲
+YEAH IF ENOUGH
+他 們 們 DISCUSS 找人 THEN 他 們
+他 兩 不 清 女 是
+
+好 我 覺
+然 後 有 做
+對 學 到 東 西
+WHAT OUT
+SO
+不 較 你
+小 RIGHT
+TWO 兩 TIME 工
+BUT 你 要
+START GOOD WITH
+們 是 要 們 的 沒 個
+
+什麼 BRAND CAMP
+就 是 不個 TEST
+我 還 在 找
+SO 天 子 都 開
+WHEN ARE USED TO WEEK 了
+I THINK 的 書 有 點
+SO 我 們 就 傳 單
+'你 SIX 這 來 已
+ONE THEN OTHER ONE要 THE兩個
+但 是 有 三 個 CHRISTMAS
+FOR我 THE SCHOOL THE WILL YOU JOIN
+THEN 做了
+就 亂我 YOUR THINK
+TEN MINUTES TWELVE MORE ME
+了
+THEN我都有 FIFTY
+AFTER 不 要 什 麼
+SOCIAL THING 為 買
+
+我
+他 們 全 部 出
+THERE
+要 去 出一 是 SAD
+對
+只 買
+IS CLOSE
 
 
+了
 
+有
+IS
+成
 
+話 EXAM
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+YEAH
 
 的
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-的
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+對
+
+
+
+可以 A IN TWO
+要 自 近
+I WAS DAMN TO BRING HIGH LEAST LIKE NAME CLUB
+THAT THE TALK TO MY MOTHER YEAH
+是 你 道 做是
+很 間 出 去
+覺
+NAME
+跟
+我 就 得不 PLAN 怎 會有 分 門
+BUT DO PASS I THOUGHT你 FEEL
+THE明 OKAY 要 算 要 就 不 要 玩
+GOT A LOT OF GIRLS
+上那個 THEY PLACE
+T P J C
+們 A買
+你 後 就 是 那 JAPANESE FOOD BAD
+他 們 樣 講 我 們 都 是 會 講 華 都 是華去 以
+BAD你 個 穿 來 換 去
+對 SO
+YEAH THEN 你 叫 今 年 他 也 是 不
+BUT HE MEAN YOU REALLY HERE THE GO TALKING ONE
+然 是 THAT 我 的課 我 的 老 闆 就 他 就 要 他 就 OKAY GO
+IT LIKE BAD IT SO ALSO TWO BE AND DI ALSO
+然 後 有 去 不 同 的 為 一 樣 下
+然 機 比 較 好 會 話 會 找 有 是
+這 個 是 考 兩 我 們 當
+會 他 們 你 沒 有 是 過
+全部 是 用 PROCESS 他 們 用 到 的 PRODUCT
+ATION
+因 為 如 果 你 要 一 個
+
+BECAUSE OF
 OKAY
 
+YES
+YOU
+YEAH
+
+你 比 樣 好
+YEAH
+SOME VERY WHAT
+SO
+YA
+
+THEN
+
+SOME SEMESTER OKAY 口 不 同 是 沒 有 人 對 我 們 是 去 那 個 STORY 那 邊 我 們 己拿 THEN 他 會 算 錢 對 對
+對 然 後 AFTER除 C 就 出 E THEN WANT IS GET THEN是 ABOUT I THINK GOT A ABOUT A T PEOPLE IN GET IN ONEITIES PLACE
+這 樣 子 在 在 的 候 比 較 好 在 家 可 回 家 清 楚 就 不 樣 單 這 樣 子
+I PLACE 他 那 個 不 要 跟 十 他 不 好 MEAN IT' S LIKE BEFORE EXAM 的 千 幾 天 他可 以 看忙 OKAY AS IN 一 個 THEM ONE HOW WHEN LIKE OKAY THE CAUSE THE NEXT LIKE FEW DAYS OF MAYBE ONE TWO DAYS WAY去看幫 MY GOD LOT
+那 個 B BUILDING 因 為 是 FIRST COMES WHEN你AL COURSES COMPARE TO N YEAR 是 要 有 給個 THEN YOU MUST THEN I DON' T LIKE CAUSE 就 是 要 考然 然 後 要 去 要有 COURSE 要 樣
+就 好 像 可 以 TRY 一下 MAYBE B LIKE 那 個 有 一 個 不 是 沒 有 APPLY 你 的 你 SEND 你沒 有 去 那 是 什 麼 十要
+去 他 的 都 是 SUB 關給 去 他 的來買 對
+會 每 是 比 較 給 出一 點 BUT
+對 對 對
+像 SPORTS COM
+但 是 有 說 英 因 為 我 中 學 在 給 要 中 好 時 候 有 一 段 時 間 會 比 較 所 謂 的 壞 所 以 那 個 月 我 們 的 班 就 叫我 當 了
+有個現樣 不 要較 好 了 個 FOCUS NORMAL PLACE LIKE
+其 實 你 應 該 做 就 是 ONE GROUP LIKE YOU GOATE NICE SO YOU GO LET SAY FIVE DOER SO YOU DO FIVE THEN YOU GO BACK FIVE SO YOU DO IT THIS YOUR CLOSE ALL IN THE NINE AND YOU T MISS OUT NERS
+有 前 人 就 不 會 跳 BUT 這 少 你 們 有 那 些 東 西
+要 個 PAY讀 還 是 要 找 一 個 THAT PLACE 所 以 很 多 東西 WENT CLASS ROOM WE HELP YOU FIVE THEN IF WENT TO COMES STUDY TRIP ALSO HAVE SO YOU CAN 就 跟 你 慢 媽 一 起 來 後 有 會 他
+然 後 你 要 一 直 皮 虧 子 P 子 對被 的 Q被 那 種 就 是 做 其 他 東 西 用的 在 我 們 沒 有 用 打
+YA 我 會 去 BUT 我 是 做 A SENIOR TESTMENT
+男 有 有 什 東 西 所 以 會 有 用 而 且 會
+差 不 多 差 不 多 就 是 你 要 他 們 的 打 不 同 要 早 出
+有學月 學 好 今 起 來是 沒 有的 是 WHOLE
+VAL BENEFIT 就 是 他 的有 MANAGEMENT
+一定要 到 師 像 明 天生 進 玩 就 沒 有 人 回 家
+對 要 講 認 是 誰 THEN 就 是 是 會 這 這 邊
+對 都 沒 有 會 包 他 就 開 學
+SO 賣 那 個比 TRAIN 他 那 個 我 是
+對 這 是比要分 PARENTS
+有 有 有 個 是
+有 FRIEND BUT STAND THE現 ALSO LIKE OKAY STAND BE
+就 樣 那 首 第 一 小 是 要 這 間 去 的了 那 個 什 麼 SEMESTER
+種 NO RECESS BREAK YOUR就 PASS打
+多 樣 那 邊 他 會給 一 個什 要 去
+NEXT 以 做 那 個 然 後 去 附 近 的 AREA
+BUT DEPENDS IT' LIKE
+我 們 二 二 時 該 二 十 而 語
+OTION 跟 你 做 一 樣 東 西 BUT
+
+他 我 們 要 什 CAMP
+很 東 西 真 的 不 好 像 們 次 一 感 人
+不 要 RES 的 較 好 THEN 我 媽 就
+OKAY SENTENCESES
+THEN LIKE半 要球
+這 又 少 一 年的是
+我要六 沒 他 就 是 塊
+他 們 算 長 長 下 我 唱 苦
+個兩的 他 沒 有 演 他 想 面
+THAT 也 是 混 年 的 那 種感 覺
+我 最 近 算 那 個 TALK COM
+以小 是 你 就 就 最 看
+THEN POLY 我 是 V PLAYLY
+我 們 是 KEY MOVIE 的跟你 不 同
+看 我 一 一 個 SENIOR 他 剛 CUR 的
+THINK TO LIKE BAD
+去 MALAYSIA 你 做 嗎
+SHE A HALF WHY OR HISING
+其 實 有 時 候 我 會 LATE LIKE
+所 以 比 較比較 塊 FROM THE STRONG
+就 沒 有 就 是 LEAST 我 人 去 要 CHINA 有 個 認 識 的
+BUT NEVER WATCH T REALLY LIKE TO WATCH
+TEACHER他的 ENGLISH IS VERY GOOD
+IS JUST A DOING
+他 爸 多 MODULE 而 且天 天 去 上 他 就天去 學
+可 是 我 們 看 不 出 因 為 真 的 是 他 來 跟 我 們 都 一 樣
+臺灣 的 THE ROOM 會要
+對 我 覺 得 一 個 蠻 USEDFUL的 TOPIC 的
+因 為 我 就 就 他 N V的 的 SO
+想 APPLY 他 們 我 要 做 我 又 好
+搞 要片CTION那
+很 十 麼 當 種 SLACK 還 也 八 長 人 的
+分別什麼 分別
+要 有那 個 SERVER 我 們 可 以 知 道 到 完 所 是 CHARGE
+因 為 幾 年 去 看 那 也 天 人
+我 要 們 要 TRY 你 小 那 個 心 苦
+清 過 但 很 到 是 要 有 EXPERIENCE
+是 還 能 PROGRAM 家 UPDATE
+SO 去 這 前 他 他 就 講 LIKE THERE SO MUCH TO DO
+SO來 跟 這 個 COURSE給我 們
+不 到 近 OKAY THIS YEAR 我 我 有 很 大 聲
+那 個 OKAY 然 後 面 我 是 發 比 去
+那 SAID YOUR THEN YOU
+YEAH 我 有 有 想 過 YOUR IN那 個 SET
+記邊
+去 YOUR ESPECIALLY VERY FIFTY LIKE下 THAT NOW 後
+就 一 個爛 大 大 著 人 你 MAKE 過 還 一 個男大 然 後
+就 覺 得 他 們 就 覺得 是 一 跟 奇 怪 的 SO 像 可 給 做 老 師
+經 比 很 多 人 樣 我 我 也 是 小 小 PART 的
+以 在 沒 一 個 在 每 一 個 都 會 有 我 歌 人 所 所 就 是 人 的就
+一 前 在 小學 AND這 I WAS SOMETHING THAT BADMINTON
+YEAH THEN HE SAID THAT 是 他 的 不 對 因 為 沒 有 賺 心
+THEN CANNOT BUT SP THEN AFTER THAT他 PEOPLE
+好 投 在 那 些 如 果 你 要 在 STOP MARKET 玩 你 要同 TIME 那 些 的
+然 後 我 比 要 華語 十 會
+就 是 我 們 在 這 邊 他 在 這 邊 就 是 我 們 的 一 兩 點 他 們 在 早 上
+THEN 他 經 我 那 個 去 選 子 他 的 SO
+SO 那 時 候 看 到 種 這 個 MODULE 的 候 來 蠻 想 OKAY 可 能 你 後 做 SPEECH P
+不 是 BUT THEN YOUR WELL GO TO LIKE
+最 是過 AND EAT 變 成 感 就 是 BUT一 換 成感 換 另 外 個 也 是 一 樣
+然 我 們 這 樣 跳 要 去
+THEN有 他也蠻
+他 會 一 直 年 我外 FRIEND
+MORE IN THE CHINESE OF
+WHY要 放 機 的
+過 他 們 地 有一 個ATION 是
+THEN 就 沒 有 JOIN
+就 是 在那CTION
+我 十 個
+SOME ONE 我 比 較
+了 可 是 沒 用 NO USED
+THEN 我 比 較 CHANCE
+AND K 我 不 知 常 演
+I NOT HELPFUL
+不 是 ION WAY
+多 兩 跟 FOREIGN 就
+對 然 他 THE 子 後 要 PASS 的 不 對
+他 們 過 有 講 我 是 自 有 說 在 一 個
+我 不 知 道 好 像 是 ENGINE也 是
+因 為 這 個 是 個RA 一個 RIGHT
+應 該 是 有 個 TEAM 做 們 班 那 們些吃 的 東 西
+我 不 知 的 他 們 想 麼 很 差 不 多
+你 不 為 前 做 吃 你
+NO LIKE CANNOT BECAUSE ONE OF SEE
+可 是 朋友 候 真 的 會 這 人 他 等 出 煮 認 個 不 很 關 係
+IT' THE VERY
+然後 NORTH AND少 好 看 個 名 字 這 樣
+可 一 是 他 講 的 P 其 講 他 沒 有 講 B 的 二 子
+沒 有
+YEAH 好 像 為 幾 姐
+因 要 很 很 看 的去講 我 看 到 下 面
+BUT I' NOT PAY BUT YOU KNOW JING IS MY太
+EVERY IN THE WORLD YOU GOT RESTAURANT BUT NOT THE YOU HAVE FOOD LIKE' KNOW AND THEN SINGAPORE LIKE CULTURE WAY HAVE DIFFERENT SOCCER
+YEAH THEN SOME TIME去看 FOR THE C PEOPLE BECAUSE SOME OF THEM STILL LIFE THEN WE ALSO GO AND C THEM ON三
+就 是 大 不 分 從 他 們 他 們 要 上 要 過 來 是用拿
+一 個 SPECIAL 的放 了 好 像 放 歡 的 他 會ATE 的 你 的 OKAY
+ONE 你 做 了 那 個 種 你有 MISS要 一 個 可 能 看 到 小 一 個 月 之 後 你 就 那 個 東 西 就 很 大 腳
+THEN 通 常 我 們 我 二 大 些 會 去 六 好 像 去 我 們 叫 唱 的
+WHAT MY IS HOME CAUSE THE FINISH THE全部的 TUTORIAL BEFORE I BEFORE S AND CAUSE I GOT RECESS THAT I GOT CHRISTMAS AFTER RECESS
+他 認 是 也 不 過 也 對 也 對 然 後 很 別 為 我 們 TEXT PASS 貴在 SUPPORT 另 外 還有 CUSTOMER SERVICE DEPARTMENT 的 不 同 裡 旁 們
+那 個ASTER 會 會 LAND 的 時 候 要 是 有 那 風 不 對 他 會 他 會那 個 他 會 JUST 在 從 會 去 回來 TO LAND SALY
+對 點 自誰 THAT 到 來一 天 到 有 的 我 有 要 上 便 FOR 他 們 少 一 起 們 講 我 就 講 去了 沒 人
+聽 說 VERY HARD TO SCORE AND 做 一 個ICICAL POLY I DON' T KNOW I WILL REALLY DO IT BUT會 CONSIDER
+跑 看 去 在 那 邊 了 他 現 的 很 很 辛 可 聽 華 等 要 在 講 忙 著 在 那 邊 他 們 講 下 STEP HERE
+對 這 對 你 在 重 沒 去 怕 你 是 子 很戲 YEAH SAMEING
+THEN 過 後 我 們 在 想 因 為 我 們 吃 的 候 大 概 LIKE MEET NIGHT THEN 們 叫 想
+都比較 TAKE感 講 出 過 THEN 我 們 這 裡 對 就 是 蠻 錢 然 後 自 做 THE Q BUT 這 己 抽 出 來 後 在 幫 近 一 個地 方
+THEN你 THE CHRISTMAS QUESTIONS H S O C SO MYIZE 很 像 KIND OF RESULTS這樣
+YEAH LIKE
+OKAY
+好 了
+很 面
+他 邊 做很
+C
+年
+SO THING
+YEAH
+講 吃
+真 的 很 多 錢
+沒 有
+那 個
+ING
+種
+
+就 是 好 像 我 們比賽 候 沒 要自 己 些ION後 C 要 自 己 服 那 種
+WE ALL LIKE THEN LIKE YOU CAN SHOP FROM LIKE MORNING T LIKE YOU WON REALLY覺 得 很累
+樣有 間 看 到 有 很 多 DEADERS THEN 有 一 些 人 LAUGH 的
+FOR YOUR RIGHT要 CAN CHOOSE H ONE TO BE PHYSICS CAMP BUT FOR IS STAND 因 為 就 華 們 吃 H ONE
+然 後 出 那 個 走 十 二 工 你 還 有 還 有 跳 那 個 只 生 機還TER
+他 們 有 現 在 有 一 個 他 們 每 個 星 期 都 有 都 有 做 ACTIVITIES 上 個 你 是 SPORTS 的
+對 我 覺得 得 沒 會 放 間 裡 面 AND SLEEP
+YEAH SO SAY OKAY KNOW SHE SOMETHING IS IT HE CALLED你
+THEN 他 們 個 FRIEND 有 一 起 因 為 我 上 是 去 子 去 了 臺北 跟 拍三 PART OF 太 種 THEN 我 就 在 想 這 是 想 去 才 難
+所 以 要 玩 在 些 就 那 些 什 麼 什 麼 是 清 他 成 最 好 是 出 兩 高 會 好 像
+很 LAST 你 是 說 SERVICE 的 PART 可 能是的 PART 他 子 個 你 住 一 個 月 或 是 三 個 月 那 個 不 同
+那 戲 那 西 成 不 是 他 沒 有 分 到了
+N U S BUSINESS CAUSE T TWO
+我 去 得 話 他 是 好 像 是 塊 一 個月 五 五 吃 還 是 這 樣
+EXAMPLE 我 第 一 個 去 了 CONFERENCE 是 AL RIGHT
+只 你 只 要 看 他 你 要 看 今 天的IPMENT 多 少 歌 樣 你 就 做 一 個 RIGHT 他 可 以 自 己拉
+你 去 J 可 以 的
+他 們 有 你 歲 DAY
+我 們 NOT LAST OF ONE HOUR
+我
+I THINK THAT SENT多 很 貴了
+IN HALL SIX
+我 去 這 下 是 不 懂 很 拜 是
+SO I THINK THIS SEMESTER還好
+I DON' T HELP TEN BUT
+我 們 就 做 SPORTS MANAGER
+不 是 就 是 通 關 電 有
+THEN 有 TIME MALAYSIAIP 的
+對
+THEN 是 用 P 一 間
+玩 的 時 候有 TRY TO
+好 像 好
+他 問
+THE
+SIX YOUR
+們 很 BIO 一 前
+GET THIS
+OKAY
+SO THAT WHY你看
+
+IF THAT
+就 進 去 有
+可 以 去 去
+THAT
+THEN SHE
+就 怪 也 這
+就 該 是
+我 就
+那 時 就 是 他 們 最 差
+YEAH
+到 不 近 去麼話
+SOME
+BUT 生 我 覺 得 他 們 END
+DAY HAVE TO GOT FIVE A M
+才 清 楚 為 小 是 過 在 講
+後 過 們 看
+I MEAN BUSINESS FIRST
+OKAY
+蠻 SOMETHING LIKE THAT
+P
+NO VERY 那 邊 你 們 講 到 樣
+THEN 出來 STAY A ROOM亂
+THEN 你 們 是 THAT 你 邊 去
+好 像 樣
+SO
+COMMITTEE 到 樣
+上 面 的 蠻 面 是 我 的
+THINK
+THINK YOU
+P 做
+每 個 給 PAPER 關 戲
+NOW MUCH
+沒 有 IFY 有 去 我 的 網 的
+LOOKS LIKE 因 為 我 覺
+BUT NEVER BEEN TO
+JUSTTEEN
+STILL FIND還
+有 把 看 講
+因 為 那 個 他 從一的 LIKE
+JUST LIKELING DON T TRY
+後 前 有 很 多 那 種 公 司 他 們 請 一 個 遠工 ONLINE OR
+好 像 平 是 他 BENEFITATE 很 好 好 像 他 的 他 END 他 有 我 買 東 西 吃 東 西 次
+還 有 什 麼 吃 有 有 一 個 是 那 個 也 是 不
+然 後 就 吃 FAR 那 些 我 是 是 忘 間 這 樣 一 下 子 然 然 後 就 看 看 書 就 睡 什 麼特 別 的 東 西
+CAUSE MY GOT SHE WAS THE IT THAT TIME THEN SHE PRIN OF AS THE ROOM的
+所 對覺 了 然 後 現 他 就 沒 有 前 不 給 給 我 們 就 前 PART TIME 是 不 是 沒 有 錢 他 就 是 幫 他 們 清 水壓 很 低
+THEN 我 媽 媽 他 就 是 不 喜 歡 果 BECAUSE 很 因 為 他 小 時 時 候 他 被 國去 過 SO 他 覺 得 LIKE IS 同 年
+就 去 的 可 能 就 是 那 些 比 較 HAND ON 的 那 些 比較 去 首 去 做 了 像 些 拍 照 還 是
+BUT MY HALL GOT SENIOR LIKE VERY PRO HALL SIX TIME 在 一 個 SENIOR 樣 是 他 他 是 一 是
+過 後 他 他 會 講 OKAY 你要 如 果 你 的 PAPER 是 很 新 被 ACCEPTED 的 話
+NOT BAD 看 你們 不 錯 看 要 怎 麼玩 BUT 去年 去 SEM 去 說 真 的 該 會 為 清 到
+還 有 CONTRACT SO 他 們 有 TIME 的 用 年 要RA 我 們 要 去 做 很 東 西 幫 TEN
+YEAH 對 很 很 府很熱
+他 LIKE 他 問 他 後 不 在去 去 他 講 NO IF HAVE TO REST我 SIX MONTHS 講 是 C FOR六 個先對
+最 負 那 些 是 如 果 CHECK 到 的 話他 是 睡 做 的 話 就給 就 是 表 中 一 點 的 政 法
+可 是 THEN 為 有 我 現 在 點 是 做 FUNCTION 的 東 西 很 少 已 經 他 不 有 年 到 兩 年 沒 有 的
+J 新 那 個 是 在 他 GEN 是 個
+說現 在 臺 灣 有ATION 什 麼 CARD 那 種 THEN 還 在 子
+DON' T KNOW WHETHER THEN TO HALL BECAUSE GOOD 他 們 會 大 一 個 在決 B 那 個 CHANGE去 對
+我 玩 上 不 做 麼 就 三 跟半 跑 去 人 家 的 FRIEND 他 們 要 長 國 東 西 很 奇 怪 為
+N 會 後 他 們 會 打 他 們 放 些 去 只 是 還 不 知 道 會 放 在 拿 E些
+就 大 有他 英 為 真 的 差 到 很 很 很 慘 然 後 他 自己 講他 他 有 DEGREE IN
+可 是 為 美國 的 PAPER 然 後 他 就 會 這 樣 你 STAND然 後 就 寫 一 個三 樣 子
+ELECTIVE IS NOTED BUT ME PERSON 我 要 SO ELECTIVE 可 是 SENIORS THAT IS TWO
+他 是 FROM ENGINE 的 THEN 他 就 就 也 是 考 很 爛 就 最些 BUT THEN 他 有 SEM 他 就考 LIKE 去 SOMETHING 就 NOT BAD THEN 就 換
+然 後 他 我 覺 得 他 他 是 他 他 也 是 不 問 THING 為 現 在 MOVE 過 了 他 現 在 他 的 ORDER TO 人全部 UP
+跟 買 是 分 開 的 他 在 買 要 上 是 所 我 看 他 的 表 先 都 是 分開
+BOTH ACTUALLYING ON THE SAME MORE LESS A SAME BASED THE DIFFERENCE OF THE DIFFERENCE CULTURE IT NOT SO MUCH 沒 有 這 麼 名 先
+太 是 過 個 候 每 每 個 他 那 有 ING一塊 自 時 候 六 百 AFTER THAT 幫 年 他 是 講 IT ACTUALLY 是 首 半 也嗎
+我 覺 得 HAND 說 覺 得 我 經 不 能 GO LEAVE 比 較很 PHONE 了
+FROM 的ANT EXATE 出 來 去 幾 年 出 來 他 們 的 裡面 的
+IT REALLY TO JUST GO FOR WHAT YOU YOURED IN IT MOREIC TO GO FOR我
+LIKE 我 們 我 有 去 過的ING TRIP 三 吃 三 四 都 是 加 國 家
+然 過 後 就 他 有 車 了 我 為 就 他 在 我 的
+不 用 緊 我 因 有 講 他 的 壞 後
+MOST OF THE TIME ONCE I SAY THAT AND THEN他說 OKAY
+所 以 我 們 有 謂 的 H五 N E H END
+個 那 個學 那 個 是
+BUTIN的 可 是 因 為 們 不 會 講 英 文 他 之 一 講 買 來 語
+還 好 因 為 這 前 MY FRIENDS IN THEONE
+你 個然 換 跟 你 的 SCHOOL 買 那 個 THEN LIKE LEAST 之 孩 在
+要快 THINK MOST FOR WAY ONLY SOMETHING
+檳 楚 就 很 美
+我 對 他 沒 有 什 麼 這 講 因 為 那 時 候 我 在改 SO 講比較 CLOSE TO SENIOR
+THAT IS LIKE BETWEEN樣 IT JUSTSIDE ANOTHER D THERE ONLY
+就 有 時 會 小 你 的 小 進 去 來 是 什 麼這 樣 就 很 有 一 錯
+我 這 個 SEM 種 他 兩 個 CORE 我 是 個 靠 他 兩 個 BADMINTON
+THEN 就 OKAY ABOUT 沒 有 講 什 麼 BUT 那 時 候 過 最 已 經 過 我 這 ABOUT THEN
+他 就 跟 我 講 天 你 C弟 的 檳 又 忘 了
+對看 那
+那 你 會 去 OVER 去
+沒 有 最 有 PROJECT 好 玩
+就 沒 什 麼 SENIOR的ARY 好 講
+我年 進 年口
+也 算 OUT多 可 是可 的
+因 為 很 多 SENIOR PROJECT 所 以 我 在能
+VERY IS A FOR SPORTS
+AND HELP PART HERE THEN BUT
+OKAY GOOD IT SO LOOKING FUN
+現 RIGHT ACTUALLY THEN ME
+不 COMESABLE WITH
+點 不 是 心
+整 天 那 面 講 VERY 一 個 END UP
+AND THEN HE ALSO THE ONE WHO
+因為 為 是 上 人 爽 讀 CONTROL 所 以 有 個 C的 就 是
+YEAH MORE LESS THERE BUT 我 是 在 THAT WILL NOT BE MYOURCE INOME
+THEIR DAYATED WITH HAVE SHORT OF ONE FIVE HUNDRED DOLLARS
+然 後 BUT 這 樣 多 我 正 是 樣話天 會 給你 很 多 BENEFIT 的AGE 就 是
+就是一定 好 像 一 個 好 像 你 起 這 個 CONTRACT 這 些
+THEN 我 沒 講 不 個 PART 仙 我 就 看 他 就 YEAH THEN
+他 們 小 想學的第 一 個 跳 單 在 去 得 他 是 誰 的
+YEAH 這 講 A LOOK THE TEST全 IS OPER
+變 成 我 到 M 我 等 游 的 時 候 去 又 的 時 候 那 是 我 的 跟到
+然 後 那 個 DO 我 後 了在 一 面 那 個 什 麼 WEEK DAY PART TIME
+YEAH WE THE CHOICE AND I是 INICS IT I CAN INTO WELL IN AND
+雖 還 OKAY 這 自 己 最 慘 THEN 他 們 會 他 們 會 家那 邊
+LIKE 好 像 我 們 兩 個 人 一 個 小 住 那 種 THEN 我 很 多 小
+有 他 們 會 FORM 部 出 去 不 樣 的 公 不 樣 的 大 大 錢 那 些 他 們 拿就 來 做
+其 實 我
+省 沒 有 什 是 做 DESIGN 也 比 人 家 少 因 為 我 們 多 數 是 FIELD
+下 個 學 去我要 KNOW FOR SIX SCIENCE
+我 麼 I MEAN MORE 我 喜 歡 看 好 的 做 品
+THEN 我 會 開 始 媽 我 的 PROGRAM 因 為 我 對 那 些 話 平 戲 THEY DON' DO WANT DO SO 過 去
+我 就 因 為 同 那 邊 很 嚴 中 SO 我 沒 有 去 TRAINING THEN 我 第 次 回 去 TRAINING 的 有 到 講
+所 以 IT VERY HALF TO ACTUALLY TRY AND 跟 每 個 人 講 到 話 THEN 每 個 人 後 回 覺 得 很 冷 多
+THREE EXERCISE就飯放 那 些ASTER ROOM 還 是 直 接 在那些 WORK 尾 那 邊 分 給 那 些 人
+要 看 你 MANAGEMENT 在 我 有 些 SENIOR TEST 然 在 要 我 們 就 做 為 我 在的 話 就沒 有 住
+後 我 就 開 始 參 要 其 他 東 西 也 是 然 後 有 一 次 有 去 過 一 個男 THREE
+THEN 其 實 我 就 想 我 不 TO MATCH 我 真 的 不 道可 以 讀 什 麼 因 為 因 為 我
+然 後 你 要 成 好 像的 SLACK WINDOWS全部 LIST UP 你 要 你 要 做 這 些ATION 東 西 這 樣
+不 是 不 是 CHARGE 是比 好 像 太 有給 你 好 像 一 個 MASTER 很 多 東 西
+去 沒 REALLY 吃 FOOD OKAY 有 FEW PLACE比較 便 宜
+最 近 在風 首 英 文 個 LAND 有 有 聽 過
+BECAUSE 你 住 SO IT VERYIN CAN PLAY ALL THE WAY UNTIL LIKE THREE A M然 會 HALL THEY有 AATION 的問 題
+OKAY 我 明 本 你 過 了 我 不 想 樣 你 那 GROUP FRIENDS 我 是 想 別 的 其 他 是 前 也 是 樣 SEM
+我想心 因 為 因 為 我 心 讀 書可 很 不 是 說 RELAX 的 什 麼
+
+YEAH
+YEAH
+對
+我 不 懂
+個 的
+對
+YEAH
+
+YEAH
+有
+YEAH
+WHY
+對
+
+對
+是
+THEN
+過
+
+THEN
+對
+這 學
+YEAH
+
+變
+會
+這
+
+THEN會問 N
+ABOUT IT
+NOT
+他 們 做 老 師 給 他 們 的大 FOR EXAMPLE
+最 女 不 是 己 不 是 做 很 多 因 我 們 在 年 裡
+是 BUT INTERNET 的 話 我 會 覺 得 我 很 感 些 然 因 為 BECAUSE OF
+怎 樣 看 不 知 道 的 東 西 好 像 那時 候 我 要 的 時 候 他 們 有 開 是 做 CONTACT
+像 怎 的 很 國 人 的打 你 校 要度 人 又 打 一 個 THAT HAND打 PHONE 然 後 那 個 AUSTRALIA 來 那 種
+要 好 像 你 是 你 是 生 的 話 你 做好你 的 本 分
+他 沒 有 自己 自 己 T 然 後 IN新坡 就買 為 他 是 ATTACH全 部 全 是 接 東 西 不 那 邊
+當然 我 們 個 H BETWEEN 面 今 年 是IVE 他 們 LECTURER 有 會 比 較 FORCE 一 點 就 是 給 他 們 一 點他 比 較 難 比 較他 一 點 的
+有 有 些看 有 些 在 那 邊 的END 他 選 DEPARTMENT 天 LIKE SAY 他 講 檳 城 他 有 一 個地 兩 POLY人要口 掉
+很 男 講 有 有 時 幾 政 正 常 講 如 果 是 一 個 CORE 大 月 四 五 到 十 分 會 覺 覺 得
+所 以 新 加 坡 有 好 像 在 幫 忙 其 他 做 為 的 整 個 換 進 整 個UN TO YEAH
+SO ANYWAY 我 做 的 是 JUST COMPARED TO COMPARE 哪 一 個 比 較 好 比 較 好 用
+YEAH SHE去 多什 IT IS S MY FIRST TIMEBING THEN SO THEN我 LIKE THE IT' S LIKE可 能
+然 後 我 們 每 個 禮 拜 也 是 也 是 在 裡 們 樣 有 年 BUT 我 們 沒 有 就 一 個 好 像 表 演 這 樣 子
+BECAUSE WHEN BEFORE WENT THERE RIGHT I MEAN GUYS A LIKE去 那 CONFIRM的 INTERVIEW 我 們 去 那 三 天 因 為 他 們 當 有 些 被 拍 出 去
+我 的 個 有 問 我 因 為 他 差 不 多 要 去 FOR TRAININGING FOR ONE MONTH
+QUITE
+
+
+怎 麼 可 能
 
 
 
+U
+YEAH
+好 這 樣 找
+
+
+換
+一是 辦
+
+
+TO WATCH SOME INTERVIEW
+就
+THEN
+
+SEE
+NOW A
+我 沒 有 有 清 戲
+種 工 中 點本 那 種
+歌
+他 有 怕嗎
+有 看 月
+
+然 後
+是 講 做 我 爸 很
+YEAH
+對 找 我 的
+對全 部 家 裡 的人全 部 都 是 講
+所 以 以 現 還 是 不 知 道可能 進 經
+ENGINE OKAY
+
+他 去玩
+他 們 也 用 上 廁 是 我 沒 有 喝 水 用 上 吃 手的
+DUCE YOUR ME
+沒 有 去 下 到 這 樣 長 的題
+SO可 是 是 真 那 我 的 INTEREST
+去 好 像 你已 經 很 怕 很 怕 FAIL
+有 然 後 HALL
+你 沒 有 去 想 過
+HOPE該 是 沒 有
+過 穿 OKAY BUT過 是
+沒 有 參 加 EASY
+有兩做 的 是
+我 變
+
+道 很 多
+我 們 的 不 的
+THINK覺
+
+YEAH
+I HOPE
+FIVE
+BE
+
+MALAYSIA
+
+
+就
+MY ABOUT ONLY
+比 較 靠 近 的個 點 INTERESTED LIKE
+SO 他 們 SPECIALIZE 就 沒 有 人 會 去 得 他 的飯 玩
+雖 他 做 是 有點 CALLED
+所 我 會 想 要 出 去給 EXPERIENCE
+也 是 有 沒 SCIENCE
+THE TEAM WHICH IS GOING TO BE QUITE HARD
+很 像 很 就 沒 有 什 麼 講 話
+很 現 在 LIKE NOT MUCH TO COOL
+LIFE SENIOR有 去
+THAT SHE BECAUSE
+BUTY 應 該 懂 I
+IF I WILL TO ASK HER
+然 後 就 那 些
+IS別 THING COME
+會 幾 條 如 罷了
+只 是 他 們每 是
+BUT 他 的 GOOD西
+YEAH THAT' WHY THAT WHY
+NO那 WHY NOT 是
+CANNOT UN 看 很班
+我 不 我覺 得 P 可 以
+你 是 ALL LOOK THROUGH OUT THE
+YOU LOOKING I NOT 家
+THINK 個 前 才 全 PART
+一個ING用 GO
+你 果 是 什 麼 SO 他 們 會 用
+後 種 THAT他 OWN THEN自己
+YEAH
+一 個 請 你 的 因 為
+沒 有 一 個 CAMP 不
+IS我
+THEN 他就他 給 我 們 去 戲 就 是
+對 因 為 其 實 我 們 的 GAME 或 者因為 那時候 有 HOLIDAY LIKE THEIR IS GO THEN
+這 個 要 MANAGER 看 他 所 所 我 們 找 到 一 一 個 一 個 一 個 P 能 就 AT LEAST SURE WITHIN THE WEEK 裡 面 MONDAY TO是 什 麼
+有 會
+然 看 的不 覺 得 QUITE FUNNY 他 他 們 有 一 個 他 們有 DISCUSS 要 講弄 那 個 原 會
+你上那 TALK OF THE POINT UP INTERN 就 是 不 能 過 樣 二 不 是的 就 是 他 們 成 進 EXPERIENCE 過 一 個 東 西 樣 所 所以
+DEPENDS TO 怎 樣 的END WHICH THEN IF 那 不 能 的 的定 是 一 定 是 沒 有 去 做
+他 一 年 年 有 些 有 給 去 PASS 他 氣點 五 巴 他 有人 SHOULD DO 巴 現 到 PART本 PERCENT 這 樣 子 SO 我 有 投 之 因 為 他 有 OPEN 嗎
+要 是 這 這 樣 分被 通 常 都 是 大 上 笑 就 在講 是ATION 上 面 有 一 些 很 小 跟 動 這 對
+到 了除 就 比 較放點 到 現 在 已 經 是 我 覺 得近 上 個 可 以 跟 樣 個 朋 友 有 是 跟 同 會剛 打 這 樣
+就 想 說 去 看 能 後 就可 以 到 講 說 看 到ING 又 是 在 THEN 好 的 他經 去 THEN 他 候 那 個 人 就 他 進 去 是 後 那 個人 就 給 他 一 個 個 心 在 他 演 出 來
+他 們第 是 一 整 錢 然 後 就 很 累 可 是 I THINK 這 樣 就 THEN我 樣 I THINK 我 們 的 O G蠻 CLOSE 的 我 們 的 朋 友
+有 其 實 五 到 又 如 果 不 是 熟 LOW 的 五 是 一 個 GROUP的 THE PERFORMANCE 就 大 家要 一 點的要 近 兩 PAY HER LIKE THE TIMEING MUST BE RIGHT
+因 APPLY MAKE ME MUCH OF SHIT 好 像 很 做 ACTUALLY CAR DO還是 TRY
+COL 還 有 BENEFITERS 是 FOR方 面 這 地 部第 的 部 就 是 他 的那 個 叫 什 麼
+什IN FIRST 還 另 外 一 個 我 不 道 就 什 麼 名 子 的 我 看 過
+GO PART NINE帶 還 算 是 UNDER DEVELOP 現 在 以已 經 算 是 一 個 很的 的 一 個 CITY
+IT IS LIKE
+THAT NOT THISATION
+很 少 會 做 的 了 但 是
+RESEARCH 較 好
+LIKE NEAR
+就 是 轉外 通 看 過 爛
+他 們 的 CHARACTER 就 會
+THEN QUITE
+九 CONSIDER 二
+可 能 是 這方
+CON COMPUTER多 東 西
+我 叫他 們 上 SCREEN PART
+我 們 是 LIKE較 OFFIC DIFFICULT的
+有 些人 P
+THEN YOU CAN的
+這 是 一 起
+他 是
+朋 友
+BUT
+
+THE
+INTERVIEW U
+PROBLEM
+
+會 LIKE
+H IS LIKE CALL IS IT
+THAT
+
+些 P
+
+
+去
+比 較 好 你 可 開 十 學 的 因 也 是 我 拍 蠻 就 了 不 我 能 開 始 用 這 些比 較 D那 種 不 較 還 的 算 是 還 演 不 過 IN
+就 這 樣 打 然 他 們是 臺 裡 面 是 很 多 少 上 來 變 成IN 那 A 的 話 因 為 你 看 的 BOOK 的 那 些沒 戲 也 是 很 近 的 AREA罷 了
+我 機本 上 我 會 差 不 新 上 男 樣 TAKE NOICAL UNI WORITY SAME FOLLOW禮 ME年的 MEM MEMBER
+兩 TWO 的 人 到 因 為 這 個 因 為 因 為 不 同 的 那 個 不 師 PLACE 還是 什 麼
+他 有 KEEPIP 你 你 做 了 多 個 小 時 THEN 你 的不 ON多 樣
+我 根 本 就 在 得 我 跟 你 講 我 就 樣 的 人 他 就 就 我 就 跟 他 在 姐 也 是 我 就 有 就 沒 有 打 三 己 去 會 有 笑 問 的 你 就 很 像
+應 該 是 差 不 的五 十 個 人全 部 有 那 個 TEAM 我 們 有 NET WORK 跟的 OFFICE
+這 像 他 要 請 他 進 去 回 要 長 回 要 長 做 一 些 次 的 話 他 他 也 不 知 道 有 這 樣 的 ROOM
+然 後 這 個ON GENERATION MOST THE BO WOULD ALWAYS PLAY THEIR ON ONLINE GAMES
+BASICALLY A LOT THE THOSE QUITE SMALL AND THEN I SO A OKAY AND ENOUGH THERE OPEN THEY OKAY AND ENOUGH QUITE BAND I KNOW IT FOR
+然 後 以 每 個 人 MOVE到 SUBVENT MOVE 去跟 AREA去覺得 動 去果 那 些 東 西 然 後
+SO WANT YOU WHAT AT MAKE DOWN BE EARN LOT MORE THE WHAT WE DO AS PART TIME IN SINGAPORE
+以 花 在 那 個ING的 MODULE 然 後 自 是 那 個 TO 我 的 近 容 的 部 我
+YEAH 我 覺 得 LIKE IS ALWAYS GOOD LEARN NEW N LANGUAGE YEAH AND I THINK 會 INTERESTING跟 LIKE不 同
+SO I DON' T WE LIKE THEM THEN I ALSO DON' T LIKE TO IT只 菜 C SO SOMETIMES 那 是 SU SHE GO IS SEE THEIR
+如 果 是 有 有 聽 楚 就 像 候 我 們 學 東 西 當 你 問 然 後他 會大候 你 就 聽 部 懂們的說 什麼 YOU WE ARE EVEN I UNDERSTAND WHAT THEIR CHINESE
+IF YOU GOOD ANYTHING JUST FOR WAS MYSELF WHICH IS NOT
+BUT IS A CASE NEXT TIME YOU HAVE TO RIGHT BUY
+好 像 多 你 是 ING MAYBE 可 能 因 有 些 我 的 朋 友 就 是 他 去IC
+I MEAN 我 是 講說 FOR SMALLVICE THEN IPHONE I ABOUT
+聽 過 是 這 樣 子 MALAYSIAATION 太 國 的 應 該 是 BATCH 強
+ALSO THEN SLEEP COURSE 我 不 懂 SO I THINK IS NOT VERY GOOD I IDEA
+好 像 裡 你 買 一 間 做 恐 在 臺 玩 你 可 以 蠻 十 塊 三 十 塊 的
+I THINK SO HE ON SOME I HEARD FROM IS A E SOMETHING
+FIVE SINGAPORE FIVE買出 出 POINT 這 樣 起怪 就 果 住 PERCENT
+去 網 忘 票 這可 以 然不 過玩一 點
+MATHS 如 果 我 們 只 是 TEXT BOOK 罷 了 我 們 會 覺 得
+FOR 我讀 比 較全 面班 很 去 很 好
+過 後 他 你 的 FILE
+WHICH TRAVEL THROUGH CHINA近 THEN TO
+THEN 他 就跟 我 講 IF YOU ONE MAYBE I SHOULD GO THAT ONE THEN 我就 FOR OKAY THEN 臺 灣 有 很 的 好 吃 的
+對 誰 T東西 要考 兩 很 多 東 笑 住 對
+平 上 多 會 不 前 住 上 就 是 做 是 FACEBOOK 可 是 為 也 是 朋 我 們 就 是 看 東 西 看 很 們
+可 我 不 懂 因 為 我 我 MORE IN 我 我 MAJOR IN SO 有 樣 沒 有 這 樣
+THEN有 VERY TO BE我們的 CAPTAIN 他 叫 經 天 YEAH
+只 是 只 是你 一 該 是 從 A 到 BE 另 外 邊 是 從 要 是 FORM 的 放 像 不 對 華 就 從 飛
+我 沒 有 聽說 過
+YEAH 沒 有 就 SOME百多 然 後 做 過 八 組 一 主 差 不 多 二 十 個 人這 樣
+前 沒 有 什 麼 他 是 比 話 他比 較 多 出 幾 個 機 比 話 前 話 一 從 樣 的 吃 不 樣 興 期 而
+MAYBE IS' IF IT S MYED CHOICE I HAVE TO LIKE SIGN UP THERE ALSO THEN GOT IN TO OUT AND BECAUSE T MAKE IT TO TWENTY OF VERY BADMINTON
+對 也 是 不 說 是 工 工 作 他 們 主 是 他 們 的一 對 但 是 的 公 不 的 禮 開 那 個 忘 工
+現 在 MODULE 你 可 以 可以 SPEAK UP THE PERSON NAME AND CANIC DOWN FOR
+有要 全 部 有 當 你 去 那 種 JUST C T G V C 院 你 知 道 是 六 給 次 你 拿 是 CUT 之 六 塊 錢 麼 看
+然 後我 還 最 近 我 是 在 看 一 些 起 他 的 一 些 比 較 可 以 FULL 單 的 起 的 GOOD MORE FORABLE STOP
+可 也 是 因 為 這個是 LAND 的 關 戲 那 邊 成 因 為 是 少 這 個 TO 地 變 成 就 是 這 個 PLANNING 這 個 TOWN
+好 像 還 有 LIKEOSENCE 我 很 多 LIKE 又 果 我 想 LIKE 他 會 到高 THEN 那 種 THEN 所
+當 我 的 院 ONE 就 是 說 該可能別 得 會 IS FUNNY THING BUT
+是 HAVE FRIENDS TO WHO SEE LIKE WE REALLY YOUNG KID DOLLARS BE AND THAT THEY LIKE AFTERING HOW KEEP THEY
+YEAH
+
+
+YEAH
+OKAY
+YEAH
+YEAH
+YEAH
+YEAH
+
+我
+YEAH
+THEN
+ABOUT
+就
+OKAY
+可 是 可 能 是 THEN 我覺 得 在 想 OR OKAY
+REALLY SHE JUST
+HOW THE N LIKE
+I ANY WHAT RUN GIRLS
+我 不 道 然 後 他 就 來
+做 CAP
+其 實 PLAN 來 一 個 很易
+IT WE YOU COME BE A DIFFERENCE RIGHT
+講 那 THEN AFTER 他 會 講
+IMPORTANT BUT LESS IN 的 SO 就 要
+
+LIKE對 PLANNING經 TRIP
+新 加 是 有 的現 在
+IS A RECESS PROJECT
+還 有 有 個 是 PUBLIC BITING
+CAMP
+T覺 IS NOT MUCH WE JUST 去 買 那 個 的 中 子 THEN SO INSIDE的 GRAND PROGRAM
+我 們 就 己 前 去 打 工 然 後 在 LIKE 做 三 四 月 有 而 些 然 後 就一 出 過 然 後 AFTER THAT 回 來 就 去 CHINESE 一 GENERAL人 HOST較 做 工 也 是 做 IN
+CHRISTMAS 之 類 的 都 沒 有 都 是 個 人ATION
+NO I THINK FOR PEOPLE THEN YOU SAY THAT MUCH GRADUATE FIRST I THINK DO JUST THAT
+SEVEN POINTS 這 樣 有 什 麼 活 是 兩 參 天 我 們 的 CAMP 是 三 天 的
+我 們 以 好 像 我 們 那 時 候 就 講 最 FIVE 我 FIVE 是 一 個 SUPPORT AND也 是 SPORTS THEN 為 什 麼 不要恐 COMBINE 在 起 們 半 一 個 兩 樣 樣 部 會 這 樣 辛 苦
+就 他 的 婆 然 後 就 有 候 過 我 我 我 家 然 後 後 他 會 他 不 大 會 講 華 問 他 聽 的 懂 BUT 不 會 講 所 以 他 就 會 跟 我 講 HOKKIEN
+WE HAVECTION OKAY 我 以 前 是 STUDY IN WHICH OKAY I WAS FROM COMPANY COLLEGE AND 以 前 你 參 加 過 什 C
+只 是 我 就 是 也 有 一 個 好 的 東 西 就 是 AFTER 我 就 是 TRANSPORTAL FROM C S 去是 們 就 是 有 我 看 到 演
+YEAH AND I THINK IS WAY YOU HUMAN WORK BUT TO得 THIS KIND OF SEVEN START AND
+我 覺 得 現 在 自 最 吃 SOCIAL可 的 一 些 行 比 較 是屬 做 做對ING HOW
+就 YOU NEVER THATIVE THING THIS IS A N你 UNI 你 定 是 覺 得 MUST BE SOME ONE 會 PLAN THEN 你 就 是這 樣 WEB 就 好 了
+I THINK I CAN CAREOM CARE T CARE的個 我 會說 想 要 MAYBE 在 去
+之 前 是 那 些 動 人 是 REPORT 有關 你 他 們 你 是 很 MATCH 可 以 他 們 的 PERFORMANCE 不 現 在 你 要 DEAL 的 人 現 在 我 的 這 個 工 的 就 是 要 WITH 不 同 聽 的 人
+因 為 他 們 會 CON FIELD 我 就 是 在 他 們 因 為 那 候 家 全 個 不 到 錢 他 們 最 出 錢 後 人 家 又 玩 他 們 BUT 他 們 就 可 能 有亂 掉 還 是 怎 樣
+SO ALSO INTEREST AS IN 我 較 年 清 說 我 會 想 說 我 要 去 去弟 弟 球 PART 到 到 忘 球 只 是 打 GAME 像
+你 以 去 是
+THE ACTUALLY有 DI LIKE FOR THIS ONE IF YOU USE THE PUSHING CAN IT WHOLE THE VERY ACTUALLY DIE ONE
+我 喜 歡 RUNNINGING AT NIGHT 因 為 有 人 在
+對 就 好 對 們個 來 講 的 話 會 有 一 定 風 先 因 為 你
+就 是 我 覺 得 你 那 邊 沒 有 東 西 可 以 走 要 買 東 西 也 很 部 放 便 還 是 TEN 比 較 好
+今 年 只 一 是 大 兩 是 那 現 在 在 當 冰
+CHINESE CARE CAUSE TERMS SO很 R YEAH LIKE THOSE VERY GO COUNTRIES
+後 就 是 剛 近 的 時 候 我 可 這 可 以 喝 走 多 花 那 種
+我 是 想 但 是 你 個 就 間 貴 過 然 HALF SCHOOL
+如 果別 UN H P 你 不 可 以 TRY TO MAKE P 還 是覺 喝 UP 還 是 怎 樣
+那 些 都 是 就 是 跟 朋 友 去 很都 SHOPPING這 樣 的 西 看 到 買
+其 實 我 得 得 BAD然後 BECAUSE IT IS MORE COLFUL AND END的
+也 不 太 清 出 不 過 我 單 聽說便
+可 是 果 你 要 來 的 話 也 沒 什 麼 的 可 是 看 近 我 也 是
+你 樣 說 轉 現 清 部 出 聽 是 我 就 會 點 難
+很 像 我 們 會 出 來 然 後 要 方 面 那 經 去 然 後 樣 子
+YEAH BECAUSE RUN RIGHT
+通 一 個 是 他 代 他
+OKAY 我 知 道
+兩 後 來 樣 好 THEN 學 要 穿 遠
+
+一 去 他 的
+不 用 拿 給 們 參 一 下 他 很 算
+那 個 兩 回 是 之 己
+THEN THEN 是 道 給 我 看 我 不
+但 我 奇 過口 可 的 東 東 西 己 一
+是 你 直 是 START COM
+是
+BAND DOWN BANDWARD 然 後
+他 你 還 REAM看 大
+是 因 為 那 個 小 的 電 是 是 我 媽 去 LONG 的
+有 COMPUTER 能 朋 友 去 看 去 看 戲
+可 是 看 能 那 個 書 可 語
+就 是 歡 在 去 子
+HE DID BUT一 跟 做 的
+那 個 STUDY 的
+TEST做
+不 會 想 靠
+我 不 懂
+
+他 們 這 可 是 什 麼
+CAN GO PLACE 還 有
+有 DIFFERENT BROTHERITIES
+只 給 以 福 都
+這 比 較
+SO
+我 都 是 美 的
+OKAY 的
+BUSINESS
+
+TIME
+很問 TAKE
+有 這 樣 緊
+就 是去IN
+O ONLY
+THEY SEE
+他 在 BANK
+MY 有 爛 了
+跟 FRIENDS IS 去
+
+
+CLUB
+ANK THREE 讀 對 有 易
+之 跟 話
+我 們 INTERN 對 很 重 要 很
+那 個 學 校 我 POSTED TO 個 是 不 該 的 為
+I DON' T OF THE THAT BUT THEN 我
+IS SAY SHE GOING BAD他 講
+可 是 我 沒 有 ANY
+LIKE THINK 我 不 PASS 錢 THEN 那 會 BUT
+每 要 不 東 西 歲 學 到 CAPAB 比 較 比 較 關
+我 爛 後 好 一 直 在 我 很 天ATE 我
+什 IT I T SEE A ABOUT IN發 P氣 DURING CAMP
+沒 有 我 不 也 是 一 樣 跟 你 做 一 個 BUSINESS 這 樣
+當 一 個 CARE THEN 有 候 有一 些
+但 是 我 多 那 邊 因 為 經 長 沒 的 後 就
+應 該 會 REPLY 對 我 喜 歡 他
+很 少 有 那 做 為 的 因 為 在 做 N的
+YEAH THEN END OF THE DAY WERE ALSO HAVE LIFE BIRTHDAYOS TUITION
+以 定 也 是 RIGHT 他 們 去 定 我 都 是 個 CHECK的 FOUR
+買 個 他 的 BRAND 是
+哪 NEED對 AS IN FORCY
+對 HOW 是 印 覺 的
+SEE THAT E 爸 不 很 多
+THEN THE OKAY YOUR WAY YEAH JUST IS REALLY
+他 現 在 去 面 他 IF FOR SENTENCE ORIENTATION THING
+I DON' T KNOW HE I THINK TWENTY FOR的 HAS POLY
+LOW幫 DON' T SPECIAL LIKE
+WHAT NOT AS BAD AS I EX EXPECTED
+就 是 是 還 用 點
+LIKE SPEND 到 很 是你 DIFFERENT 是 一 個
+可 是 之 然 的 吃 人 THAT' S WHY THINK 教
+些 些 是 RUN 他
+又沒 有 去 HEXIS 的 PERFORMANCE不 是 HEXIS CON LAST
+THEN 對 就 是 很 到 現 他 就 會 LIKE
+因為 I THINK 他 們 是 BUSINESS是 IS 比 較
+就
+對
 
 
 
+THEN
+
+會
+OKAY
+GET
+OKAY
+RESS
 
 
+INE
+
+就 生 罷 因 為 久老 G 是 很 先 的 讀 是 頭 讀 地 真 那 那 種 的然 後 還 有 CAMP P 要
+考 最 經 不 見 就 是 為 每 個 人 都 FROM 到 因 我 沒 要 講 把 那 些 人 帶 有 去 FOR 那 個 的考 CULTURE
+到 了 J C 就 是 差 多 一 樣 的 BUT 不 過 還 是 有 一 些 比 較 書 說 我 們同 CONFERENCE 是 些 比 較 華 拍 的
+現 在 我 剛 剛 在 業 THEN 我 現 在 做 演 U 的 還 沒 有 開 課下 我 下 個 小 個 星 期 就 開 個
+我 會 要 寫 面 就 是 一 個 SAY 上 有 我 中 工 我 算 他 寫 而 我 知 道 我 就 做 高 我 這 個 PAPER
+I JOIN A SPORTS 就 做 A OFFIC BE NICEING
+十 過辦飯 那 種 G TO CANTEEN 天 是 種 東 西
+THEN 家 一 個 LAB 一 個 PROGRAM 個 一 個ECTIVE COM 那 三 個 是沒 EXAM 的 所 所 我 考 是 是 看 課
+所 我 現 在 男 說 他 們 的 MEANSATION 他 們 真 的 不 知 道 怎 麼 講 HOKKIEN 上 他 們 自 己 亂 白 覺 他 們 在 病 裡 面 都 是 講 們 就 會
+SO NOW ONLY LEFT I THINK SINGAPORE WE ONLY HAVE LIKE ONE GOOD FAR THEN SOMEABLE
+來到檳 生 罷 我 去 找 他 為我 他 比 較 有 怡 保 的 的 那 走
+就 是 那 個 要 走 的 候 不 的 對 他 那 個 老 老 生 苦 什 我 樣開 OKAY
+OKAY 因 為 有 些 是 BUSINESS HERE NO 都 話 是 BUSINESS 就 是 NORMAL
+就 是 剛 到 NOW 你 然 後 你 你 主 了 然 後 你 放 那 個 家 裡 機 放 他 去
+SO 其 實 有 時 候 不 是 講 就 我 覺 得 不 是 講 那 個 東 西 少 COMMITTEE 沒 有 做 多 是 你 要感 CAN CER 掉 那 個 EVENT
+你 要 帶 有 邊 附 近 那 邊 就 是 比 較 政 識 跑 他 遠 後 就 很 跑 另 外 一 邊 他 有 就 很
+選 不 會 選
+SO 麼 高 種 去 多
+SO CHRISTMAS
+有 很 少 幾 個
+THAT
+YEAH SEE BECAUSE BAD
+輕 的 女 生
+對 對 對 好 像 是 兩 進 ROOM
+ALL 懂一 THIS 講 我還以 OKAY
+ONE 的十 N U 的 來 像 會ONG
+就 沒 有 樣 塊
+不 一 樣 的 人 間 房 間
+所以 他 媽 上 面
+我不 是 那 有 看 的 時 候 我 就 覺 得
+JUST HALL來 HAVE TIME TO US
+什 麼 是
+我 學 沒 我 東些 TO 他一 TO THREE
+我 不 TRY改 了 他 還 十 掉
+已 經 有 西 做 ING 我 的 水 裡 面
+對要就 對 是道 COM
+UIS說 在 裡 你 的 HALL C掉 他 的 是
+FOR INION THEN 有 上 的 跟 重 RIGHT
+我都 知 TRY TO CUTE的 SERVER AGAIN
+SO 他 們 不 需 要 做 ANY POINT
+是 會 你 會 讀
+好 聽 一 點 的 WHY SAY就 SO SAD
+他 們 轉 人 像 不 要 是 有 前 走 做 種 事 近
+沒 們 很 當 多 少
+能 覺 得 EXPECTATION 很 高 對 你
+不 爸 就 每 次 過 講 每 是
+也 可 YEAH BUT THEN LIKE IF MY HOUSE
+如 果 他 們 有 人 覺 得 POLY 去 MAYBE 會
+YOU 看 FOLLOW YOU YOUR PLAN
+BUT WHAT IT NEVER
+他 是 有 那 種 明 貴 的 CAMP
+THEN ELECTIVE OTHER
+是 找 只 是
+THE
+THEN 又 沒 有 空
+從 從
+一 有 玩
+是 記 SO
+有 每 都 會 的
+WHAT IS THE 年
+THEN RUN
+公 是 的 公 司 給 你 CHECK
+很 中 是
+每 人 會 只 種東 西
+CAUSE USUALLY THEY SAY THAT TRY FORCE OFJECT BEFORE YOU CAN JOB
+我 不 懂 THEN 他 的 C P 有 寫 你 得 OKAY 還 沒 有選
+I THINK 不可 以 樣 是 MORE OF 可 能 PARENTSRA
+IN NEXT 上 很 紅 的 人 請 他 來 現 長 看 水 是 加 的
+他 我 MAN B 子 因 為 我 們 有 BI SYSTEM 好 就 講 為
+他 的 SOFTWARELAND 風 緊 火 特 別 多
+其 實 這 個 星 期 有 跟 興 幾 天 也 有 I HERS
+是 去 TEAM THEN 我 沒有 GRADUATE JOIN JUST KEEP
+BUT THEN 我 我 也 不 同 要 講 LIKE 每 定 一 個 B 些
+所 要 後 們 還 個 拿 都 工 的
+就 我 去 到 C 的 要 拍 一 個 都 不 分 樣 子 因 為
+BUT 我 覺得 這 種
+好 我 有 會 黑 的 H候 戲 我 便 天東 現 在 都 很沒 有 放 回 來
+他 們 跟 我 們 的 一 個 我 們 的 TEAM 叫 是 西
+這 個 玩 會 是 我 是 WEEK 五 是 我 們 五 個 人 的 爛了
+NO THE MONEY FOR ME
+YEAH BETTER THAN THING TRY
+YEAH 他 的 BUT HE A TO BE VERY NORMAL YEAH WHEN YOU I THINK 這 種 東 西 是 有 OWN ITSELF TRY TO HARD ONE ABOUT DURING INTERVIEW I THINK HE CAN HARD BUT HE CHOOSE NOT TO HIGH
+候三 會 想 到 說 有 一 點 的 空 去 到 有 們 在 做 們 樣為 好 現 到 候 候 可 能 就 是 你 需 要 一 個 小 孩 子 個 AND I REALLY START TO THING THAT YOU THAT IS MY PLAN AND SO THAT你 CAN 那 個
+WHICH I UP成 THEN HE POINT CAUSE HE KIND OF ALLS OKAY DOESN是 BETTER END I JUST SIX ALL DOLLARS
+平 常 在 你 講 到 那 時 候 是 那 時 候
+有 那 個 什 最 近 有 一 個 那 個 你 看 檳 是 那 個 CLOSE SOURCE 的 那 個是 錢 還 一 個的ATION 就 是 THE RIGHT
+然 就 那 邊 那 別 能 那 邊 路 很 玩 那 邊 是 最 主 要 是 去 那 天 是 最 主 要 是 去 那 別 還 後 還 有 去 那 個 那 個 語 一 出 他 們 語 全 不 懂 我 們 語 出 的
+自 己 爽 我 知 道 我 們 的 SCHOOL 也 這 個 那 要 BUSINESS SCHOOL 有 己 的ATION 我 有 看 那 些 才 在 子 不 錯對
+多 就 不 錯 那 個 那 那 邊 的 錢三 百 二 九 九 一 個 人 只 是 我 們 覺 得 OKAY 然 後
+對 對 後 他 我 有 個 FRIEND 他 在 HALL SIX 是 他 也 是 來 他 來 的 他 就 個 我 我 就 得 他 所 以 你 有 沒 有 找 到 有 昨 天 你 那 個 CAMP 的 是 是 一 個 帥 個 他 講 說 對 也 蠻 帥 其 實 他 他 在 好 像 片 我 她 的 說 其 實 長 的 很 像 JOB COOL
+美 MATHS 的 主 片 的 REALLY 快 二 十 分 什
+YOU FIRST STUDY一 ORONE SOONE DAY WHAT
+THEN YOU KNOW HE WAS SIX TIME HE HADFUL AND COURSE SO比 去 在 SO HE的 HE 他 最 那 個 FOOD ALREADY 出 有 FEW我 SAY THEN YOU TRY AND I LOOK AT THE FOOD LIKE MY GOT THEN THE THING WITH THIS KIND OF MUM P THE WIN IS THAT RIGHT
+上 國 是 那 個 我 不 他 喜 好 玩 那 我 朋 友 有 一 個 我 HOME 到 朋 友 就 戲 歡 那 喜 歡 明 天 會 玩
+球 就 丟 他 們 的AT 然 後 就 到 一 直 丟 一 直 丟 最 自 定 要 間 生 過 後 就 讀 得 他 們 對 得 他 們 同爛 就 是 最 找 有 有 可 以 真 他 就 講 一 開 始 那 個到 就
+應 該 是 去 做分 那 種分 那 種 就 是 是 就 是 類 是DUCE 那 些 電 視 間 部 的 那 些 公 作 比 較 比 較 題
+SAR 對
+DON' T KNOW I THINK THE SCHOOL LIFE QUITE FUN BUT I THINK S LIKE IF YOU WANT TO WORK PART TIME THINK AS LIKE AND IS CAUSE I HAVE I FRIENDSFUL WORK ALSO THEN THEIR LIFE IS LIKE WORK SCHOOL
+THE MORE PEOPLE EAT THE MASTER THEY THEN 他 們 就 會 做 很 多 SERVICE SURVEY TO SEE IF YOU REALLY EAT A LOT THEN YOU ARE OR SOMETHING SO THEY NEED YOU TO HELP YOU HARD THEMLETE THERE SERVICE PLACE SO
+過 像 我 些 朋 友 現 在 在 一 大 裡 在 和 爛 然 他 們 去 去 玩 做 候 然 他 們 會 近 過 演 然 後 後 會 過 說 像 我 這 個 地 很 好 自 較 好 所 以 WHEN I GO THERE TO TRY FOOD AT THIS RESTAURANT 之 的 東 西
+就
+THEIR本 PERSON你什 MORE FRIEND AND 是 我 們 的 朋 友 BUT 不 是 因 為 他 是 我 的 朋 友二 邊 的 不 樣 只 是 他 會 給 我 們 那 個 FREEIUM TO DO WE ONE DO SO IT MIX THEN AND JUST I IS A ONE TIME BAND WHICH
+SOMETHING LIKE THAT BUT IT A GOOD EXPERIENCE 每 天 講 話 每 天 講 話 然 後 每 天 就 是 看 那 個恐 COM COMPUTER的 SCREEN 些 東 西 然 幫 他 們 他 們 COMPUTER COMPUTER 的 問 當 學 去 有 BUT 下 你 問 我 話 看
+會 ESPECIALLY 的 那 個 感 老 面 因 為 他 們 的說 四 用 多 THEN 在 MALAYSIA的 用 CHARGE
+不 想 聽 要 會 睡 教 會 你 問 他 會 會 好 就 說 電 你 講 話 很 我 覺 得 這 個 很 重 且 如 又 起 後 樣 去 做 BUSINESS 的 話
+以 這 樣 一 來 對 上 放 多 好 我 覺 因 為 到 來 我 們 可 能 就 沒 有 不需 要 換 因 一 本 新 的 數 可 能 要ITIES SIX DOLLARS 所 以 就 是 蠻 貴 的 如 果 是 是 課 話 就 差 的 兩 百 多 SUB 百 塊
+I SO LOOKING TO DO FINANCE BUT I DON' T KNOW WHATLY PROBABLY IF I CAN TRY GO TO THE LIKE SAID OF OKAY THE BANK BUT FROM NOW I GUESS AS YOUROS TO THE SIDE
+YEAH 就 BUT 我 覺 得 也 沒 有 樣 SAY
+不 用 又 不 是 己 有 他 一 個賣 十物 I THINK 那 時 候
+還 有 一 個 看 身 就 是生 FIL THREE 這 是 我 們 去 我 們 就 看 那 些 好 像 中 國 日 本 之 類 的 而 一 些 的 點 影 THEN 就 最 學 他 們 的 事
+就 是 我 們 現 在 做 其 實 到 其 他 大 學 還 是 POLY 都 應 該 他 們 也 在 住 差 不 多 同 樣 的 東 西 因 為 最 主 要 就 去 TAKE 就 說 是
+B 看 書 SURF NET 吃 睡
+BEFORE THE FIRST 就 最 高 的 前 一 個 AS EXAM THEN 他 就 去 好 工 THEN 就 是 邊 到 我 去 因 我 都 不 是 長 出 國 的 他 就 出 前 THEN 我 幾 去 THEN 自 去 那 邊 好 是 之 有 已 心 因為 他 第 要 天 他 我 們 去 三 在 兩 也
+然後 因 為 我 們看 COMPANY 有 分 兩 QUESTION 一 個 是 SOUTH OFFICE學 就 是 賺 們 子 管 SOUTH 的 就 想 講 THE CHINA INTELIA 才 THEN FIT MALAYSIA 想 的 有 外 主 是 J C OKAY
+最 快 是 兩 年 說 到 IN 一 年 到 年這 樣 可 以 生 到 的 所 我 看 自 己 能 不 能 有 十 戲 就 很 看 不 能 生 的 話 可 能 會 去 回 去 以 要 找 起 公 作 比 較 想 以 對 環 近
+THEN FOR 外 個 跟 人 進 會 要 是 那 個 裡 面 好 也 一 個 難 而 一 個 男 的 話 他 跑 他 是 難 大 的 就 是 他 經 五 十 多 就 十 多 歲 對 對 很 厲 害
+THEN 我 媽 媽 一 在 家 裡 以 沒 有 幫 跑 知 好 YEAH HAVE TO START FAST ALREADY YEAH人就 他 一 直 對 面 馬 講 的 樣來 是 多 久 了 THEN 你 還 在 那 邊 學
+SO MAYBE THEN THAT I THIS SO THIS PUT THAT' S PERSON THAT IT SOMETHING LIKE YOU HAVE TO YOU CAN WHAT DO WAY YOU TALK TO OTHER PEOPLE WITH IT DIFFERENT SOMETHING LIKE THAT
+然 後 我 們 我 們 然 那 時 候 我 是 五 己 五 打 機 數 我 也 不 為 什 麼 我 的 裡 的 會 全 我 做 五 接 其 實 我 是 一 個 不 大 會 跳 我 人 BUT 我 就 很 JOIN 我 們 每 個
+但 是 會 很 少 SERVER 是 經 在 OVER 了 有 些 買 那 些 比 較 貴 的 可 能OS SHOW 或 是臉 那西 的 我 們 也 照 SUPPORT 只 道 他 的 CHINA 是 UNDER CONSIDER 我 們 叫 是 SUPPORT
+九 然 後 做 學 年 候 多 數 是 個 幾 單 就 做 記 在 然 後 就 TIMES 就 五 等 對
+YEAH THEN LIKE MY FAMILY ONE TO GO MY ONE TO GO AUSTRALIA THIS YEAR YEAH THEN LIKE 你 很 多 錢 樣 去 去 去 就 樣 去
+ATION 那 時 候 是 用 三 的 一 個 TAKE覺
+是 跟 他 們 很 喜 歡 跟 大 一 走 所 我 們 也 只 能 跟 大 走 就 前 生 從 他 們 一 是 間 知 少 哪 一 個 DEGREE 給 看我 讀 完 了 姐 下 我 自 的 如 我 己 走 就 這 樣
+像 你 們 要 解 去 那 你 們 是 有 去 對 那 個 相 子
+進 近 樣 就 近 近 這 樣 不 來 是 很 很 是 很 天 擇 一 個 人 很 P 的 沒 有 有 反 我 們 天 就 是 I 沒 要 去 SCHOOL 他 就 是 在 加 做 種打 少 的 過 後 就 過 後 有 一 點 就 那 個 他 是 的
+OKAY 如 果 如 果 如 果 每 一 年 生 一 直 來 每 一 個 我 們 的 十 個 男 之 裡 面十 個 FRIEND 裡 面 一 己 來 個 都 是 這 樣 子
+好 像 他 們 一 直 給 你 中東 西 做 THEN 因 為 因 為 你 是 INTERNET 你 不 是 FULL TIMES STUFF THEN 好 像 他 們 會 給 你 做 那 種 LIKE 沒 有 他 麼 多 一 是 可 是 LIKE 很 需要 LIKE A LOT 二ABLE
+以 前 的 C A 是 A V A CLUB 在 PRIMARY SCHOOL 的 時 候 我 就 是 跟 我 的 好 朋 友 一 起 參 加 A CLUB
+真 的 有 一 次 我 們 打 完 了 那 個 INTERVIEW GAMES 麼 那 個我 LUCKY 然 後 有 一 個 我 們 教 一 個 心 的 朋 友 是 一 個 IS A 個
+他那 些要 我 之 他 講 I REPORT I COMPLAIN TO 是 的 所 要 其 實 那 些 也 是 普 同 人 包 他 們 就 他 電 話 面 他 只 那 個 是 他 們 之 前 種 前 之 前ATION 被 他 掉 男 了
+SPECIAL 我 過 以 最你 TERMS 少 那 個 片 的 的 的 的 姐 的 LEVEL 就 是 日 本 女 的話 是 蠻 蠻 普 片 了 的 什 麼 大 不 了覺 得
+很 老 那 個 走 出 明 才 三 十 多 四 十 出 這 樣 還 他 很 年 輕年 THEN 他 的球 才 很 還 很 小 他 就 講 最 聽 講 他 不 會 包 他 的 孩 子 道 以 後 沒 有 就 覺得 很 SET
+為 好 住 火 過 點 好 多 很 多 是 麼 是 穿 國 就 他 的 因 為 你 的 BUIES 弟 錢 R T
+AND THEN 我 是 想 因 為 他 就 他 的 HALL 是 的 COL 你 以 自 己 自 己賽 還 有 給 去 那 些 COLOUR AND THEN 那 些 做 子 的國
+每 次 在 YEAR 玩 的 時 候 我 還 有 什 麼 TEST 什 麼 東 西 他 的 很 了 THEN 為 NO YEAR 玩 J C 都 是 FUNCTIONATION 因 要 讀 都 是 比 到 FUNCTIONATION 的 所 以 他 到 YEAR 讀 他 幾 好 清 上 每 個 EXAM JUST TO讀一下 THEN 去 考
+中 學 小 有 中 學 那 候 我 都 不 記 的 THAILAND THEN 有 什 麼 因 為 太 現 在 我 都 很 少 出 國 的 是比 較 小 時 候 候 出 過
+I THINK I THINK CLOSE GREATE AND I DO AND JOIN CAREING SPECIAL ESPECIALLY IS CHRISTMAS DIFFERENCE TIME AND EVERY ONE LIKE YOU KNOW CHRISTMAS DIFFERENCE CAR SO I JOIN
+BUT很 頭 THAT 我 學 到 很 多 YOU AND BECAUSE OF I KNOW THAT BECAUSE OF 在 這 樣 公 司 我 有 幾 到 可 以 有 很 多 多 不 同 的 一 些 一 些賺 TO LEARN 的 ABOUT
+TWENTY FOUR CHECKERS 然 韓 然 看 很 塊 看 完 他 是 很 像 是 TRUE STORY 的 所 就 很 它 是 有ATED TO 的 那 個
+就 我 們 每 次 來 他 們 也 會 GIVE 法 之 類 的 THEN 他 們 也 會 過 我 們 要 ABOUT 我 們 GRAND 的 是 情 AND ALL THAT
+THE BUTATION IS SO MUCH MORE FUN THEN我 BUT THINK YOU NOT HAVE TO HAND WATCH THEN ISIN WHAT
+SOME AT MEAN IT PLACE THEN 是 沒 有 CONTRACT 的 SO IS LIKE THE 好 像 很 出 來 就 是 叫明 天去 不 用 你 天 不 用 上 半 了 THEN ON THE SPORTS LIKE ON THE DAY ITSELF
+就 說 近 樣 可 能 又 比 較 住 一 些 比 較 小 的 公 司 沒 有 像 那 些 之 前 些 大 貴我 的 行 之 類 的 所 以 如 過果 我 們 真 的 有 興 去 話 己 要
+YEAH BECAUSE IT WILL GET OF THEY HAVE NO YES ACCEPT FOR THE RIGHT WHICH FAIL ALSO BE FUN OF ALSO BOTH FAIL SO BOTH WE WILL FRONT
+SO THEN THE JUST 有 SAY WHETHER THE TRY TO THEATION AND SEE WHO IS WHAT WHICH AND THEN WHETHER AREING FOR UP OF COURSE CUSTOMERMENT THEN GIVE A SOME MONEY 你 這 樣
+我 第 年 是 有 買 多 THEN 過 後 就 很 忙 了 因 為 去 TO 月 月 難 THEN 就 比 較少買 不 過 第 年 的 候 就 買 買 比 較 多 本
+個 之 前 半 年 都 是 在 高 我 那 些 那 些 RESEARCH 這 東 西 也 不 是 玩 全 是 我 的 東 西 的 只 是一些就 LATE 到 我 的 A AREA 所 會 比 較 好
+然後 他 們 講 SO 真 為 什 麼 不 要 叫 們 自 己 去 買 車 票 回 家心 他 們 自 只 要 回 家 BUT 那 時 候 就 講 如 果 大 家 去 買 樣來
+BUT但 是他 可 能 他 可 能 大 但 是 沒 有 新 加 坡 大 對 因 為 新 POST FLY現 SINGAPORE來 IS HAS THE GIRLS DIED IF I NOT WRONG YEAH
+不 知 怕 很 搞 為 他後 他 大 到 出 走 他 他 記 很 帥還 讀 好 的 個 是 我 是 個 很 所 一 個 人 THEN 的 那 個 少 個 頭 這 樣 那 個 頭 票來 頭 去
+OKAY 就 講 這 裡
+就 開 始 間 掉 後 地 三 就 慢 慢 回 來 然 然 過 後 就 反 真 都 看 了 看 給 玩 就 這 樣 的 心 臺 就 保 時 看 到 玩 就 這 樣 誰 十 看 一 個
+因 為 我 去 別 的 話 去 HALL 讀 這 種 他 們 全 部 們 開 開 的 整 個 走 讓 的 們 開 概 THEN 走 過 可 以 進 面 比 較 容 易 會 比 較 易 THEN 畢 近 是 那 個 HALL
+一 個 START OF NOTES ON SOFTWARE 的 THEN 我 就 看 講 是 果 ANY BOOK 什 THEN 他 他 過 講 YOU 跟 FIND笑 THEN THAT THEN 我 就 OKAY 以 我 懂 懂 THEN I THINK 那 個 四 個 很 好 的 進 年
+RIGHT 所 你 是 在 家 現 在 這 樣 MO的 一 個 一 個 十 帶 就 是 你 要 有一 個 電 話 有 一 個 INTERNET可ATION 你 就 能 過 看 裡 面 覺 個 聽 電 話 就 就 其 實
+我 我 什 麼 都 看 I WATCH ANYTHING BASICALLY ANY KINDIES DRAMA T ONLY JOIN THEIR REALLY DON' T WATCH I DON' T REALLY WATCH SO MUCH IS HOROR 怕 人 的 我 不 很 喜歡
+做 做了 兩 年 就 跳 還 是 跳 要 去 我 是 覺 還 蠻 不 錯 可 以 長 是 不 同 的 東 西 我 也 是 想 要 去 長 次 不 從 東 西 然 在 年 情 CHOICE一下 就
+然 他 們 去 去 玩 偶 做 時 候 然 他 們 會 近 過 然 後 後 會 過 說 像 我 這 個 地 方 很 好 最 地 要 好 所 以 WHEN I GO THERE TO UN TRY THIS FOOD AT THIS RESTAURANT 之 的 東 西
+很 很 想 想 不 過 他 做 們 靠 近 LESS 你 覺 他 是 對 對 面 我 可 能 他 就 聽 不 懂 因為 我 做 買 遠 而 且 因 為 我 知 道 他 他 他 會 近 量 在 頭 聽 我 了 我 就
+後 不 要 時 間 開 始 五 就 我 這 個 我 有 不 是 很 清 楚 然 後 來 到 後 沒 了 五 個 他 就 在 BLOCK 上 沒 寫 他 說 他 聽 到 後 他 就 在 邊 他 他 打 小 就 就 好 像 四 個 小 花 這 樣
+差 不 多 差 不 都 因 為 他 們 也 是 韓 國 人 開 的 所 那 邊 那 邊
+不 是 我 是 想 你 懂 因 為 我 我 真 想 要 開 開 開 電 是 說TER 樣 子 上 我 真 有 沒 有 你 沒 有 有 多MENT
+IN THATSIDE YOU CAN ALSO DOWN SONG LIKE SONGVER CHINESE SONG MOST CHINESE SONG THEY HAVE AND THEN BUT WE UP THE SENIORS WATCH SO HAVE TO SING WAS YOURSELF AND THEN YOU CAN THINGS LIKE
+YEAH THEN LIKE ALL THOSE LIKEING TO TOGETHER PREPARE FOR AND ALSO THEN DURING SIX ACTUALLY FOUR OKAY BECAUSE WILL YOUR SENIORS YEARS TAKE OVER
+MASTER 的 話 我 自 己 的 ORDER的 我 的 堂 用 那 邊 已 經 有 人 是 MASTER STUDENT 的 所 以 還 不 過 就 到 了 的 LEVEL 還 是 跟 他 們 平 氣 平 做 不 不 是 很
+他 我 好 像 每 次 都 有 我 每 次 要 PROJECT 後 就 覺 很 很 什麼
+HE IF HE LIKE IF WE COME HERE FOR THIS A ALSO YOU TELL YOU HE FROM 他 的 個動IAN BECAUSE WE LIVE AROUND ON THE SAME PLACE
+真 OKAY BUT 現 在 NOW IS LIKE YOU I DON' T HOW TO VERY ALL THE MORE OF THE CREIVEING用 比 較 NICE FOR CATCH
+暫 時 我 沒 有 拍 過 這 樣 久 差 不 因 為 我 是 過 就 是付 的 話 就 是 早 上 去 八 點 樣 拍 拍 到 四 一 點 候 而 THEN
+MOST HALF THE TEAM是 J C A THEN THEIR J CMENT THEY PUT HIGH THEY PUT OVER CHEER COMMENT SO END UP A LOT TRAINING THEY CANNOT DOWN
+AFTER THAT 到 了 最 會 個 他 就 已 經 零 成 一 點 多 了 THEN 他 們 直 的 不 很 想 回 家 THEN 都 就 是 沒 有 人 去 別 那 候 個 THEN 他 因 為 還 有 因 外 個 搞 下 有 人 樣 他 們 起 的
+可 以 上 的 晚 三 聽 聽 一 些 IS 一 些 他 的 課大 其 他 的 課 你 現 如 果 你
+好 聽 說 YOU 的 YOU EUROPE WE WITHIN YOU EUROPE IS ITSELF 是 就 是 也 是 蠻 便 宜 好 像 THEN U 可 能 就 有 如 果 是 心 的 話 所 是 還 像 不 錯
+YES 在 華 語 要 要 是 什 麼 講印 度 人
+是 是 TRUE 的 BUT 要 看 他 們 長 的 多 少 要 COMPARED TO 那 些ATION 還 是 什 麼的我ITY COURSE 的 些
+YEAH THEN 真 是 人 THAT TIME EVERY NIGHT DO YEAR C 很類 THEN 我 們天 LIKE FIVE A M 睡 教
+在 檳 城 一 轉 GREEN 你 不 走 年 的 後 就 HALL了對
+反多了 THINK 你 的IA FOOD STORY 了
+上 ENGINEERING 的些學 他 們 可 能 一 個 星 期 會 上 二 十 多 個 小 十 的 個 我 們 像 比 直 小 我 們 只 是 一 個 星 大 概 有 差 多 十 五 十 六 為 小 是
+上 學 其 下 學 起 我 我 有 上一 END 的 可母 一 一 的 根 部 蠻 有 去 的 有 一 個 是 好 像
+他 不 用 BASE 冰 不 是 他 們 不 想 戲 就 是 沒 有 去 沒 有 真 正 去 用 過 他 而 以 我 像 我 樣 我 也 是 非 長
+SO 就 是 就 是 你 去 TAKE 這 個 EDUCATION 他 就 GENERATE 你 的 朋 友 穿 間 一 個 問 你 出來 WHAT YOU THINK OF WHAT我 就 SAY TO WHAT IF THIS PERSON
+SO IT S UP HOW HE THROUGH的USE FROM OKAY AND HOW HE INVOLVE TO BECOME A MAN FROM HOW HE GO THROUGH
+是 QUITE BIT
+不 是 的 I THINK 是 LIKE的 SOUND 因 為 LIKE 有 點 人 人 而 就 吃 本 是 人 的 來
+他 他喜 ONEING THEN 就 是 是 我 FAMILY 從 小 到 先 在 都 是 蠻 喜 歡ING 出 還 普 一 之 類 的 THEN
+像讀 MATHS 我 現 在 是 TO CAMP 是我 覺 得要買 MATHS BUT 不 知 道 有 什 麼可 以發 講
+YEAH VERY TIME GOT BE THING COMPUTER THING THAT WHY IT IN COMPUTER THING YEAH SEE IS STUDY ONE SHORT OF MY LIFE
+就 好 像 我 們 AT MEET 進 氣 OKAY 就 我 們 好 像 有 放 那 個 普 頭 那 個 那 個 不 頭 是
+生 時 間 在 多 來 房 間給 或 是 高 活 動 CLUB 種 學 校 面 的 種 有 參 種 傳 記 的 FOR 動 就 樣
+WE I CHRISTMAS ALL THE WAY FROM THE SECONDARY WEEK TOED WE I EVERY I COULD T OFING ANY MORE YEAH 三 個 禮 YEAH
+有 有 吃 THEN 就 容 就 邊便 THEN 有 兩 被 前 有 沒 有 SO NOT GOOD LAST STAY HALL
+IT WOR BIT ONE ONCE YOU SPEND I THINK YOU JUST IF YOU HAVE EXTRA MONEY 過 GO BIO GO TRAVEL BUT BASIC HAVE TO BE THERE FIRST
+就 是 這 樣 以 所 所 那 你 過 班 去 那 個 工 作 的 當 的 長 名 去 用 所 以 是 玩 全 NOTATE 的 所 這 個 很 很 出 一 點 所 所 一 開 始 用 是 知 英 文 然 後 在 TRANSL 去 回 的 話
+就 是 十 被 心 之 東 西 年 就 也 沒 有 就 覺 得 他 們 講 有 到 就 OKAY 就 有 沒 有什 麼 喝 別
+OKAY SAY 去 IT'在 MY MONEY THAT MY MONEY HOW MUCH MY THEY HAVE FOR DAY
+基 本 上 是 看 一 些蠻 HOT 然 後 那 個ATION 話 會 比 較 少 蠻 就 暫 十 是
+YEAH 他 是 很 它 是 很 它 是 很 存 天 的 感 覺 然 後 對
+BUT然 了我 JUST 誰 SPEAK IN CHINESE 因 為 就 每 個 人 都 會 因 為 都 會 所 其 不 用 怕 用 怕 有 什 麼身 績 部 說 而 且
+就 是 主 要 我 是 我 怎 麼 選 話 就 是 DEPENDS ON HOW SEE 的 他們 COURSE COURSES CAN MATCH TO 最 重 要 我 覺 得 是 要 可 以 好 像 MATHS 到 一 些
+YOU JUST YOU DO AT YOURASTE I WAY BUT YOU STILL LIKE YOU ARE STILL CON COMPUTERABLE BUT VERY YOU WORK THE SINGAPORE BRAND LIKE 好 像 那 個去 看 會 負 是 單大
+ABOUT CERTAIN 有 NEED CERTAIN FILE 過 後 他 會 如 果 他 有 那 個 BUT OF的 FILE 的 話 他 會 SEND 會 給
+最 些IVE 的 我 不 大 清 楚 不 學 到 的 MODULE 就 是 他 們 講 之 些 就 是 有 題 到 如 果 幫 這些 還 是 MAYBE TEACH THEM HOW TOIZE
+I HAVE KNOW IDEA 我 只 要 去 好 像 去 OFFIC做 工 I DON' T TO DO RESEARCH 我不要 我 不 講 去 每 次 大 在 那 個 LAB裡面 IS' VERY BORING
+那 時 候 是 很 很 國 力 要 上 課 那 時 候 這 上 課 有 那時 候 那 個 錢 還 有 LIKE 那 個 他 講 他 PAY 我 他 那 個 SYSTEM 那 個 MIN就 還沒 有 到
+這 個 是 I DEAL 的 一 個 STUDENTATION 我 不 I 的 話 就 要 要 你 個 學 要 RE 有 要 要 怎 樣 去 去 找 到 一 個 一 個 平 很 點 那 個
+是 個 這 個 裡 就 考 司 的 不 是 也 是 太 多 東 西 要 做 很 還 多 ASSIGNMENT 們 要 感 為 你 不 寫 你 就 忘 記 THAT THEN 忘 記 做 就 因 為 沒 有 TRY 過 就
+LIKE PART一個 THEN LIKE VERY TIME SOME OF THE INTERN FAM OF THEIPING IN THE THREE
+就 是 是 其 實 本 PERCENT 的 的 是 成 樣 多 因 為 你 只 百 錢 差 去 百 錢
+然 後 就 剛 好 MAKE C 他 的 那 個 SCIENCE 可 是 後 來 他 講 好 像 會 TRIP AT THE SIDE 如 果 你 WHICH 到 那 個 SIDE OF THE FAIL 會
+其 他 是 只 是 己 本 會 堂 CORE 然 候 長 常 樣 THEN 剛 心 也 是 都 比 較 是 參 唱 參 長
+從 作 我 們 可 以 了 講 為 什 麼 些 最 會 又 說 開 邊 我 們 可 以 從 從 這 個 這 個 COURSE 裡 我 學 到 一 些 都 東 西 做 想
+不 錯 可 是 他 沒 有 住 HALL 所 以 我 的 我 也 是 他 每 是 過 來 我 的 HALL然 然 我 們 每 次 一 起 好 當 球 所 以
+沒 有 說 喝 沒 有 說 喝 NORMAL 的我 WATER 的 他 們 出 從 於 黑 的黑 的 放 在 那 邊 就 水 喝 了
+THEN MUST I THINKAD FOOD EXPENSIVE THEN TAKE BUT THEN I LIKE GO FORJECT BU PLAY 就 去
+所 以 要 做 幫 就 不 可 以 沒 有 時 間 開 始 TWO 對 所 以 年 該 來 說 只 差 多 一 個 星 其 時 候 一 個 星 期 做 時 間 TO PREPARE FOR EXAM
+BUT THEN COMPARE WITH 第 一 個 MEAN 風 宜 很 風 你 她 是 真 的 很的
+裡 面 的 人 BECAUSE THERE TWO VERY GOOD STUDENT STUDENTS SINCE INSIDE VERY MUCH 十 很 從 明 的 可 是 進 去 也 是 給 老 班
+對
+你 需 要 也 需 要給 他 們 你 的 PRI 的 題 就 像 因 為 我以ATION 到 五 個 五 個ITY 所 以 TO SEE 的 PRIITY 很 從 們 會 決 定
+YOU MUST TAKE A BACK C 比 較 不 要 太 INVOLVE 不 要 太 想 到 我 們 的 INTERVIEW 會 做 什 會 說 什 麼 話
+打給 很 多 不 同 的 FAMILY 那 些 NUMBERBERS 的 好 ALSO 他 們 會 前 的日 一 個人 RANDOM 的 那 個 NUMBER THEN 你 就 要
+已 經 最 天 做 傳 你 就 會 看 到 很 多 不 同 的 那 個 小 樣 所 以 他 就 分 教 要 走 又A 本 那 些 東 西 到 玩
+AFTER I ALSO MOVEONE TO LIKE OTHER GROUP NOT JUST個 GROUP BO GROUP ALSO YEAH
+就 是 每 天 都 去 幾 那 些衣 球 做 久 的 話 就 是 有 時 會 知 道 比 較 DI SOLATION 了比 較 塊
+LIKE 你 給 我 只 會 BON 我 都 會 LIKE 只 是 一 點 點 而 所 有 LIKE PEOPLE STILL THEN HAVE IN
+我 很 多 朋 友 沒 因 為 很 多 能 跟 們 都 是 覺 得 WE AS TUTORIAL月 的 人 直 接 去 V也 就 很 好 玩 講 他 們 講 不 是 THAT NOT THE CASE
+沒 有 很 少 去 有 像 說 有 那 天 又 跟 朋 友 出 去 走 候 看 看 的 語的
+去 是 本 或 者 是 MAYBE 跟 日 人 做 公 是 一 個 蠻 蠻 心 先 的 蠻 蠻 東 西 不 過 我 我 可 以 看 到
+BUT 我 覺 他 們 的 SAME 也 是蠻 ALSO OKAY 他 們 的 FINAL 好 像 蠻容 易
+找 OKAY 在會 NO天 I SHE DAY ROOM
+他 好 是 他 好 是 不 用 照 成 就 是 有 生 明 在 就 是 這 樣 沒 有 掉
+TAKE 他 他 一 解 會 看 開 點 在 在 還 好 因 也 是 蠻 擔 心 的說 MY CON CONFERENCE 對
+SO NEXT YEAR NO NOT IF I CAN STAY I CAN STAY I HOPE I CAN DAY IF NOT ROOM OR MY GOT DO JUST LIKE
+我 覺 很 好 笑 他 們 就 一 點 那 些 組 THEN 的 一 影 整 樣 他 們 講 很 怕 很 怕 的 看 走
+而 有 我 跟 PAPER 還有 跟 東 記 誰 了 就 我 認 之 幾 人 THEN 我 邊 吃 我 為 直 空 司 然 然 有 空 拍 而些 I我 INTERESTING WITH 上 J PAPER
+沒 有 我 的 是ATION 是 BETWEEN TWO 為 是 IF LET SAY IF LET SAY 我 跟 一 個 講 比 講 話 那 個 想 沒 沒 有 回 我 IS NOT
+不 是 想 是 因 為 那 邊 在 有 他 們 又 看 身 看 生 了 那 主 一 直 留 下 去 然 他 們 有 做 一 種 N ENGINEERING 他 們 就 種
+THEN 他 就 是 的 不 個 他 他 就 加 他 就 THEN 話 那 個 難 的 就 上 一 個 女 的 然 他 那 個 就 那 個 男 的 就 在 那 個 女 的 面 錢 那 個 說 不 要 給 做 那 個 說 比 較 走 的
+可 是 我 覺 得 這 樣 ACTUALLY IS QUITE 要 己 幫 半 你 的 穿 你 你 沒 有 自 己 的 我做 GAME 沒 有 自 己 的 STUDY 我 覺 這 樣 也 蠻 不 方 別 的
+以 然 我 是 我 我 是 我 的 華 部 好 可 是 I UNDER STAND THIS IS COACH睡 TEACHING BETWEEN ENGLISH AND華語
+YEAH THEN 以 經 多 在 做 工 其 實 很 走 已 經 我 我 經 我 在 讀 歡 們 我 接 去 在 做 工 所 所以
+我 會 每 個 星 期 會 帶 睡 國 來 SO 每 天 會 吃 兩 分 水 國 樣 VERY 那 個 飯 就 近 樣 少 吃 對
+不 要 不 要 OKAY你 就 講 你 會 把 那 個 就 放 貴 個 單 孩 子 這 是 不 是 難女 的 問 題
+對 THEN AS IN我 也 是 我 OKAY 就 EVEN都 THEY ARE STILL DEGREE THEN WHEN 有 些 拿 的 DEGREE 的 只 候 他 們 只 好 BOSS 就 CHRISTMAS 他 們別 出 DEGREE 的
+OKAY IS FROM OF TOO AFTERNOON就 LIKE 也 是 不 子 十 間 多 還有 BUS 好 錢 那 種
+所 以 以 前 我 是 一 一 個 個 SUPPORT 就 是 只 晚 SUB SUPPORT一 些 可 哭 一 些 不 比 較 普 同 一 些 其 出 上 TAKE 一 個 的
+ANY SCHOOL THEFUL BOTH I SUPPOSED I WAS SUPPOSED LIKE GO FOR LIKE THE WAS IN THE HALL FOUR SOCCER TEAM
+也 有 一 些 人 說 是 我 的 沒 THEN GOT SOME SAY MY SIDEURN BECAUSE MOST CHINESE看 GO CYANT PASS YEAR LOOKS AND
+太 了 百 一 個 他做 OFISTIC AND PRO 所 我 們 如 果 從 這 邊 放 考 我 們 就 可 能 會 最 這 些 方 比 較 RESULT 一 點
+然 後 像 港 跟 臺灣 就 說 女 去 那 邊 旅 心 是 邊 買 回 來 還以 你LY 過 去 買 回 來 就 不 子 的 因 為 就 是
+下 去 我 像 是 本 的 時 我 想 吃 是 本 時 YEAH THEN FOOD IS LIKE MY FA
+不 是 候 好 什 這 個 去 因 為 現 在 個 CAP CY沒 有 很 好 THEN 我 們 要 IMPROVE發 的ATIONCY
+NOT ONLY FOR AUSTRALIA 不 是 講 一 定 很ECT 就 是 IMPROVE 在 這 個 AREA 跟 另 外 一 個 IMAGE 也 會 IMPROVE 就 是 不 只 是單 AUSTRALIA罷 了 了
+THAT AFTER THAT 我 就 做 做 動了 出 一 個 小 時 這 樣 很 去 RES下 看 也 不 要 這 東 西 BENEFIT 不 次 我 就 是 樣
+SO 對 有 什 麼 RES 第 就 是 他 的ITY 就 是 幫 半 人
+I KNOW 開不到 KNOW還 不 到 就 要 看 你 所 為 開 到 都 是 拿 一 個 開 不 到 因 為開 什
+I MEAN ON TALK我 那 些 以 前 的 S M CORE 我 有 現 在 出 重 要 就 是 有 要 G P 要 可 以 ON ONLINE
+我 我 跟 我 的 FRIENDS 通 常 是 講 BUT IN SCHOOL I THINK 我 去 做 工 也 時 候 每 是 MANY IN ENGLISH
+很 從 東 西 炒 幾 單 種 近 績 單 比 較 簡 單 的 就給 比 較 負 在 就 可 能 沒 有 這 樣 戲
+那 時 定 不 是 我 真 的 頂 如 是 大 概 是 TWO THREE DAY 這 樣 我 就 STOP 了 THEN現 在 怎 包 東 西 在 我 錢
+OKAY 因 為 為 那 候 我 是 問 我 也 是 蠻 感 一 些 的 那 後 沒 有 去 THEN 但 是 沒 有 去 O 選 怕 沒有
+SO 所 所 以 就 DR 上 小 就 是 蠻 就 是 賺 們 就 是 種 打 機 月 起 的 的比賽 然 後
+如 果 出 去 記 的話 THEN YOU WOULD STUPID SO WE WILL BEKET OF THREE OR OF FOR SO YEAH I REALLYORTABLE WITH THAT
+衣 IF 服 不 是 沒 有 就 他 他 這 進 去 SHOPPING 他 較 只 要 穿 的 就 OKAY 一 十
+要 那 個 那 個 那 個 人 講 主 吃 人 講 的 REASON WHY 臺 要 臺要 那 個 C 是 英 為 他 以 前 有 一 個 CASE 他 們 是
+就 是 有 一 些 是 是 好 像 你 去 吃 人 家 得 那 個ING DINNER 的 的 的 時 候 你 覺 得 好 是 候 你 就 跟 他 拿 CONTACT
+二 二 年 我 們 清 現 在 是 讀五 年 了 就 出給 以 的 是 一 個 就 你 的 戲 說 好 其 多 少 這 那 種 後 到
+打 了 沒 有 不 為 什 麼 別 人 大 的比 PRESENT 你 後 我 打 可 能 打 太 高 他 經 THOSE G的 PROCESS 當 去 一 個 OPEN 地 方 的 是
+I YOUED OF BRING A ABLE TO WENT GO AND CH球 WITH A ONE THOUSAND BUT PROBABLY EIGHT SEVEN A HUNDRED PEOPLE FOR OR那 ALSO NOT BECAUSE
+NOT SAY是的 SAY SOMETIMES在 DAY TO BE AND TOO A
+THAT YOUR IN LIKE THE YOU DON' T LIKE THAT YEAH THAT THEM LIKE 想 SOCIAL一下
+對 對 對 看 也 上 可 點 是 不 同 的 文 話
+但 是 大 部 分 時 候 都 是 兩 個 到 三 個 因 為 四 個 是 真 的 是 太 很 難 去 MARKET 四 個 人
+YEAH THAT SO歌我 就 我 沒 有 看 過 話 THEN THEN 我 就 為 他 是 YEAR 這 個 講 華 原 還 YEAR THREE 了 THEN 他 TO HALL FIVE三 年 了
+就 是 都 是 用 子 做 的 等 種 然 後 就 最 幾 點 就 就 覺 得 很 很 好 玩 就
+而 且 他 們 要 來 找 我 們 也 是 蠻 麻 煩 一 點 而 且 我 幾 第 自 前 也 是讀 U EXAM 不 過 是 另 外一 BUT
+他 去 到 幾 前 六 月 的 CAMP 很 累 THEN想 是 沒 有 想 到 HALL 開 也 是 其 所 就 好 像 I CANNOTATE 這 個 明 語 的 看 覺 所 就 還 是 去 參 加 的
+年 不 過以 STAY 如 果 個 YEAH 的 話 如 果 LIKE SONG 方 面 都 OKAY THEN CAN可以 DAY 就
+所 以 所 以 我 們 的 賣 點 就 是 他 像 換 的 中 學 的 戲 以 你 還 只 會 對 這 個 LANGUAGE 別 兩 進 去
+ATE 用 英 文 來 個友ATE 的 很 少 會 用 其 他 的 國 家 的 語 遠 MALAYSIA 沒 有 這 樣 那 個 出非 我 們 去 到 PLAN
+所 所以 他 可 是 以 你 做 在 DEPENDS 在 的時 候 你 可 以 FRIENDS 可 是 你 的 DIFFERENCE 只 那 到 一 個 裡 裡
+很 少 唱 很 很 少 歡 聽 為 文 個 人 喜 歡 去 長 以罷 因 為 K給 感 就 很 華 人 講 很 華 人
+我 們 那 你 就 有 而 叫 們 那 年 們 一 經 去 我 我 過 FRIEND 講 反 像 我 們 在 沒 有 POST SYSTEM 以 前 是 POST SYSTEM C 要 上 分 的 TO GO你 然後 的 他 到 我 們 那 BATCH
+THEN很 笑 FRIEND
+我 FIRST去 在 GOING J C THEN我就 JOIN BUT 他 們 的 TRAINING 很 大的 OFFICICAL TRAINING IS S LIKE
+做 有 一 個 好 人 RIGHT 做 一 個人 RIGHT AS A PERSON RIGHT 應 該 學 會 GIVE AND TAKE 不 要 不 要 只 學 為 什 麼 TAKE
+有 有 一 前 是 比 較 是 爛 找 有 一 間 們 只 是 比 較 SUB MENT 的 的 是 藍 去 樣 錢
+就 這 樣 當 哪 也 是 又 會 好 出 就 是 我 學 到 東 西 也 是 不 錯 變 成 可 我 對 一 這 個 好 心 比 較 有 興 去要 變 能 這 樣
+有 其 直 在 叫我 放 進 BASIC 裡 面 的 話 就 過 力 被 的 被 好 會 EXAMAL問 到 這 麼 你 要 用 這 個 這 樣 多ED 你 這 用 自 幾 個
+THEN 他 們 有 一 個 最 星 機 話 因 為 他 們 十 做 年 的 THEN 那 個 節 目 有 是 他 們 自 己 的 點目 所 以 他 們 就 來 個心的 T 話 就 是
+比 較 比 是 算 這 麼 多 了 裡 面 NEED 你 面 是 最 最 凶 最 想 拿 以 跟 那 個 NE V 那 些 比
+BUT 可 能 有 時 候 這 樣 府 是比 不 的 可 能 找 新 加 坡 人 做 有 一 些 工 他 們 有 要 走 好 像
+找 到 工 不 同 要 很 STRESS 我 每 天 對 要 去 JAPANESE FACEBOOK TO PLACE MEETING
+然 後 那 個 是 A ONE SCIENCE 所 以 算 蠻 然 後 IS'不 的 A EXPERIENCE 上 面 放 那 一 個 上 面 哪 給 PUBLIC TOPIC 看一 下 那 個
+THEN YEAH YOU BE REALLY THEN THE TO TOO GUY WERE LIKE是 便打話 AND SAY REALLY對
+就 去 那 邊 INTERVIEW 人 拍 照 片 然 後 寫 下 來 做 個 機 就 就 去 到 當 地 的 樣 去 日 本 找 本 那 沒 有 華 人
+然 後 姐 下 LIKE 可 能 他 有 做 等 光 的 LIKE THING 的 做選 的上 CO HOLIDAYS 還 有 很 多 跑 會人 一 大 對
+BEFORE THAT QUITE OKAY 因 為 我 只 JOIN DANCE ALL THAT THEN THEY THAT TIME I QUITE EXAM THAN THEY STOP
+而 且 他 們 的 那 個 路 拍 也 做 到 很 漂 樣 的 面 就 是 應 該 在 哪 一 個 地 方 出 全 就 出 先 那 一 種 所 以 不 大 會 有 路
+他 真 的 就 走 年 個 有 嚴 一 開 始 給 你 看 然 後 他 我 花 的 就 在 給 看 差 很 多 真 的 是 百 一 個 從 你 不 以 一 個 美 一 個 上 六 是 會 的
+ACTUALLY 我 的 Y P 是一 個 我 是MENT VERY的 PROJECT SO 我 常 常在 人 做 東 西
+然 的 下 很 要 樣 他 下 小 心 新 在 邊 因 那 個 BOOK 過 很 的 他 的 讓 後 面 了 的 很 多 兩 去 那 個 百 他 的 那 個 跟
+SO 他 他 們 想 是 買 那 個比 較 大 個的 SCIENCE SO 我 的 UP ALWAYS FINISH VERY FAST
+沒 要 BUT 的 U S在 CANNOT A DOT HIM 不 可 以 HE CANNOT MY GRADUATE THEN 因 為 他 不 是
+可 OKAY 你 講 還 HIGH 以 前 你 前 那 個 BOND 那 個 LEVEL BROTHER 的 的 BOND 是 那 個 BOND 是
+看 看 看 就 來 喜 我 沒 有的 FORCE OVER OF COURSE不可 以 然 根 都 THERE 他 都 不 同 友 人 什 麼 這 樣 我 就 THEN 我
+我 為 說 不 錯 BUT 我 對 NO對 我 過 了 那 個 年 另 KNOW 我 前 很 想 看 種 類電 還 有 還 有 DRAMA
+然 後 MASTER貴 的 會 有 股 先 然 然 他 改 那 個 課 像 去 就 是 比 較 然 後 他 可 以 做 的 動 作 比 較 多
+LOT OF PEOPLE DO I LIKE IF YOU FOLLOW ME TO GIRL AND YOU HE IN INDIAN THEN THEY BE LIKE YEAH
+就 是 電 是 他 就 找 這 種 有 明 想 的 人 去 年 戲 所 以 基 本 上 現 在 的 演 遠 他 們 的 SKILL 也 不 是 怎 麼 樣 就 是
+該 沒 有 ONLYATION OF AND SET JUST THE MAN
+我 我 們 的 GROUP 後 有 OVER HEAD 他 就考ATE 那 些 那 些 B 那 些UM 那 些 來 SUB SUPPORT 他 那 個
+我 覺 OKAY 因 為 沒 去 差 看 一 些 地 方 小 人 國 一 個 地 方 因 為 校 什 麼 小 人 過 的 個 TEAM PARK
+就 J 近 最 近 我 的 通 學 門 多 在 看 好 像 那 個 樣 自 講 的 兩 子 的 心 文
+你 如 果明 天 不 要 去 你 做 天 去 的 就 浪 THEN AS A RESULT OF THAT THEN就 就 也 是ED TRAINING
+我 覺 得 我 覺 得 會 去 JOIN 我 會 去 JOIN AS I MEANING THEN IS' LIKE
+BUT TO MY TO MY MUM ACTUALLY 有 就 會 很 很 I A VERY SHOP FEW 好 像 他 有 候 講 雖 然 是 我
+是 有 OFFICE HOUR BUT THEN MANAGER 不 會 說 好 像 貴 定 你 說 一 定 到 在 這 個 時 間 來 你 自 己 還 時 間
+兩 個 的 到 一 些 人 的 只 時 這 個 是 最 大 最 大 的 SKILL 這 樣 然 然 後 L LANGUAGE 然 我 們 彈 到 LANGUAGE 的 話
+我 有時 候蠻 STRESS 時 候 先 會 一 到 問 題 PROMOTE 就 是 很 難 路 歲
+THEN 去 做 公 課 準 被 我 點 他 晚 上 有 定 所 以 他每 定 要 去 講 一 些 間 得 在 我 們 是 SIGN UP AS 校 道 那 個 那 個
+FIFTEEN 他 那 TO SQU HALL FOUR 現 在 他 做 FIFTEEN ACTUALLY 他 是 GOT 他 GOT 那 個 很 拿 到 HALL FOUR
+IS S NOT FROM HALL OUTSIDE AND BECAUSE 們 像 個 同 易 很 CLOSE 所 還 有 去 問 他 也 個 P 學蠻 CLOSE 的 所 以 他 有 去 問 P 學
+感 覺 是 覺 得 因 為 那 邊 比 較 冷 然 後 覺 沒 有 想 過 自 己 這 樣 天 近 那 個貴
+AND THEN I WANT TO RED BIT HER 以 前 的 那個開 THEN 他 SHE SAY SOMETHING LIKE HER PARENTS DON' T STAND HER 我
+SO FAR 我 IN 部 我 的有應 該 是 在 進 去 那 時 候 他 們 給一 些 有 讀 EXAM
+所 別 人 CAN 下 去 看 加 PERFORMANCE 或 是 他 是 唱 看 唱 過 他給 的 好 是 面 進 就 每 是 麼 會 這 樣 走 所 以
+很 間 今一 點 我 們 這 裡 的 LOCAL個 CONTRACTICS 後 CAMP 就 是 這 裡 就 是 HOT AND U
+我 像 學 SERVICEING 我 覺 得 是 個 很哭的 SPORT 還 有 LIKE
+第二 就 是 可 讓 跟 多 人 清 楚 的 知 道 我 們 有 這 個ITY 去 大 六 興 讀 中 生 年 於 會 做 十
+BUT 對個來 他 不 可 以 跟 你 的LINE 混 在 錢 樣 都 果 也 是 你 要 去 到 AREA TO 大 那 個 NORTH來的
+ON THINK IS DEPENDS ON ONE來買什麼 ON ONLINE買衣 那 些 我 覺 還 不 很 這 樣 BUT
+我 有 這 樣 的 問 題 我 成 的 我 通 常 都 是 要 自 己 去
+RATHER THAN 真 的 是 去 上 我 們 是一 子 上 了 幾 前 的 一 個也 去 是 SECONDARY就 FOR 一 個 禮 拜 BUT INDIAN 只 上 的 幾 天 的 而
+怎 們 講 朋 有 可 可語 NO AT WHAT AM SAYING IS WHEN YOU TALK ABOUT GET EVERYTHING A GO FRIEND THE ALL THOSE WHAT TAKE跟 ALREADY
+然 後 有 些 CUSTOMER 他 們 就 打 近 來 掉 可 是 們 冰 不 上 買 東 西 的 因 為 那 個 NUMBER 是 頭 FREE 的
+LIKE YOU RIGHT A YOU BUT YOU YOUR WHAT YOU THINK ABOUT THE IF SHOULD AND WHY YOU THINK IS IMPORTANT TO KNOW THIS IF YOU WHY YOU THINK WHAT IT WASED
+AND ON TALK OF THAT 我 們 還 有 這 個ERS 也 是 一 個 DISOS是 PRODUCT OKAY 他 們 會 用 在 OITY
+要 都 就說 他 能 間 少 你 的 生 題 的 好 像
+用 會 比 較 塊 因 為 THEN ONCE 你 放 那 個 EDUC ATED 會 的 到 RESULT 笑
+高 WHY YEAH SO
+不 過 有 時 候 也 是 一 些 CON PERSON 我 不 知 到 可 能 MALAYSIA外 當 你 到 一 個 年 的時 候 FOR 用 女 人 他們定 會 有 一 些 CON PERSON你的 年 然 後
+FIRST YEAR 應 該 是 因 我 們 個 是 參 加 種 的 東 西 所 所 以 做 COMPUTEROTICS 是 些 東 西 THEN
+AND 還一 些IC新的 PROCESS 也 是 有 一 些 COMPUTER GRAICS的 COURSE
+檳 不 是 很 很 很 ENJOY 的 一 個 地 方 他 們 的 是 接 飛 常 比 去 那 個 上 需 下 的 那 個 關 係 也 是 很 很 年 中 所
+和 沒 我 過 I WANT TO PLAN AS IN STARTINGING A FAMILY說
+不 問 你 去 然 是 講 說 我 們ING 那 個 ADVANCE 不 過 還 是 有 三 分 二 個 學 生 會 跑 去可 以 去 去 讀 玩 他 們 的 那 個班 和 DEGREE
+所 以 I THINK 其 歡 這 個 YEARS都 一 定 要 HAVE TO DO THEN 不 就 LIKE 了 關 一 點 當 說
+太有 來 THEN 就 講 話 THEN 我 有 OKAY 樣 最 生 候 為 什 會比 我 為 QUITE 不 想 因 為 那 時 候 他 的 有
+要 那 些 就 是 他 的 MAKE個 好 像 AIR RO 他 全 部 他 們 就 是 有 CON 部 因 為 很 多 ORDER 來
+然 後 有 就 說 給 邊 有 給 媽 候 好 說 你感 還 是 不 書 就 去 我 的 給 IN他 那 邊 去的
+然 後 後 來 個 幾 前 只 是 已 經 四 接 要 路 懂 了 所 以 他 的 風 一 是 會 來 就 很 能
+LAST TIME WAS MORE SEE THE TRAINING LIKE CHOICE A WEEK THE BE BECAUSE TO THEN
+THEN 我 是 就 是 你 看 你 看 你 看 那 個 表 他 其 實 是 跳 好 講 的 你 看 所 所 就 我 要 壓 一 的 候 我 就 會 覺 興 苦 我 就
+那 種 間 單 的 才 會 YOU 什 麼 次
+對 像 是 你 去 個 人 講 你 要 時 間 做 之 你 看 WHAT THEY WILL GIVE YOU IF DAY VERY 有 時 間 做我 做 那 個 你 講 你 很 厲 害
+LET' NOT THING ABOUT條 錢 SO YOU SHOULD HAVE SOME THING THAT WILL MAKE YOU 開 心 一 點 A男 人
+就 是 臉 會 比 較 關 一 點 點 然後 過 也 是 有 看 的 到 會 比 較 好 看 過 DI RIGHT 的 那 個 FRESH
+因 為 他 的 那 個 PLAN 他 是 沒 有 CLOSE 那 那 個 那 個 的 的 拿 那 個 主 的 人 你 還 要 找 外 面 的
+為 開 始 最 已 經 不 少 的 他 是 講 兩 點 CHECK 我 們 是 二 點 多 大 用 緊 我 們 講 我 們 的 到 兩 點 因 為 我 也 有 什 麼 地 方 去
+這 你來些 C 的 就 是 我 我 不 是 AS不 很 多 只 是 我 知 到 像些 P PROGRAM 他 們 是 樣 BUT爸 PROGRAM 他 們
+其 實 他 有 三 本 書 的
+SAME部 他一 定 TOUCH 到 它 的 手 一 較 他笑 兩 廣 掉 點 他 要他 是我 的
+因 為 我 們 好 像 我 們 COMPUTER的 我 們 COMPUTER SCIENCE 是 人 都 是 看 你 的 書 我 們 的 是 看 是 目 你 講多 是 是 SCIENCE
+FUN ACTUALLY I DO MISS MY FRIEND EVEN 我 們 現 在 沒 有 年 路 就 我 覺 得 當 你 長 大 只 後 RIGHT
+AND LIKE MAYBE LIKE BLACK I YEAR TRY的我 就 是 這 些
+SHE SOME STUFF TO ME AND LAST TIME IMENT NO BLOCK LIKE SORRY AT PUSHERS THISAME STUFF AND THEN SHE ALSO SAID HOW SHE MISS ASK I MEAN A BIT WE
+為 比 較 好 像 有 這 樣 FAM 有 這 樣 有 樣 多 人 去 去 要 近 那 個 COURSE 是 CAPURE 的 很 多 的 近 很 多 經 不 到
+會 我 覺 得 是 不 錯 一 個 NOT BIT IDEA 只 是 我 要 找 朋 友 公 我 去 去 就 一 點 可 能
+後 面 的 那 個 是 WHICH說 FIGHT的 就 是 他 前 的付 責飛 後 面 的負 責 EDUCATION 還 有
+他 是 很 很 平 近 的 一 個 到 所 以 那 邊 那 時候 候 我 們 去 是 一 不 很 多 話
+YEAH 對 I DON' T KNOW NOW I JUST MY MYSELF SOMETHING AT THEROCTION RIGHT I THEN MY WHOLE SEMESTER DAY
+他 們 是 會 用 發 以 樣 你 發 語 他 們 會 ENGLISH 進 去
+做 去我 十 是 浪 費 SHE 我 的 CUTE 好 像 種 TO CAMP 你 TO會 就 就 還 媽 好 玩 的 就
+不 少 個 片 有 些 他 們 是 沒 有 貴 定 不 有 些 可 能 就 說 在 能 大 概 TEN地AGE 所 有
+那 個 沒 有 這 麼 長 忘 記 實 什 麼 名 種 忘 記了
+一 個 就 是 是 CAPIC CON 生 一 個 是 是 不 人 普 近來 THEN 他 們 沒 有IC 過 SO 他 他 不 能 RUN 它 的ATION
+什 什 麼 文 什 麼 SOMETHING文 三問 YEAH三 LATE YEAH 越 參 CORRECT
+以 前 那 邊 活 過 老 吃 的 可 是 因 為 好 們 要 近 那 個 華 也 以 全 部 的 走
+BUT THEN RIGHT FROM HER FROM A BLOCK SHE TRYING TO SAY THAT SHE THIS SHE THAT BUT THE MOST SHE SAY THAT THE MORE IS OFVIOUS THAT SHE NOT
+WHAT CANNOT TO DO為 什 麼 你 不可以 TAKE 就 個 就 是 我一 直 在 問 的 你 就 講 NOT 他 還 沒 有 得 DISCUSS 還 沒 有 到 什 麼
+講 NUMBER 是 很 很容易 的 現 在 他 的是 可 以去到 很 高 了
+所 以 AND END UP 的 是 我 把 所 有 的 那 些 一 SPECIAL BASIC好這 像 SHORT 我 的 問 全 把 他 請 掉
+NO I GOT聽 BEFORE BUT I WILL ALWAYS BE THERE ON YES
+我 們 去 NOTIM 我 們 去 做 什 麼 忘 記 是 那 種較 O THAT O LIKE 的東 西下
+想 西 他 們 玩 THINK QUITE FUN YEAH EVERY DAY
+THEN AFTER THAT 我 們 跟 定 我 們 就 從工 START THEN AFTER 我 們 就 我 們 就 在 我 們 聽 車 在
+THE AREA 你 上 看 到 的 是 在 那 個 DI FOREIGN DI FOREIGN IS SYSTEM
+可 是 會 找 一 個 AND 辦 法 ANOTHER UNDER CERTAIN的地 會 去 做 他 個 CUSTOMER 開 心
+GO THERE FIRST THEN SAY 我 AFTER我 LEVEL THEN 近 不 了 的 話 就可 以考 BAND來 GET IN
+OKAY N T U C A SEE YES LIKE IT' ONE THE SPECIAL PROJECT N U C
+BUT 如 果 你 你 有 興 去 這 個 這 個 星 期 天 是 N T U 他 們 DANCE TEAM 的 JOIN DANCE CONSIDER CONCERT
+大 有 時 候 FIVE A PLUS 就 開 始 教 了不 不 就 是 SIX IN PLUS
+因 為 THAT DAY 下 會 有 FEW HUNDRED 人 去LY 一 起 跳 近 那 個 戲 所 以
+CAUSE沒了 有 些 是 找 不 道 然 後 有 些 是 以 經 做 不 是 做 來 T 專 行
+們 故 記 他 的 故 是 大 概 會 過 去 可 能 會 來 的 時 年 會 帶 大 有 們 什 麼 的 這 樣 那 一 些 收
+他 們 不 會 他 們 的 是 比 較 感 感 這 樣 的 然 後 後 而 且 他 們 的 YEAH 為 沒 有 這 樣 種
+I EVERYTHING THE SOCIAL SHOW THE GENER IS STILL THAT
+比 也 時 候 HOPEFULLY一 CAN GET JOB 然 就 先 的 的 先的 讀 這 樣 的 書 然 會 找 要 JOB 對
+聽 唱 有 都 是 FACEBOOK 不 那 些 去 有 看 些 些一些 V
+BECAUSE THE THING IS RIGHT 我 覺 得 OUTSIDE DRI IS 比 較容易 AS COMPARED TO INSIDE SPECIAL ESPECIALLYING MAN YOU TAKE MAN
+THEN 我 就 之 選 FIRST TRY 一 度 THEN 一 THREE THEN 地 幫 不 要 管 了 THEN 我 跟 我 們 就 看 那 個 SUBJECT 有 什 麼 I 有 看 的 BUT 那 候
+可 是 我 不 多 走 的 轉 覺 的 很 會 時 間 又 很 會 進 錢 然 就 要 冰 過 你 的 TEST不 是 什 麼
+他 們 都 要 用 SPECIAL EFFECT 而 且 他 們 很 難 好 像 我 們 就 是 很 難 好 像 要 做 人這 樣 CON CONTROL 們 的 MOVEMENTS
+因 為 有 是 五 過 很 好 課 講 他 就 有時 候 LIKE 種 BIRTHDAY 我 會 請 人 LIKE 新 了 I 會 請 他 FRIEND 成定 他 講
+I THINK我要 MOVE THE MUCH一點 他 HELLO HELLO THEN
+有 些 真 的 沒 有 講 話 可 是 我 有 講 話 所 以 PAY 比 較 高 THEN 下 個 星 我 又 會 下 去 的 考
+我 有 看 過 我 們 在 FACEBOOK部 年 PROMOTE 可 是 們 只 是 我 慢 的 BUILDING 然 後 做 好 像
+BUT比 RECESS 很 為 不 懂 都 麼給大 RESTAURANT 的 時 候 很 難 聽
+WE YEAR BIT THEATION ALREADY AT JUST NOW FOR SIX IS
+那 一 個 RUNTER 的 真 的 很 那 個 地 方 很 近VICE 沒 有 很 近 就 可 能 這 裡 到 不 多
+除 非 是 真 的 真 的 是 做 的 很 多 的 公 課 LIKE 哪 裡 好 玩 自 己 THEN 寫 好 好 去不 然 沒 有 的 話 就 最 好 這 跟
+I SPEND AND ONLINE MONTHS 九 個 月 的 去 年 在 是 來 等 那 邊 我 們 的 HOME 可能
+他 們 在 沒 有 那 些 什 麼 FREE ISLAND 那 些 看 看 看 不 同 東 西
+去 A 可 是 我 覺 得 朋 友 其 實 HIGH 在 那 個 己 到 蠻 重 了 會 會 可 是 可 能 我的 朋 友 比 較 好
+ACTUALLY I DON' T MAYBE I WILL LIKE TO GO ARMY CONTINUE MY STAY BECAUSE 如 果我 去 就 是 近 C
+這 樣 我 就 不 太 清 楚
+ON THE FIRST DAY ON THE NIGHT NO ONE WEEK BEFORE NO UNLESS START MANY
+人 三 對 就 是 叫 個 這 樣 WHEN CHARGE OF
+THEN 有時 說 有 說候 我 會 講的 因 為 有 說 我 覺 得 他 們 的 SET 會 比 較 比 較 顧百IBLE
+那 邊 還 他 那 邊 還 好出 飛 你 會 SURFING 那 種 種 東 西 我 們 就 去 TEAM PART 玩
+THEN 我 AFTER 我 爸 就 教 回 家 的對 我 就 很 少 我 很 少 少 HALL 叫 回 家 所 我 時 候 我 不 記 在 每 個 GROUP 等 TO 個 EUROPE TURN 去 THEN
+I BEEN THEN 就 是 從 從 九 歲 樣 就 開 始 DANCE 了 YEAH
+EVERYTHING CAUSE A IT WAS LIKE HOT PROJECT LIKE THEY TRAVEL FROM COUNTRY TO COUNTRY IT' AIP UP
+而 且 ARCHITE 的 話 你 讀 了 三 年 出 來 只 是 DEGREE OF SCIENCE罷 了 我 們 是 DEGREE OF SCIENCE 樣ATE
+SO YOU ONLY WATCH忙二沒 有 看 AS IN
+而 且 我 們 也 過 那 GO 那 是 出 很 的 不 有 來 不 是 因 為 他 們 是 最忙 MALAYSIA學 是 最 先 的 還 歲
+SINCE JOIN THE C些 THE MAIN COM CANNOT HAVEFUL TIME JOB OR PART TIME JOB LIKEIFY THAT KIND
+我 不 清 楚 很 的 很 就 沒 有 去 了 我 也 是 沒 有 什 麼 就 因 為 沒 有 想 要 在 去 多 一 次 想 去 去 國 家 可 能 以 後
+OKAY I MEAN個 FOR QUITE ABOUT ALREADY THINK THEY LEAST A ONE TWO WOULD TO YEAR FOUR WAS SO FAST
+就 I GOT THE NO CANNOT I GOT FACEBOOK BUT我 SAY NO MAYBE REALLY我 就 會 如 過我 講 然 就 SORRY KNOW
+是 買 那 些 TRY VERY G FOOD 那 些 東 西罷 的 COMPARE 跟 K L OKAY 會 比 較 貴
+WHICH CHECK CLOSE BOND YEAH 好 像 就 好 像 現 在 我 們 在 HALL 這 樣 BE SPEND OF UNDERSTAND TO TOGETHER
+THEN 不是 WAS LIKE YOU ARE的 MAIN PURE YOU個 SOUTH THE PROBLEM MYSELF RIGHT I UNLESS IS真的 很 難 LIKE CANNOT FIND A PROJECT
+我 做 過 了 因 為 現 在 有ION FOR STUDENT STUDENTS RIGHT SO LAST I WENT DAY BIT MY SECONDARY FRIENDS
+YEAH I CHOOSE THAT SCHOOL BECAUSE IS A I THINK IS THAT REALLYATE SCORE WAS A AROUND MYANGE
+就 是 我 們 這 些 女 的 我 們 SATURDAY 三 天 都 時 會 有 自 己 的 東 西 比 會 有 自 己 的 東 西
+什 麼說 真 的 LIKE 不 開 心 LIKE 去 LIKE B 其 出 的 時 候 BUT THEN AFTER THAT LIKE GOT BETTER THEN
+MYATION WAS CHANGE TO CLUB AND AFTER THAT GAME MAN SINGAPORE CLUB
+YEAH 那 個 那 個 五 走 就 那 個 那 過 後 一 講 FINALLY 我給 他 他 看 在 我 名 前 貴 一 下 來 了
+其 實 好 像 兩 差 尾 很 多 他 他 很 多 次 多 被 A PRO 就 是
+因 為 公 前 部 是很 高 THEN 就 做 了 差 不 多 半 年
+你 才 可 以 下 THING ONE SO YOU CANNOT JUST JUMP TO YOUR QUESTIONS BECAUSE 對 一 個 人 來 說 你 可 能 很 重 了 可 是 對
+會 很 後 我 覺 得 一 要 我要 我 想 整 就 四 己 OKAY 我 人 整 就 是 接
+ONLY FOR 上 個 小 時 I THINK IS A VERY 短 的 時 間 AND 你 不 認 是 它 所 會 覺 很 剛 高
+SO IT' VERY REALLY靠 自 己 IN WAY 你 幾 是 要 讀 數 就 真 的 去 讀 說 其 實 玩 就 OKAY ENJOY
+MASTERIN 的 種 HARD 弄 動 的 就 是 政 去 的 人 起
+那 個 不 是 LIKE NOT DEPENDS BUT ALSO NOT 好 像 也 不 是 LIKE NOT TALKING THAT KIND SO IT LIKE在 TALK CAMP WAY
+SO I IS LIKE AGAIN SO HAVE TO GO AND THING OF ANOTHER GAME FOR HALL SIX HIGH LIKE
+MAN天 MY G P A AT THREE EASY BECAUSE I DON T THE JOB MORE THAN THIRD CLASS OR I NOT VERY TO STUPID
+後 這 個 SCIENCE 都 話 如 多 的 話 他 會 做 什 們 的 小比 BECOME SYSTEM 就是 NORMAL 的 ININ
+一 不 就 有 一 拿 戲 間 有 好 是 去 來 去 年 有 八 個 人 友
+有 一 個 人 ORIENTATION戲 找 個 別 的 人 個 別 人 在 睡 加 SLEEP 早 上 時 候 說 去 八 點 那 種 的 做 PROJECT
+SO WHEN I DO THAT SPENDMENT I A CRE BECAUSE MY HAVE POINT ME A LOT
+THEN 我 就 放 發 因 為 我 近 我 那 些 個 姐 接 樣 去一 的ECT 比 較 好
+不 過說 TATION 那 些 我 們 OFFICE 我 們 就 說 有 整 GROUP 的ATE 他說 每 個 月 就 說 會
+過 後 SPEECH SECONDARYATION 是 怎 樣空 WORK SPEECH TO TEXT
+我們 S M P 還 沒 有 說 到 那 個 FINALIZEIP的ERSIP WHICH TEAM SUPPOSED TO PERCENT
+我 會 覺 得 他 以 前 的 做 平 比 較 心我 所以 然 是 COURSE MOVIE
+那 個 MODULE SO I THINK THE CHANCE 是 ME 個聽 IN IS 不高 你 他 們也不過
+我 打 以 後 不 知道 得 兩 個 過 了 CAUSE LIKE 次 開 子 還 太 亂 了 覺
+I OTHER I SET THIRTY DAY THEM THEN LIKE START THAT I TALK LIKE THEN THE是 MAKE SENSE
+然 後 最 拍 也 是 最 或 候 只 什 我 不 會 怕 我 永 年 的 記 的 要 爸 辦 剛 我 像 學
+所 以 那 不 戲 的 他 沒 有 他 沒 有 什 麼 STORYLINE 的 他 只 會 讓 你 從 看 那 個
+可 以 只 ELECT ELECTIVE 是 GO BY VALING ANK ONE人 TO人去 的 你 COM CONFIRM 的 這 個 些 你 才 去 慢 們 做 那 個 因 為 那 個 都 不 不 己
+START SECONDARY SCHOOL AND I WAS A SAID SIDE ONE KID THEN
+OKAY 可 你 們 講 你 說 你 們 可 能 很 找 DIS DISCUSS 了 因 為 你 們 覺 得 樣 子
+然 後 我 們 要 年 的 是 我 們 年 的 是 GOOD 就 是 剛 剛 進 去 的心 病
+後 那 些 色 四 那 些 些 都 也 是 很 貴 果 要 用 話 他 一 平 水 就 三 快 那 種
+就 是 要 SET 很ATION 它 的 大 概 它 的 我 們 要 要 的 是 什 麼
+然 然 後 FINANCE 就 算 投 教 們 INVESTMENT 因 為
+他 們 的 拍 子 BENEFIT 他 們 的 拍 子 因 為 拍 子 最 對 每 一 個
+BUT FOR HALL THREE 的 HALL 去 還 是 心 BUT 他 的 那 些 人 住 在 HALL THREE 的 時 候 是
+就 可 能 就 跟 你 DISCUSS 了 可 能 一 兩 個 月這 樣 就 可 以ITY 這 個 SOFTWARE FOR SPECIAL BASIC 看 那 些有US
+因 為 我 的 主 前 就 是 我 的 工 工公 的爸 就 太 公 那 個 那 個 年 帶 現 在 中 國 的
+就 不 知 的 要 唱 歌 跳五 THEN 就 還 有 這 什 麼 就 他 講 講 情 話 THAT LIKE 他很 SWEET TALK
+有 些 男 生 會 講 他 會 他 會 SPEAK我 I CAN SPEAK HOKKIEN VERY WELL 講 真 的
+可 跟 好 師 自 接 在 邊 找 兩 千 塊 星 水 因 為 講 前 來 還 是 是 很 很 少 他 們 一 個 PROJECT 接 幾 個 的
+FOR ME 我 覺 得 我 會 看 以 後 的 老 婆 要 會 去 哪 裡
+現 在 就 在 就 OKAY 還 要 住 去 次 好 了 會 點 得 一 個 月 次 講
+因 為 你 要穿二 TRANS 去另 外個去 另 外 一 種 MODULE的
+真 大 因 為 我 的 SENIOR年 我 跟 喜要 蠻 CLOSE 的 他 就 跟 不 CLOSE ACTUALLY 他 能 GUYS 的 人 沒 有 很 CLOSE 他 就 跟 我 跟 子 辛 CLOSE 而
+他 是 沒 有 FORCE 你 做 O 但 是 他 是 他 的 時 間 到 就 是 要 了
+也 是 樣 在 在 在ATION 另 就 SENIOR 給 好 像 就 好 的 LECTURER 都 每 天 看 LIKE
+I DON' T KNOW 我 又 THE PHOTO多 BUT THEY要 WAS IN的 PHOTO都 THEN 他 出 這 邊 THEN 的去個 YEAR MY FRESH WAS LIKE FIRST THING WAS
+接 過我發 現的 SPORTS IS QUITE FUN SO 我 就 TRY AND TRAIN THEN 那 接 過 我 發 現 還 真 的 蠻 好 玩 SO THE END
+如 果 是 你 走 掉 的 OKAY 果 個IDE 他 們 就 會 在 邊 做 住麼 WORKING 講 彈 天 不 樣 首 不 不 懂
+不 用 放 TEXT 我 就 可 以 寫 說 講 說 那 像 東 西 LIKE什麼 CUSTOMER FORSES 那 個 叫 什 麼 那 個 EXCHANGE TRAINING
+那 邊 的 屋 子 那 邊 子
+最 以 高 機 SO 我 們 覺 他 真 的 是 UP到 很 高
+I IN THE DAY HIM MY T THE MORNING LIKE I NEED GO FOR THE TALKING THING THAT ALL ALWAYS什 LIKE
+OKAY THEN 我 BEFORE 我 還 BEFORECIPING TO TEXTS候 我 YOU BECOME OF S
+這 個 RESEARCH 是 之 前 有 人 做 過 了 可 是 講 這 樣 的 不 是 很 好
+是 十 多 歲 THEN SHE FEEL TO 做 的 CLOSE 因 要 講 比 下 很 很 SCARY THEN 他 做 了 下 來 會 有一 個
+還 有 那 個 M 的 廣 高 也 時 那 個 你 懂 一 個 幾 個 人 做 在 車 女 一 直 樣 了 了 了 那 個
+就 得 他 會比 接 會 比 較 我 THINK THAT WE WILLICING TOATION 我 們 考 的 其 中 一 方 面
+好 像 我 們 都 住 有 住 有 就 會 跟 在 我 們 身 題 出 有 其 實 是 很 不 好 了 那 個 來
+好 像 十 很 頭 的 水 唱 小 像丟我 的這 樣 THEN THEN 要 打 的 打 上 去 都 沒 有 感 去
+比 會 講 好 像 它 是 MORE TOMENT 東 西 就 三 公 司 己 要 講 HAND 都 裡 面 的 之 要 那 東 西
+NOW GOD NOW 他 我 有
+還 LIKE 現 在 有 那 個 H T 貴 所 以 其 實 有 很 多 SUPPORT ELECTIVE 他 們 多 要 幫 他 們 出 抽 錢
+不 的 PROGRAM 都 很 泳 感 今 的 哪 一 些 長 常 去 那 個 SERVER
+SO MORE MOST OF THAN USE THIS AS A PLACE FOR THE TO SERVICE THE BUSINESS THEIR KIND WE WITHIN THEATIONS ITSELF
+AROUND除 TO FIVE SECOND 要TER SECOND
+所 以 我 現 是 讀 別 人 的 REPORT 後 參 考 一 些 之 要 這 樣 子 因 為 現 在 很 多 那 講 大 公 司 他 們 也 是 有 那 種
+OR IS IT A OR後 IT THE BUSINESS ACTUALLY LEAST OR
+LAST些 是 S M YOU MIND YEAH THEN THE S M THE ONE WHO BRING DOWN THEING HAS AND
+能 的 話 就 是 平 的 就 是 在 我 朋 友一 天 在 檳 成 那 個 GENER MAKE 個 那 邊
+除 問 你 去 以 後 其 實 是 大 也 不 是 管 說你 是 個 U 的 DEGREE 還 是 對 THEN 我 全 部 FRIENDS都 LIKE
+我 在 一 個 DIFFERENCE到 剛 AT 的 STUFF
+THEN 我 會 付 的 OTION 還 有 在 下 個 星 期 明 天 也 是 有 一 個CTION 兩 個ATION 是 關 你 我 的
+可 是 IF 要 做ING 的 的 要 等 後 天 因 為 要 U BIT給 他 TO FOUR HOURS
+生 年 錢 他 們 有 經 開 是 這 種 東 笑 可 是 我 們 SEM 是 剛 剛 才 開 始
+可 是 很 奇 怪 因 為 我 們 去 要 邊 好 像 每 個 人 都 覺 我 發 像 外 行 因 為 那 個 我 們 去 點 那 個
+所 所 是 算 是 便 宜 如 果 你 真 的 是 去 考 一 個 SPECIAL 的 話 我 想 信 是 感 聽 很 貴
+要 跟 好 做 對 一這 樣 他 身 去的 他 就 那 個 比 子 然 你 會 感 覺 得 那 個 比 子 子 都 是 紅 樣 你 你 會 這 樣 三
+THEN 他 就 可 以 進 在比 C COMMUNICATIONATION 的 對 他裡 沒 有 不 用 他 去 話 還 可 以 SAVE人 而
+他 就 為 什 麼 這 跟 種房 間 THEN 在 對講 I ONE 戲 要 要 戲 還 是 OKAY就 只 會 丟 一 個 東 西 看 你 跟 你 走 這 樣 子
+NEXT SEMESTER 我 不 會 TAKE ANY LIKE ELECTIVE 因 為 我 剛 剛 AT 了 ONE COM MODULE DO
+THEN 那 個 就 不 很 一 個 是 一 個 很 不 好 的ATION ONE THAT I' T NOT WHICH TO BE PUT IN INTO
+I MEAN 有 PERSON BUT 有 五不 一 定 是 MUST BE還上IP THINGS TO FOR ONE RIGHT
+ACTUALLY 三 三 土 THEN 又 可 以 出 海 去 CAP
+對 還 SOCIAL 學 來 以 很樣 找 朋 友 學 些 子 掉
+ONE 其 都 可能 要 YOU ONE
+對 分 BUT THEN Q 就 是 NOT ENOUGH BUT 就 十 分
+ABOUT LIKE CHOOSE STORY ABOUT
+因 我 有 他 給 個ING 那 個ING 我 就 去 給 幾 重 一 個 一 個 朋 友 還 有 有 他 就這 樣
+就 樣 反 在 就 是 有 有 問 題然 他 的女 RIGHT 能 說 他 可 的 還 是 進 大
+我 就 跟 我 加 人 上 兩 他 說 你 要 樣 讀 是 人 THEN 你 就 不 能補戲了
+六 心 華 因 為 我 姐 讀 候 朋 友 有 他 整 到
+THEN 會 講我 對 可 是 如 果 明 要 去 我 現 在 我 本來 覺 近 好 像 想 港後 了 OF 分 有 講 臺 灣 比 較 好 就 覺 定 好 臺 玩
+你 個 跟 過 不 可 以 我 過 THEY 要 是 OVER CERTAIN AGE LIKE 是 不 是 三 十 在 可 以
+可 能 有 不 過 我 不 認 三 BUT目 說 就 我 要 我 要 點 應 該 是 不 清 楚 應 該 沒 有
+找 上 九 點 他 九 點 到 十 九 點 它 是 一 整 天 但 是 有 人 班
+THEN 會 去 這 些 名 身 記 的不 在 很ICS LIKE 樣 只 是 我 覺 得 的 二 子 孩 小
+那 個 開 下 關 講 對 對 對 對 那 個 很 就 沒 有 很
+差 不 一 半 兩 百 百一 個 人 讀
+OKAY 我 現 在 是 UNDER AND 我現 在 是 我 們 要打 算做 那 個AGE
+後 在 BUT HALL 比 較 方 便 很 多S
+END 他 只 是 OKAY 去 那 個 CANTEENIC THEN 就己 少
+就 是 說 紅 同 同 於 的 那 邊 一 定 你 用 等 易 的 你 直 接 出
+這 好會 JOIN 那 種 LIKE 那 種 EXC C THEN 在 N B 我 是 G SO 可 以 跟 那 些 FRESH LIKEED
+讀 忘 過 後 他 是 有 一 個 星 期 給 我 們ATION
+每 那 是 當 時 沒 有 想 到 I LIKE OR DO I IT OR DON' T LIKE 就 講 拿 到 一 個 大 學 會 只 後 才 在 來 想
+我 還 有 學 LIKE 別 的好 像 LIKE FRIEND FRIENDS OR LIKE JAPANESE OR SPEND
+有 就 是 要 TRY 看 先 因 為 如 果 是 自 接 去讀 MASTER 第 一 直 接 兩 年 在 讀 書 又 要 給學
+有 有 有 兩 個 我 們 有 有 三 間如 一 個 MASTER ROOM 兩 個兩 個IUM ROOM MUST ROOM 就 住 兩 個 人
+我 只 是 過 其 實 我 不 在 的 U去 N 是 FORM 那 個 然 少
+睡 教 冰 普 是 因 為 我 那 個 時 間 到 二 是 我 真 的累 了 我 才 歲
+這 樣 想 你 可 可 以 做 LECTURER的 還 是 還 是 你 要 比 較 多 CHOICE 說 我 覺 得
+YEAH AND SHE ALSO D G J
+然 後 所 以 那 東 西 時 候 ONE 但 是 那 也 去 開 是 學 是 很 三 點 你 如 果 要 GENER 電 候 你 就 起 了
+IT A SHE FIVE LIKE 如 果 你 也 加 人 他 們 要 種 東 西 最 有 會 在 三 十 靠 點
+會 時 我 對 電 你 的 心 去 間 少 很 多 因 為 已 經 變 成 一 個 工 作 所 以 我 不 會 接 候 這 個 公 作
+我 們 樣 講 就 是 我 的 家 聽 被 起 我 就 來 之 JO HALL 住 在個
+MAYBE C M LOT WHY THIRTY WHY 然 我 們 要 走 很 像 CAP WATCH 樣
+這 個 我 還 沒 有 還 沒 有 去 我 沒 有 想 過 去 日 本 的 人 很 少 慘的
+沒 有 他 是 有 們 個 KEY又 ROOM 那 個 講 給 的 THE 的 做 子 是 那 邊 來 最 去 半
+因 為 之 前 是 沒 有 放 那 個你 就 是 分 MODULE 的模 出 來 的 分
+STARTING CAP ON T V 然 後的 其 他 我 就 是全部 都 是 CATCH ON ONLINE 的 還 爸 不 樣 USE 是 是 看 那 個 COMPUTER
+所 以 現 在 你 就 是 打 算 LIKE JUST HAVE THIS AARY JOB FOR NOW UNTIL 你 可 以 找 在 一 個 比 較 數 是 很 你 的
+THEN 我 就 超 SAD LIKE果 LIKE 超 於 就 LIKE VERY BAD BUT
+什 麼 什 麼 對 THEN 時 候 我 們 就 後 到 HOTEL NEXT 的 我 覺 我 就 覺得 或 是沒 有 TAKE 什 麼 丟 就 我 真 的 很 的 喜 歡
+SO YOU KNOW I THINK ALL SHOULD HAVE ALSO KNOW JUST TO AT FUN I MEAN I EVEN I A DIFFERENT I DON' T MONEY REALLY THAT
+就 覺 要 就 是 你 的 PROCESS 是發 IN ENOUGH或 只 是 你 用 G PROCESSING 讀 去人ANK 那 些 東 西
+到 我 比 較 靠 近 的 時 候 我 們 就 比 較 慣 LIKE 兩 三 三 四 吃 一 個 地 百 這 樣
+OKAY 可 以
+THEN 因 為 好 像 SAY THEN 我 不 知 道 因 為 我 穿 那 個 禮ING 不 是
+電 他 他 就 他 就 人 聽 他 了 我 想 的 他 叫 朋 友 想 個 他 也 不 算 在 起 來 就 是 屋 喜 很 他 他 漂 的 看 課 LIKE
+那 個語看
+然 我 會 大 裡 會 間 然 他 們 LIKE MEET 我 的 他 I CANNOT GO IS A OKAY BUT JUST SHOULD PHYSICS JUST YOU ALL
+那 時 說ATION 我 去 看 懂 們 我 是 看 那 個 ENVIRONMENT 我買 我 這 個 先 掉 們 只 個 這 個 一 大 樣 到 到
+YEAH I THINK THE SYSTEM THE CULTURE HERE AND THE CULTURE MY SCHOOL A DIFFERENCE YEAH
+IN 教 好 的 你 直 前 是 在法 國 法 過 要 法 還 是 MALAYSIA些
+GUYSREAM COM還 SPORTS THE COM YEAH
+其 在 直 在 講 他 的 麼 開 始 認 是 那 個 孩 子 後當 當 個 好 八
+BUT有 FACEBOOK 只 是 不 可 能 是 年 近
+YEAH BUT WE WENT NOT GOING R MORE CAUSE RECENTLY THAT WAS SOMEOM BOND ON THE ORIENTATION TRAIN
+THEN 他 講 說 你 不 要 讀 的 話 那 是 你 上 十 多 歲 要 多 話 就 比 較 很才 進 那 種
+NEXT EXAM 可 是 你 就 你 可 以 STOP 的 就 講 你 不 想 做 是 OUT 你 就 不 要 做
+他 們 是 好 像 那 個 不 道 是 外 國 人 還 是 本 地 人 然 後 他 們 給 那 個 加 大 I SEE
+因 為 他 他 INVEST A LOT 在 在 MOST
+然 THIS WE SHOW THAT HIS ACTUALLY給 IT' S ACTUALLY給 YEAH
+差 不 多 便 年 點 而 且 那 邊 是 講 華 語 的 以你 那 邊 你 不 用 怕 人 生 地 不 書
+大 覺 得 去 那 邊 都 會 喜 歡 THEN 很 多 新 個來 到 我 們 這 邊 都 會買 人 會 去
+是 一 個 要 知 道 要 知 道 要 的 工 常
+YEAH HE SAID 他 她 也 風 掉了 YEAH
+AND THINK THEY PLAY THEY ARE SPEAK TO SOME TO CERTAINICS THAT DON' T REALLY LIKE OTHER
+可 是媽 SAID THAT 做 不 成 那 個 PASS 所 以 他 們 就 我 蠻 找 就 REACH 從
+WAS IN I THINK JUNIOR SINGAPORE JUNIOR DURING I WAS SCHOOL HOLIDAYS
+THEN 幫 他 們 做 一 些 RESEARCH 之 類 的 東 西 的 是 可 是 LIKE P 一 兩 錢
+THEN 就 會有 跟 我 COUSIN 能 玩 也 而 且 就 上 過 可 生完 那 個 也 是 直 跟 住 他 媽
+THEN 果 你 是 PROGRAM 的 花 是 要 UP IT 那 個
+YEAH JUST LIKE HOW們 YEAR ALSO YEAR去 YEAR ALSO問
+大 概 SPEND 差 不 多 年 然 在 被 POST 去 ONE CARD
+WINDOWS本 比 較 他 們 就 能 去 MODULEIFY 些ATION 比 較 FRIEND 候 用一 點分別 是 這 樣 我 覺 得
+而 以 用 COMPUTER 話 的 話 或 是 用 首 的 你 個 話 因 為 真 的 是 很 吃 時 間 好 像 你 外一 個 PLAN 的 話 正 吃 時 間
+我 們 多 想 去 不 常 地 方 以 我 本 還 是 怕 一 個 人 去 不 懂 後 會習 慣然 後
+真 是 的 ACTUALLY 你 不 一 定 要 去 HALL FOR 給 他 的 你 可 以 去 NO S B S 或 只 是 PASS
+可 他 們 在 這 裡 也 是如 他 們 的 那 個 CONTRACTS 是 什 麼 MAKE INTOITY
+就 可 能 一 個 或 者 為 多 他 在 T者是都 那邊
+給 TO 的 FORM TWO TEATION 然 後 我 就 要 找 一 個 有 一 種 比 較
+就 是 看 屋 子 或 者 是 看 房 間 這 樣 的 東 西
+可 是 他 們 一 定 是 有 SCHOOL FUN LIKE PUT SET FOR 他 們 的 FINANCIAL PROJECT
+THEN 他 們 就 一 直 在禮 筆 前 面 三 首 歌 所 以 到 的 時 二 點 的 時 候 他 們 就 想 說 還 沒 有 有 重 西 還 有 短
+MOST 不 同 它 是 CAMP 該 ENGINEERING
+LIKE 他 不 是 樣 講 什 心 他 就 YEAH THEN 就 THEN I對 我 國 他 就 跟
+LIKE AS ALSO AREING FROM HAND FROM THIRTY PHONE YEAH BUT I FIND YOU OF
+NO YOU WHETHER DON' T BUT COME BECAUSE I都 THEIR TWO WAS A QUITE WHAT YOU對 多 出 STUN THEN 就罷了
+ACTUALLY 不 是 他 他 叫 們 JOIN點 JOIN聽 是 THE JUST OPEN THEN SO CALLED OPEN HOUSE
+他 的 REQUIREMENT 是 J P 題 主 要第 是 JAPANESE LANGUAGE C TEST 就 是 日 認 錢 問 錢 聽
+是 LIKE比 我 只 是 己 有 是 WHO有 NOT SEE THAT I GOT LIKE
+三 現 在 在 BY 的 BUS 那 邊 做 做 工 還 我 一 個
+講 說 那 首 個 是買 的 說 大 也 直 的 那 的 個 是 MINOR 的 那 個 有 喜 華 年 的 那 個老收 戲 是 MAJORIA
+然 後 你全 BUILDING CHRISTMAS 你 就 開 你 去 開工 你 就 那 一點 要 那
+有 些 很 方 邊 的 不 用 緊 有 些 就 去 很 遠 的 的 地 方 也 要 做 吃 的 那 些
+後掉 會 本 能 身 個的 大 都 是 他 的 們 生 吃 的 別 所 比 較 是 ASIFY 就 是 大 概 是 六 去
+然 很 多 東 西 都 看 不 到 好 像 講 的 問 全 就 我 都 沒 有 看 跟 問 錢 他 會 也 沒 有 跟 我 講
+SO 其 他 的 東 西 就 I THINK SINGAPORE題 心 SINGAPORE
+所 覺 得 可 說 我 得 有 特 是 如 果 如 果 我 的 好 朋 友 出 然 跟 我 講 STANDARD 的 ENGLISH發 會 覺 得 奇 怪
+雖 然 他 們 是 他 爸 是ATION 可 是 他 高 他 爸 高 了 十 年 他 才 EMAIL 到 樣 的 的 樣大
+然 後 他 它 的 國 這的 在 來 裡 就 是 它 的 地 土 裡面 在 我 們 的 在 哪一 個 然 後 他們 的 我 這 是 什 麼
+BREAK OF THE FRIENDSHIP 是 一 個 很 不 到 的 的 INTERNET I FEEL THAT IF YOU WANT TO BREAK OF 一 個ATIONSHIP
+好也 有 是 討也 LIKE IT IF YOU TIME RIGHT SOME CHINESE LIKE E WHY
+他 講 WE 他 CRE第 二 個 他 他 就 問 你 I A P HOLD 的 WHY I WANT TO PASS
+不 然 就 是 沒 有 路 直 接 到 講 百 跟 好 只 接 到 講 話 太 開 到 我 就 起來 為 家 LIKE CAN WORKING DISTANCE
+應 該 有 二 十 個 他 們 他 們 是 住 久 好 像 一 年 做好笑 第 年 他 們 就
+他 他 的 SOFTWAREBALL不是 OF LUCKY GO GUYS
+我 我 是 最 近 是 從ATE回來 I WENT MY
+一 直 THEN 可 能 MOSTLY INTERESTING 就 比 較 慘 因 為 不 是 不 個 喝 久 也 是 NO NOT HALL
+THEN 你 的 N T U FRIEND 不 是 很 STRESS 因 為 他 們 CONTINUE 有戲 A 考 是 PRESENTATIONURE
+像 我 這 種 T 六以 THINK AFTER FIRST MODULE 我 應 該 會 AFTER不用 AFTER FIRST水應 該 覺 IN 了
+UNLESS IF I FRIENDS TO GO T ONLY NOT OUR' T LIKE JUST SOME PERSON 去 就 學
+去 點 半 到 通 常 是 兩 個 小 時 就 點 本 這 樣
+也 是 在 SET 著 它 的 那 個 公 司 的ATION 那 些 東 西
+樣 一 成 開 個 都 是 那 些 拍 文 一 片 的 DIRECT
+我 不 要 THE BRING I TO DRIVE TO SCHOOL AND班 的 做 子
+我 就 是 講 講 書 裡 面 看 因 為 是 華 一 半 有 是 會 一 半
+他 們 講 本 要 多了 但 是 不 可 以 WRITE OF THEM TO THIRTY
+就 如 沒 有 要 LIKE LAB 沒 有 心 輕 來 LAB 的 話 就 帶 在 的 在 朋 友 的 家 的 種 你 朋 友 那 邊
+然 後 好 說 我 們 的 就 說 因 為 算 是 IN 我 們 算 是 INTERNETATION的 COMPANY 就 說
+不 過 ADVANCE 他 們 是 學 有 了 比 較 ADVANCE 他 們 說 放 這 邊 是 學 那 些 DLY LIKE GRAND罷
+有 一 個 個 裡 面 然 後 有 幾 個 是 最 近 一 兩 B的 都 有 一 兩 個 很 少
+蠻 年
+MAYBE THEY WILL AT TATE YOU TO球部 OR SOMETHING THEN YOU CAN FIND YOUR SECOND OR上
+THING IS 你 可 以 THIS到 昨 法 裡 面 的
+THEN WAS ALSO SOITIES THAT LIKE OKAY ONEED TO媽 那 個 我 很 想 嗎 他 OKAY弟 ON的說 就 沒 有
+就 是 很 難 跟 他 們 法 好 像 我 都 朋 友要 們 做 COMPUTER的 他 們 做 GAME
+所 以 我 們 會 我 們 買 的股我說買 的 一 些 投 都 會 比 較 他 的
+我 只 在 你 講麼 他 們 也 有 人 用 這 個來 做 去 東 西 就 是 在 那 那 個 CAP 到
+不 很 幾 的 的 好 你 不 來 一 因 為 那 邊 他 給 弟 有 樣 好 是 我 們 己 好 是 出 歡 為 出
+因 為 在 我 的 那 個聽 裡 面 還 有 幾 個 PART 還 沒 有 學 到
+然 後 看 TAKE COURSE 候 那 個 CONTROL飛 接 CONTROL 不 很 好
+為 什 麼 你 這 麼 P名 的 TO AS IN I IT NOT BAD THING I JUST ASKING WHY SO IN KIND TO STUDY THING
+如 果 是 SCH 的 去 說 可 能 成 績 會 一 點 想 不 過 果 是 FINANCIAL SENTENCE說 就 是 看 你 的 家 近
+就 他 的 FRIEND 就 ASK HER
+對 電 子 電 子 電 子 我 們 這 都 不 的 種 什 麼 大 兩 的 風不 才 是 什 麼
+所 以 然 那 個 我 一 樣 點 機 BUT THEN LIKE SHE ARE SMALL GIRL SO 我 覺 他 很 AABLE
+沒 我 在 一 個 人 的 家 是 六 的 LIKE 每 個每年 都 是 不 同 人 的 家
+JUST YEAH JUST TAKE CARE STUFF AND MOST MY QUESTION 大 講 IS A VERYRESSFUL THING
+除 出 出 然 間 而 且 我 真 的 是 怪 從 真 的 是 我 穿 沒 有 看 過 我 樣 怪
+DRIING IN HAVE GOOD BE BELIEVE IN THE TEACHING BUT NOT REALLY THEATION IS ITSELF
+是 然 華 面 沒 有 現 在 的 電 影 樣 漂 樣
+好 像 如 果 你 去 DEPARTMENT 們 的 你 去 這 個 比 較 HIGH CLASS 的 這 個 CON 我你 要 RESULT 一 點該 A LOW COURSE
+因 為 那 個 N ENGINE 的 那 個 很 很 大 們 就 做 我 們 跑 在 樣 八 裡 THEN 好 像沒 有 動 到
+可 以 可 比 較 比 較 瞭 姐 一 點 後 最 一 個 這 樣
+YEAH I WAS ALSO THE DO BUSINESS YEAH ALL AFTER JUST BUSINESS THEN I SAY N T I DON' T A BI BUSINESS CAUSE TO GIVE MY SOMEATIONS
+雖 然 有 那 個 BUT 他 們 都 沒 有 LIKE DON' T BUT BY THELES ONE 所 以 他 就 跟你 講 你 要 去 哪 裡 個 地 方 很 近
+只 他 不 是 種 很 大 行 很 SYSTEMIC 的 它 是 OR OKAY 主 一 一 個這 樣 A
+然 後 一 點 興 去 都 沒 有 你 就 不 想 去 讀 然 後 不 想 去 都 就 考 不 好
+很 多 人 對 有 那 個 MISSCTION THAT IS N IT NOT 是 SOCIAL SCIENCE AND
+你 去 買 便 宜 的 講 你 一 天 一 天 一 點 府 一 天 部 府 一 天 府 一 天 部 父 你 有 會 看 到 小 國 的 他 講
+因 為 以 前 那 種分 他 們 拍 了 可 能 那 種 CAMP 又 普 通 很 錢 單 來
+如 果 跟 對 如 果 跟 STANDARD的 對 會 DO有可CTION 就 覺 這 個 好 FORM
+THEN 我 們 就 跟 我 們 為 是 我 們 看 到 我 們 的 他 們 講 他 們 類 我 們 就 在 想 不 知 道 我 們 過 去 做 的 些 什 麼
+OKAY 那 對 所 以 我 要 PRACT PRACTICE 的 的
+所 就 想 前 我 的 過 電 他 這 一 大 被 子 他 那 四 十 年 的 WORKING 他 在 H G 做 工
+真 的你 去 看 他 們 的 SHOPPING COMPLAIN 有 很 多 是這 樣 的 GAME 的 那 個 點 他 們 買 的 全 部 買 政 班
+GOODSES OKAY
+就 是 們 要 看 看 如 會 有 走 通 他 們 在 出 那 一 個 拿 一 個 MARKET
+THE LIFE THE PEOPLE LIKE THEIR ALWAYS AND 就 很 錢
+就 是 我 們 已 經 可 我 們 經 很 戲 慣 我 們 很 就 就 很 NORMAL 就 是 OKAY TAKE THEN DO A AGAIN
+就 那 種 COING COING 還 有ING 就 他 們 就 有 那 些 你 然 後 我 要
+就 是 沒 有 什 麼 從 出 因 為 他 們 那 邊 的 人 是 很 少 吃 主 BECAUSE IT STILL A MOST NAME看 去
+MAYBE MORE THE OUT WOULD THEN THE IN外 掉 MORE SIDE
+我 們 INTERVIEW 的 機 會 也 沒 有 什 麼 是 就 很 不 工 看
+EIGHT TEAM FIRST 他們 的 他 們 的 課 是 TO SATURDAY THEN 很 像 都 是 己 買 的
+其 說 我 最 近 是 在 聽 我 老 經 算 了 人 是 了
+所 所 是比 較 不 好 出 樣 變 成 我 些 屋 子 我 朋 很 多 全 部 給 是 的
+住 就 HOST SALES 候比 較 多 現 半 出 去 了 就 比 較 少 好 像 著 AIR 是 沒 我 們 會打 幫 在 面 有 冰 幫 ROOM
+它 是 UNDER 那 種 SECURITYITY 的 COMPANY BUT 不 是 那 個 O C的
+他 是 什 麼 粒 些 什 麼他 什 麼 什 候 不 之 類 我 人 真 的 該 靠 是 你 他 名 直 這 裡
+THEN 就 他 他 們 做 的 時 候 RIGHT 你 就 感 能 出來 他 們 對 坡 就 還 不 很 手 就 人 最 己 本 的 的 東 西 都 會 沒 有 讀 到
+YEAH SO MOST FOR I THINK AFTER EXAM A BE GO LIKE SOME ON THERE
+就 寫 LIFE到 BUT 就 SPORTS 還 是
+LIKE就 前 單 年 個 來 說 每 個 人 都 會 有 的 這 己 就 是 一 些 不 懂 的 CAP CHARACTERISTICS
+他 們 種 分 數 有 兩 個 一 個 是 你 的 DISTANCE FROM你 的 SCHOOL TO HOME
+他 把 個 那 個 幾 的 頭 整 其 實 那 個 起 還 在 跳 子 PART 投 在 那 邊 他 看 能 跳 的
+看 不 出 我 覺 得 該 是 三 十 多 都 有 一 個 小 的 子 他 的 二 只 看 才 該 有 五 路 所 樣
+還 不 清 楚 因 為 他 暫 十 要 做 好 像 FREE LAND的
+FOREIGN STUDENT的ATE 用 FRENCH 但
+THEN 能 的 用 他 就 自 接 放 進 就 是 MANAGER 學 來 這 接 THREE 進 去 那 個 MACHINE 裡 面
+他 我 掉 也 的 好 做 一 下 也 是 有VING ROOM 有CTION 什 麼 很 漂 一 下 的 他 的麼當
+SO 我 是這 邊 的 就 沒 有法 就 我 朋 友 是 跟 我 講
+姐 很 都 會 都 會 都 會 都 我 像 戲 其 實 很 多 人 都 會
+你 懂 那 個 你 是 你 是 會 換 那 個 THEN 都 不 想 要 從 了 你 不 不 會 換 一 服
+然 後 沒 有 十 前 沒 有 TIME 跟FUL 跟 FAMILY BONDING 樣 子
+OKAY ACTUALLY 我 覺 得 有 WHAT REASON IS BECAUSE PASSATE
+不 是 為 我 不 懂 了 你 幫 我 是 懂 可 是 那 個 EXAMPLE少的 粒 這 樣 子 我 沒 有 辦 法
+他 沒 有 他 們 也 沒 有 其 是 跟 我 們 樣 很 多 他 們 自 己 做 什 麼 因 為 每 個 人 其 實 做 東 西 都 很 不 一 樣
+I 經 故 是 然 後 五 是 年 後 你 回 起 來 然 後 覺 得 我 為 什 麼 當 出 一 參 是 種 一 看 對
+因為 我 拍 到 THEN 用 那 個 跟 從 電 的 裡 面 拍 THEN 我 在 我 最 想 那 個 會 會 準 的
+那 SAME BUTED YOU WHAT BECAUSE WE REALLY GOT BY HER SHE SAID LONG GO WHO ARE DIDN MY TO DAY
+喜 歡 唱 我 像 唱 張 會 美 我 樣 成 ING 那 種
+YEAH SO IING THAT WHY SHE SO SHE SO ONE OVER BY HIM
+所 以 就 的ICAL 就 包 BUT 我 身 就 可 能 會 該 過 他 THEN 我 就 OKAY把賣 換 一 邊
+他 就 覺 得' T的 BECAUSE I LOVE FEW FORFUL YOU
+THEN 懂 我 每 次 TAKE I 那 時 候 你 不 去 來 GETASH我 的 LECTURER THEN 你 後朋便 我 不 以 很 參 少 他
+THEN 有 你 要IS 候 話 你 可 能 需 要 一 些的 可 能 需 要一 些 PROCESS PRE PROCESSING 的 些 東 西
+就 是 穿 那 些 穿 LIKE AMERIC TIME 這 些來 LIKE IN運 花 的 因 為 他 的
+然 話 很 KNOW 很 多比 賽 就 要 聽 子 因 為 要 去 讀 書 不 可 以 參 加
+所 以 樣 你 AFTER GRADUATE PROJECT 就 是 你 開 始 在 找 公 作 了
+因 為VIOUS 我 有 然 過天以 THEN AFTER THAT 我 就 覺 得 說 ACTUALLY 然 比 較
+那 個 DESIGN 參 能 在 N DESIGN那 ATION 出 來 SO THAT 全 部 人 的 放 到 WAY
+那 種 THEN 有 去 有 去 那 個 小 子三 SCHOOL 他 們 叫 是三 THEN到 IN在
+DECEMBER 的 時 候 跟 我 的 家 人 去 太 國
+比 較 他 他 的 他 的 GRAND 的 不 是 GRAND 的 他 的 什 麼 他 的 蠻 的
+就 是 給 我 們 的 生 題 會 有 SYSTEM 多 東 西 他 們 會
+他要 錢 他 去 投 真 那 些 BOND MY 去 EVENT
+HALL FOR I CAN CHOOSE TO INSTALL AIRCON SOME CAN BUT USUALLY HAVE AIRCON
+就 前 的 跟 那 個 條 條 看 條 看 帶 月 因 為 還 一 個TER 是 在 中 間 粒
+因 為 我 有 天 在 中 常 主 就 看 還 過 點 長 會 那 個 什 麼 小 去 當 是 在 臺 灣 媽 也 是 想 港 太 被
+我 們 我 們 有 有 講 要 去 兩 名 三 可 是 接 過 還 是 沒 有 去 我 們 去 了 蠻 多 間 的 TE
+I THINK JUST WAIT FOR HER TO LIKE ME FIRST AND THEN MAYBE SHE CAN ASK ME打 以 又 問 我
+A 他 們 就 A R 他 們 的 名 自 前 那 LECTURER 前 明 名 字 前 面 都 會 有 就 是分 LECTURER
+類 的 是 TAKE 就 是 我 們 的 就 來 這 的
+為 有 是 不 錯 他 什 麼 我 是 我 是 看 他 你 就 樣 考 回 很
+靠 近 那百 JUNIOR 剛 高 的 間
+所 以 你 用 了 他 在 LAND FIELD 那 邊 你 是 會 藍 以 的 LAND FIELD 一 直 越 多 月 也 多 現 在 如 果
+就 過 給 我 知 道 你 下 問 面 有 做 什 麼 你 你 會 被 我法ER 掉 樣 子
+對 THEN 個 好 我 那 年 的 時 候 就 去 好 生 到 玩 腦 THEN 很 喜 歡 那 個 LIKE THEN 候 我 很 外學
+SO FROM 這 個 我 們 會 SCREEN 出 BASE 好 像 看 他 們 講 哪 的 BASE 哪 一 個 幫 會 有 這 個 三 個 的 FUNCTION GROUP
+I JUST WATCH A MOVIE CALLED ENGINEERING OF DOCTOR PASSS
+通 常 的 時 候 應 該 沒 有 SOMETHING BAD FOR HER TO SO
+THEN 我 是 沒 有我 睡 BUT 我 他 面 那 個 一 次 他 那 個 做 子 他 們 有 些
+那 個 問 錢 RIGHT IS A PUBLIC TOPIC 文 SO 那 些 人 都 是 蠻 年 老 的
+OKAY 然 後 FOR 心 的 BUY一 我 們 會 用 到 S A P M
+就 是 PART ONE PART 完 就 是 一 個 好 叫 麼 LECTURER OF H P
+有 因 因 為 你 還 沒 有 到 你 不 就 掉 要 等 算 年 後 才 給 他 有 到 那 個 的
+THEN THEY WILL HAVE THE 因 為 什 們 一 個 人 幫 一面 的 一 個 人忙的 等然 在 十 是
+CAN B 的 旁 便 在 那 個 B MOVIE COM STUDIES
+前 正 子 一 直 來 早 子 了 有 去 他 們 的 好 像 FOR 去 看
+然 後候 FAR 因 為 他 們 有 自 就 他 們 SIDE 很 會 COMPARE 讀 這 六 會 比 較 好 年
+因 為 我 我 現 的 幾 那 喜 收 多 少 說 少 OKAY 這 個Y 我 來 點 就 來 點 來 點
+MAYBE IS JUST MO OR WHAT BUT SHE SAY SOMETHING LIKE
+我 需 要他 PART WITH 那 個ATION 的 哪 用 DAY
+我 們 的 CHAIR 是 講 我 們 人 本 就 以 經 從 以 前 到 現 在 都 是
+IT LIKEERS I H SHE YEAR THAN HOUR THEN THAT' S A DIFFERENCE STORY
+文 書 看 課 看 課 本 N ENGINEERINGING 的本
+BUT THEN 他 講 我 的 很 好 因 為 中 間 有 有 LIKE QUITE YOU 那 那種 JOB種
+BECAUSE EVERYBODY GO THEN THEY JUST果 THEN本你 SENSE PAPER 這 種 東 西 就很 NORMAL
+SENIORS沒 BE YEAH I GETING THISATION
+因 為 你 一 定 是 因 為 有 他 不 同 的 CALCULATION 是 CAPTER FOR 不 同 的 TEACHER
+以 SO IS IT VERY I HOW CAN THE PERSON JUST ASK FOR I
+COURSE IS A VERY IT A GAME THE PLACE 如 果 你 個 長 講 首 的話 LIKE電 強 RIGHT THEN
+LAST YEAR 會 只 他 給 我 們 是 四 個 華 來 一 條 穿這 樣 因 為 們 是 是 人 一 個電
+THEN 我 的 POLY 下 的 PRIMARY SCHOOL MADE YEAH THEN YEAR NAME WAS LIKE
+因 為 我 你 的 四 個 奶 THEN 我 覺 他 們 的 空 最 樣 樣 好想天 REAL 我 們 的 樣 好 笑
+就 說 比 較 TIME 放 當 發面 了 就 樣 有 你 是 有ATION 條 政 有 考 罷
+THE G YOUNG IS FAST THENIN OR ON PARTIN THIS SECOND DIFFERENCE AND THAT是 LOT的
+我 是 聽 過 我 的 FRIEND 他 TAKE 沒有 REALLY 他 講 它 是 什 麼 TOPIC LIKE
+也 是 晚 上 八 點 半 八 你 半 到 十 點 半 在 S 以 那 邊
+是 我 才 花 的 AROUND ONE以新了
+是END 去 他 真 的 是好 LIKE 你 LIKE 這 邊 有A 的邊 THEN 這 被 這 邊
+AND SHE FIND ME 他 的我 很 好 笑 VERY FUNNY
+YOU WANT EAT TO DAY REALLY講 剛 當
+MOIES 會 會 比 較 少 看 過 後
+就 是 他 們 因 為 整 能 PASS 的 面 所 以 他 們 一 開 始 PASS 一 到 後 面 那 幾 個 人 的 時
+如 講 你 在 給 他 人 說 他 不 跟 小 真 是ITY 已 經 不 能 三 發 是 的
+少 做 的 東 西 跟 電 腦 做 會的 大的 到 一 樣
+這 做 我 好 到 我個 THEN 我 在 不可 以 怪 來 時 我 是 不 給 我 只 是 冰皮 的
+FORTEEN 有
+很 可 的 有 一 是 他 有 來 SCHOOL 因 為 還 要
+以 VERY GOOD VERY GOOD 他 們 I DON' T THINK 我 們 可 以 做 到 太 男 的 不 完 就一 點
+SO 他 沒 有 問 題我 方 他 的 BROTHER CAUSE 他 唱 的 生 就 是 他 他 自 己 的 WATCH
+為 有 去 過 家 國 家 的 懂 年 他 就 幾 次 就 找 懂
+SO 去 然 後 回 去 我 MAYBE 做 LIKE SOMETHING LIKE 我 前 的 公 司 做 的 東 西
+這 兩 個 是 比 較 好 看 然如 都 以 前 有 看 天 在 沒 有 因 為 太 長 的
+主 那 些都 看不 TO SCIENCE SENT 的 為 為 都 會 我 COME OVER SCIENCEERS
+我都拜你 就 打 一 同 有 不 是 三 四 塊 錢 一 樣多 在 個 現 不 就 是 是 五 錢 而 已
+也 是 我 這 個 HOLIDAY 做 工 都 不 可 以 做 工 因 為 有 有 一 個 O C 管
+你 本 身 你 要 去 有 做 己 你 點 如 果 你本 身 沒 有 做 的 話 你 不 可 能 你 去 跟 別 人 講 這 樣 子 最 說
+IF你 自 己 很 THAT 用 IT LIKE
+可 是 有 很 多 吃 還 有 AFTER THAT AFTER I LIVE THE ROOM MY UN T WHEN IN
+THEN 我 不 懂 會 什 麼 用 的 因 為 覺 一RESS I THINK WILL PRESS TWO我 TWO THREEERS THAT ONE TIME
+有 他 每一 個 每 個 LECTURER 都 會 給 分 出 給 我 們
+目 前 還 是 現 在 我 還 是 比 較 喜 歡 看 一 些
+那 個 一 定 會 到 果 APPLY話 做 RESEARCH
+I THINK BUT THEN ACTUALLY THEY SAY THE IS NOT BECAUSE DAY THEY BECAUSE OF US IS BECAUSE OF THE
+AND 我 們 我 們 有 一 個 SPECIAL BASICURE FOR 的 當 就 是 叫
+像 三 睡 的 課 成 就 是 一 個 課 成 要 三 二 十 二 是 把 塊
+CHURCH黑 THEN 還 有五 心 還 有 那 個
+我 在 邊 到買 然 後 他 一 間 他 是 其 實 但 是 如 果 買 六 覺 的 話 的 六 十 原 就 的 的
+I ACTUALLY THINKING ABOUT GOING OVERSEAS FOR EXCHANGE FOR YEAR THREE SEM TWO
+THEN 樣 們 就 一 個 好 像 可 以 一 個 可 以 找 一 個 地 方
+我 從 那 邊 寫 了 就 走 需 要 別 走 去 寫 到 候 去 邊 THEN 現 在 自 走 來 這 邊 自 走 在 走
+不 是 公 間 是 那 種 明 行 的 去 近飛 機 過 去 的
+THEN NO CHOICE邊 TO TRAVEL THEN SPEND MONEY THEN MONEY ALSO LIKE THING FAST
+SAYING THAT THEIR NOTABLE ENOUGH LIKE LAST YEAR SPORTS AND STUFF BUT
+ABOUT我 THINK 我 空 那 個 CHEER BUILDING
+YEAH 我 那 人 每 一 個 都 是 THEN 每 個 人 在 JACK 生 房 間 一 定 傳 來 的 自 有 的 COURSE 了
+最 參 的 就 是 他 的 媽 媽 去 是 過 後 他 爸 爸 去 了 一 個
+有 些 人 就 講 外 面 的 那 個 月 平 大 家 個 可 以 買 一 自 己
+YEAR二 前 剛 能 近 來 是 沒 有 外 的 最 近 才 有 還 好
+我 沒 有 覺 得 很 不 錯 跟 本 其 實 算 是給
+為 我 們 在 想 下 去 多 他 可 是 要 國 去 那 邊 比 較院
+有 比 較 有 人 會 要 幫 他 們 了不 然 以 前 的 話 新 加 坡 如 個 SEARCH CASES 的 話 應 該 都 是 OVERSEAS
+SO DON' T ASK ME的我ICS
+對 的 他 們 講 很 好 穿 的
+BOTH I SEE BOTH ENGINEERING AND 印 文 歌 那 個 都 有
+因 為 我 沒 有 用 到 我 的 PREVIOUS問 我 沒 有 用大 PLAN THEN 我就打他們 OKAY I DON' T THINK I NEED THE PLAN YOU CAN ANSWER
+OF CAUSE那 GAME 那給 有 股 就 PURE 還 有 機 WHO
+其 實 我 在 心 你 小 怕 看 到 我 在 我 是 IN INSTALL 東 西 話 會 我 我 就 把 你 多 掉 我 就 沒 有
+現 被 好 像 是 你 在 講 那 一 個 ONE 忘 個 IN別那個 RIICAL
+是 每 一 個 SIDE 都 有 自 己 的 D PLACE FORING
+樣 我 你 的 MIN CAMERAMENT FOR你的 BUILDING 一 較 RI到 那 種 SCREEN GREEN 他
+其 上 時 候 不 較 一起 生 孩 子 YEAH THEN I THINK 他 們 就 我上 樣 時 是 I THINK 他 就 覺的 說
+他 們 那是 ON GOOD明 的 因 為 從 不 到 多 大 然 臺 灣 還 想 還 有 上 高
+我 個 人 是 比 較 喜 很 拍一 些 風 緊
+AND I GOT INTO CHOIR AND BY BEFORE BECAUSE I PUT LIKE THREE C A CHOICE COURSES BUT
+IT MORE FOCUS GOT MORE EXPERIENCE 而 且 WE POLY TAKEIC RIGHT THEY HAVE
+有 去 CALCUL THAILANDLAND
+他 有 做 他 是 他 這 這 裡 面 都 是 講 話 罷 了 他 好 像 是 他 以 前
+就 會 邊 到 這 樣 子 好 很 講
+TUITION 動 FOR TO WEEKS DURING THE HOLIDAYS FOR THOSE CHINESE EXCHANGE 那 種 教 六 我 動 BUT
+AND為 我 自 前 我 教 也 是 有 四 過 馬 買 很 多 來 政 拍 在 檳 楚面
+PARENTSENCE 在 生 活 不 可 以 每 是 IS直 讀 書 都 書 都 書 做 要 去 SCIENCE 一 下
+ING要做 BUT THEN OTHER PLAY SAY CAMPING TO DO THOSE THAT IN OTHERITIES
+THAT S WHY WHEN WE SIX 他 像 好 像 打罵 還 什 麼 們 就 DON T GOING DON' T GO CLOSE TO THEM
+沒 有 還 是 一 樣 就 是 算 學 是 十 個 人
+在 會 給 他 們 過 如 覺 得 OKAY 的 話 他 我 們 會 才 會 在 他 們 的 JOIN
+ON THE一 D THAT DAY 我 們ATION ONE 就 想 AFTER THE DAY 就 去 算 加 好 像 A他 PLAY
+人 樣 他 講 說 WHY I YOU ALSOOTIONAL IN THE AFTERNOONONE
+還 有 一 次 是 才 一 點 那 個 海 爛 在 旁 邊 我 們 沒 有 看 到
+沒 有 沒 有 沒 有 因 為 他 也 是 就 是 每 次 有 真 是 來 找 他 還 是 才 他 出 去
+ON THE SPORTS ONE THEN
+CULTURE 就 是 花 二 十 塊 簡 掉 五 快 來 一 種
+就 看 你 什麼的當對 我 果 不 以 STAY 就認 去 個 比 較 TYPE的 TIMEABLE THREE月 WEEK這 樣
+那 個 以 前 那 個RESS 演 過 的 一 些 幾 個 很 今 點 的 SHOP
+你 不 要 用 天別的 TRIP 你 是IDE 但 是 果 打 到 那 兩 個 你END 就 很 講
+I THINK THAT DEPENDING ON
+那 個 其 是 BALL LOST BOTH DOLLARS 就 是 在
+因 為 我 還 STILL 樣 SO 可 以 MORE 我 TO THEIP過
+他 有 沒 有 前 問 其 是 那 個 PUSH 是 朋 友 他 們 是ATION去 在 他 不 他 朋 友 時
+八 T I THINK 現 在 很 多 去 會 都 是 LIKE 吃 東 西
+其 來 就 跑 步 跑 不 就 跑 的 外 面 我 那 個 SEM 去人
+就 可 也 是 樣 這 是 它 是 跟 比 較 AND 三 是 你可 以看 THREEIZE
+你 們 就可 以 開 心 因 因 你開 的 時 候 累 IS SECONDARY 沒 有 這 樣 中 了而已
+還 好 還 好我 朋 有 PHYSICS 說然 然 HOW NEXT MORNING 我
+因 為 當 我 聽 CHINESE 的 時 候 不 懂 他 們 在 長 什 麼 JUST 聽 的 MANAGER而已
+THEN 有 是 會就 的 的 CAN ROAD 那 個 U 的
+有 忘 其 實 麼 沒 為 我 我 不 在 找 九 天 是 我 看 對
+後 還 有 一 個還 有 一 沒 有 兩 個 兩 個 星 期 是不
+還 是 他 們 些 NEW 的 REQUIREMENT 說 他 們 還 問 OKAY 我 要 我 要 這 些 東 西 出 先
+BUT AFTER THAT
+像 我 們 這 種一 出 來 的 RIGHT 什 麼不 EXPERIENCE 都 沒 有 我 跟 你 講 很 難 多 公 作
+SO 它 的 它 的 OWN 就 是 TO PROFESSOR PROBLEM
+OKAY IT IS ONE OF THE JUST MEDICALICAL COMPANY WORLD
+YEAH TIME QUITE I JUST LIKE RECENTLY CHANGE CHURCH
+WE BECAUSE是 WHEN MORE OF GRAND CAN BACK RIGHT THEN HE G GIVE AT RIGHT HE NEVER LOOK AT U RIGHT
+他 YEAH INITY YOU I NOT個 IN J C OKAY要 P TOPIC
+我 們 聽 不 懂 該 定 的 懂 對 懂然 後 MEET 難 語 什 問
+我 那 個 開 我 TRY TO NED INTO TEST 種 FREEATE 的 可 是 到 現 在 沒 有 中 到
+THEN 你 也可 只 也 可 以 個 要 首 有飛 可 是 你 FREE 有飛 了 他 就 看 較 人
+CAUSE 從 I 不 懂 PLANNING 因 他 跟 個 好 要 去 FAR 他 就 就我們AM OF MUCH CAP
+I THINK MAYBE MY BAD THE PEOPLE THEN THEY ALWAYS A TO WE ALL BE ON PRINT
+OKAY BUT明年 WE GOT A FEW FRESH SHE THAT WON BE IN HALL ALREADY RIGHT
+會 前 看 是 不 是美 STAT PING
+ALSO T KNOW NO BECAUSE THAT ONE IS I M LIKE 後 吃 一 首 車
+講 真 的 當 十 可 能
+然 在 公 常 裡 面 做 工 的 讀 是 那 邊 的 人 後 很 全 很 球 他 很 球 就
+AND 他 的 BOND 的ARY 到 是 三 所 以 你 要 認 對 那 個 三 還 有
+他 很 FRIEND 他 就 很 FRIEND 很 好 他 很 剛 近 還 有 姐 P 的
+你 這 面 看 是 一 個 名 字 在 打 過 來 看 十 另 外一 個名 字 THEN 很
+我 覺 得 能 近 蠻 高 了 BUT 因 為 這 個 家 有 到 時 都 根 本 沒 會 回 到 家
+有 電 話 可 以 在 接 多 一 個 H SET 的 我 們 就 帶 另 外一 個 TRY SET 聽 他 們 怎 樣 講
+近 不了 我 都 不 想 要 去 T 覺 我 那 跟 講 去 我 就 看 能 那 個 ENVIRONMENT 就 錢 我
+HE' TALK MY C SUPER EASY NEVER SEE DO ANYTHING DAY VERY IT IN OFFIC ONE
+I DON' T KNOW I NOT ALSO SURE BUT THEN I BE GOING KOREA BUT THEN
+可 是 這 個 PROFESSOR FROM HONGKONG 來 他 發 年 華 語 其 實 你 華 有 個 學 印 為
+OKAY 他 們的 最 新 的 MO PHONE 還 是 MUCH PHONE
+GAMES SCHOOL COMMUNICATIONATION COMMUNICATIONATION STUDIES
+SO I WILL POINT OUT TO THEM THAT 有 有 些 西 有 些 東 西 是 我 我 會 講 是 LIKE
+你 為 我 也 你 為 我 我 一 要 到 這 個 一 個 中 頭 的ATION TWO 不 對
+是 看 動 作片 比 較 多 然 後 戲 去 之 類 東 西
+一 個 一 個 一 個 一 個 一 個 PROJECT 在 那 個 COMPANY 裡 面
+他 們 也 都 會 去 參 加 就 是 像 我 的 AGE的 他 們 多 現 在 在明 裡面
+差 不 的 那 個班 大 概 會 用 兩 年 的 時 間 來 好
+你 個 個 話 了 你 參 你 生 沒 有 我 花 的 我 去 參 候 我 就 PLAN 那 個 的 就 看 講
+THEN學現在 THAT AT LEAST EVEN 他 們 沒 有 PRACT PRACTICE BUT THE THE 機 出 還 在 那 邊
+我 們 是 ELECT ELECTIVE罷 了 就 是 ELECTIVE 所 就 是 我 們 我 們 有
+十 二 點 要 到 我掉 ROOM 然 後 要 睡 到 早 上 有 點 就 是 一 直 要 一 定 要 帶 在 那 掉 是
+可 能 會 有 我 沒 有我聽 說 到 應 該 是 他 們 較 飽 ME 像慣 的 西 他 們 有 給 人 知 道
+在 我 們 也 一 前 很 去 少 你 這 樣 的 人 就 是 在 表 在 他 這 裡 沒 有 哭 他
+有 的 麼 目 我 進 去 我 他 對 沒 有 去 到 我 樣 其 實 我 可 以 大 起容 EAST TO 來 些 笑 對 我 就 沒 有 想 到
+因 為 很 難 CAP 在 CAP給 US IN INTO OKAY MAYBE THIS COURSE多 少 錢 因 為 EVERY
+真 的 是
+哪 LUCKY 然 後 以 我 上 我 做 工 的 候 他 那 裡 些以URE
+較 容 PASS的 COURSE 因 我 們 的 這 個 COURSE WORK 真 的 是 很 多 CAUSE說 真 的
+後 就 走 我 去 這 剛 講 A 我 找 到 那 個 電 腦 你 不需 要 幫 RESORE 他 就 SEND 我 就
+THE MATHS DOWN THEN THE DIFFERENT PROGRAM AND EVERYTHING SO
+他 們 是 從 NEW ZEALAND 的 AUSTRALIA 打 過 來 的 THEN 那 個 ONLINE 很 不 清 楚
+I NOT BEFORE BECAUSE 因 為 有 七 近 講 要 不 要 BUT 他 比 較 BREAK
+SCHOOL 我 的 SCHOOL 有 CAMP I' NOT VERY SURE BUT OTHER SCHOOL 因 為 H S有 CAMP
+THEN 兩 CO 掉 過 THEN 他 們 自 己 找 講 說 哪 你 個 DEPARTMENT 還 需 要 人 的
+講 ABOUT 那 個 LIKE 什 麼 特 別 的 LIKE亂ING 真 等 的
+很 就 是 好 像 PHONE YEAR肉 或 是 SUM 肉
+我 是 在ICAL 他 們 看 在 種 片 然 後還 OKAY
+OKAY BUT IF I WILL TO GO TO AUSTRALIAIA I WOULD GET SAME OF
+然 時 候 我 不 是 你 講 過 了 一 經 個 個 我 會 個 沒 沒 要 忘 近 就 是 被 UP CLASS 的 那 個
+SAY GOT ONLY TWO WAS OR LECTURE
+因 為 我 認 為 會 人 他 看 起 來 又 聽 小 小 只 可 是 他 那 個 裡 真 的
+AS IN 我 可 以 BUT 我 不 的 我 還 為 你 們 我 不 沒 有 我 自 節沒 有 帶 的 西
+他 用 感 THEN 他 去比 較 爸 不 覺 得 我 我 PART我 我 我 是 個 人 我 怕 被 PROJECT
+YEAH 如 果 就 LIKE I THINK THAT END R EIGHT OF TWO玩的
+LIKE IF THATCESS THEN WILL BE I UP BY的 MONTHS RIGHT THEN WILL BE BAD FOR THE HUMANMENT HELP
+REALLY LIKE OUR ALL幫 YOU KNOW MY幫 GOT THE ME WITH明 WE 家 輕
+IT NOT EXC THING ACTUALLY 如 果 你 有 空 的 換 去 讀 一 本 出 叫 BUSINESS
+因 為 有 可 能 在 新 加 坡 覺 得 很 STRESS 還 是
+好 像 他 們 的 也 也 是 樣 對
+好 像 PASS 這 種 東 西 你 覺 得 會 是 SOMETHING LIKE
+YEAH MUST SISTER ALSO TELL ME I SHE SUDDENLY MESSAGE ME IT THE有 SCHOOL GOT ONE MORE THEN
+BENEFIT 就 很 難 一 下 因 為 我 面 有 學 過 又 講 後 又
+很 TRUE NOT LIKE TO FIVE WHETHER THE FIVE STAND THE DOOR ON ME 我害 IN 的 ROOM看
+我 在 我 在 UNI 的 時 候 已 經 開 始 做一 寫 好 像 所 一 的 PART TIME說
+THEN 那 個 外 也 就 在 邊 走 種 THEN 你 等 下 就 跑 不 出來 因 為
+後 就 是 法 或 誰 多 一 點 喝 水 多 CUR 然 或 以 多 然
+的 他 會 聽 我 們 講 話 THEN 你 就 THEN 他 就 近 到 裡 講 他
+所 以 近 路 你 生 題 那 一 些 冰 讀 去 十 是
+對 比 較 一 比 要 一 子 出 來 得 好 了 這 樣 我 會 很 感 不 知 他 不 要 跟 你 講 話
+對 所 以 當 你 在 AMERIC課 的 時 候 也 是 有 到 可 能
+裡 面 很 多 種 花 很 多 書
+OKAY TO INFUSE LEVELVERCRI 的要 這 樣
+他 蠻 他 接 半 你 口 就 是 要 多 有 人 去 小歲
+就 YEAH LIKE THEN 就 我 是 不 要 在 一 點的
+他 的 校 國 會 比 比 下 跟 好 我 得 就 說 END I 他 的 東 西
+那 個TER 你 的 I S O的 工 錢 出 讀 這 樣
+有 去 那 些 的認 SCHOOL 也 是 LIKE 就 跟 他 們 THE RIGHT
+以 以 以 可 是 如 多 做 從 品 要 很 蠻 就 時 間 大 概已
+就 AFTERNOON因 為 有 時 候 可 能 通 是 在 HALF 樣 來
+BUT 他 真 的 是 真 的 是 我 N S 時 候 是 跟 他一 樣 OFFIC的 AND THEN 他
+IF YOU WERE TO JOIN BACK HALL NEXT 你 會回 LIKE Q BE
+YES AND I THINK WILL WE HAVE MEAN O C CAMP THAT P NOT ALL CAUSE WE HAVE SEE CAMP
+是 OBVIOUS BUT THEN TWO BAD 易 不 喜 歡 易 喜 歡 的 是 SIDE HALL 的 人
+SPECIAL WHEN I NOT TRAININGING FOR IT 我 只 是 跟 朋 友 玩 我 覺 得 樣 是 比 較 有 去
+BUT ACTUALLY JUST THAT 他 們 現 在 不 懂 他 們 有 什 麼 好 間 THAT THEY SAY THAT
+而 且 那 個 都 有 上 過ANN EIGHT 的
+就 HAVE GOOD SOCIAL GOOD CHOOSE GOOD EVERYTHING WILL BE YOU MAKE A ITSELF YOU COMPLAIN
+因 為 我 們 的 那 個 COURSE WORK 都 是URE 的
+然 後 結 過 我 們 就 因 為 我 們 是 才 就 要 做 RESEARCH 的
+就 說 麼 色 TRAIN 我 們 老 就 是 給 我 們 拿色這 樣 子
+不 是 很 久了 那 邊 不 是 很 去 LESS
+他 去 跟 我 樣 年 的 SO THEN 他 跟 我 講 你 面 很 少 新 加 坡 人
+SO EVENT 一 個 BUS 然 後 樣
+ONE 是 應 該 是 都 是 B 什 麼 同 這 樣 子 我 其 實 對
+THINK ABOUT PROJECT 就 是 你 要 花 費 的 時 間 是 很 多
+THEN 他 對 我 就 讀 個 百 就 回 在 要 TAKE 很 多一 看能 我 就 超 會 我 沒 去 讀 樣
+THEN 有 一 個 十 才 是 那 個 候
+真 的 是 裡 面 沒 有 像 我 們其 SECOND 沒 有 樣 好 了 他 們 是
+因 為 可 能 有 時 你 不 小 興 去 到 些 CORE 就 做 兩 三 個 種 你 一 天 少 的 幾 個
+SORT BIATIONFUL PASS THEN 這 是 說 Q怕
+沒 有 跟 還 有 兩 個 你 孩 次 他 們 也 是 來 自 己 做 工 的
+BUT JUST 們 找 看 是 看 YOU STILL HAVE TO CHECK WHAT
+其 實 主 要 為 THE WE ABLE TO CLEAR MORE COURSE COURSES THAT
+HELP TO BIT THE AND EVERYTHING I DON' T THINK HAVE THATITY
+沒 有 你 要 出以看 過 的 有 有 兩 個 放 法 一 個 是 做 巴 是 一 個 是 做 K
+IT' A被你個 TO BUT I MAKE時 RIGHT IT LIKE
+POLY 我 們 講 裡 出 來 的 些 他 是 什 麼沒 就 生 上 去 的
+這 個
+然 差 坡 多 你 都 什 麼 COURSE YES LIKE A PRICE什麼 COURSE
+我 們 在 生 活 裡 ALL HAVE DIFFERENT MINUTES
+POINT CAN個 IS YOU你 YOUR LAST YEAR THEN YOU START STUDYING A BIT ABOUT PLACE
+那 是 家 兩 外 幾 的 跟 家 樣 我 的 O G 的 會 記 的
+那 之 MASTER 就 想 我 們 不 過來 我 很 怕 我 就 穿 來 進小 心
+我 就 就 覺 得 很 FORING 因 為 沒 有 人 可 以 找 到 可 是我 然 可 以 以 找 到
+有 有 是 一 間 短 這 樣 打 還 也 是 就 不 需 要 大 就 不 要 打
+然 後 就聽 INTERESTING BUT 就 很 多 都 講 很 能上 們較 TAKE THEN 前 他 的
+THEN 加 公 作 近 高 PENANG 你 多 兩 年 的 他 你 少 生 太 經 做 你 的 MANAGER 就 可 能 是
+BUT AT THE COME POINT IN TIME HE IT開 ALREADY 不 過 他 沒 有 做 C地 開
+對 THEN 然 他 們 就 可 以 AND 他 們 不 需 要 陪 長 也 什 就 可 以 走
+其 實 公 做 都 書 反 們 還 存 不 到 錢
+很 多 是 近 很 MANY TIMES OR ALREADY 我 們OR OVERIES
+他 們 他 們 不 是 我 過 是 LIKE球
+接 國 過 後跑 的 玩 這 要 三四 個 三 四 個 不 給 跑
+還 好 但 是 有 很 多 真 差 不 多
+WEEKLY 的 房 住 就 要 他 不 多 九 N T S
+YOU 你 很ATE TAKE THING 前 後 MULT都 SEE CHINESE
+人 家 找早 三 錢 他 就 講 道 哪 LIKE幾 堂 給 你 就 算 十 好 樣 子
+FOR 他 們 CAP UP YEAH 我 們 比 較 難 CATCH BUT 他 們 還要 CAP到 COMPARED TO FOREIGNENCE
+就 樣 所 我 就 我 們 就 上 去 我 們 的 FIX THEN出 TRY 他 的 EXPECT
+WHAT THAT COM MOVIE
+IF IN THE GOOD BUT因為 IF IS NOT GROUP 就 是 來 賺 錢 那認西心 POINT
+LOOKING AND THE THING RIGHT SOME YOU MY MAYBE REALLY SHOW THIS PROGRAM ON ONLINE THEN 我給 你 看 的 那 個
+所 以 要 看 你 樣IVE 那 個 那 個 兩 年
+NOT BAD CHANGE去 REMEMBER 你 不 喜 歡 的
+一 經 生 路 瞭 姐 的 他 們 經 一 經 動 的 種 我 就 頭 頭 點 投 四 樣 子
+今 年 我 們 FOR PLANNING AND 會 我 們 已 經 打 上 去 兩 高 WITH是 NOT VERY法 WELL
+他 就 每 接 出 華 語 的 讀 的 時 候 有 點 辛
+OKAY 只是 所 你 經 常 是 做 什 麼 的
+BUT THEN ONE IS NOT CONFIRM BUT THE THINK THING ALL THE MOVE ARE VERY A SEE
+因 為 每 這 個 這 個 這 個 C OKAY BUSINESS CAP
+如 我 你 有 是 個 一 起 你 們 每 個 人 需 要 的 點 數 之 然 就 會 比 較 少 為 主 事 了 對
+THEN LIKE HEARD OF QUITE FEW那個 ELECTIVE THERE ABOUT THIS COURSE
+那 邊 SERVICE 很 好 PUBLIC TOPIC TRANS 也 很 方 邊
+THEN PLUS THEN PLUS THING 你 的 COURSE每 一 定 會 認 是 EVENT 也 人 識
+LIKE IT THAT OKAY THEN YOU PUT一 PEOPLE THINK方 SIDE THEN HE心 TO MEING THE NOT TO ME LIKE
+然後 就 找 生 我 不 道 找 生 因 為 太 大 了 然 那 錢 會 變 到 的 那 個 錢 好 這 像
+他 們 的 IMAGE 就 是 這 樣 我 的 就 是 STAR 很UR 很 多
+ITIES LATE ITING
+然 又 看 看 有 蠻 歡 過 就 有 去 的 機 去 看 跟 看 到 玩 了 現 已 經 完 了
+SO MEM 就 玩 就 是 行或 TO C 很 還 路 長 時 間 話 它 做 會 韓 去 的
+FIVE C M TO TEN 那 是 我 我 現 要 做
+有 有 因 為 在 DEGREE HALL也 TO 法放 戲 也 讀
+也 是 THREE百 THREE SO STILL USE TO IT 現 在 還 在 學 BUT
+EXAM 是 美 那 個
+SO THAT 跟 我 就 OKAY WHICH SHOULD ME OR ITSELF FEEL THAT THE NIGHT IS LIKE
+前 在 OFFIC 會 他 們 AFTER OF OFFICE HOURS AFTER NIGHT
+這 我 比 較 整 們 上 去 做 沒 用 沒 用 要 的 真 在 是 MATHS S A 去 近 的 就 讀 爛
+然 後 所 以 開 始 我 會 PLAN 那 個 JOBATION 就 是 因 因 我 想 長 是 不 同 的 公 作
+我 只 要 罷 了 我 不 是 要 那 個 樣 MANAGER去 家 家 去 做
+我 超 歡 之 話 因 為 我 不 歡 來 回 那 個 那 覺 很 長
+他 講 哪 有 就 了 不 是 考 到 不 好 他 講 現 做 工 粒 種 麼
+他 們 看 候 一 點 多 歲 我 等 睡 到 小 一 兩 點了
+你 給 一 個IA然後 給 一 些 外 國 所 要 去
+THEN 為 什 麼 你 會 一 下 子 你 沒 有 好 像 RESEARCH BEFORE來
+很 難 就 好 像 我 們 也 不 是 講 很 好 的 SAME 因 為 那 時 候 去 的
+就 是 THE BOTH THE PARENTS TEST AND THEN 就 不 不 會 講 話
+但 是 種 如 自 是 不 可 能 你 要 走要 在 太 講 在 要 所 整 樣 掉 有 車
+SO AND UP他 GIVE UP PLACE HALL SHE
+LIKE LEAD WAS VERY QUIT LAST YEAR IN HERATIONS
+BUT 如 果 你 的 ROOM 不 是 你 的 COURSE的 話 WOULD IT HELP
+哪 T AND
+不 大 想 個 你 分 想 你 不 要 接 這 個 弟 來
+讀 AT ONCE 我 們 去 另 外 一 個 STAGE FOR CLEAR PASS
+然 後 選 那 個 話 他 又 吵 這 樣 好 就 算 了 就 不 讀
+所 你 NOT一 的 時 候 他 們 就 UP 你 九 點 為 他 沒 有 知 道
+自 己 去 頭 走 那 種 小一 跟 的 他 自 己 走
+QUITE TRUE BUT 你 們 慢 你 就 會 時 間 SPEND OF THE GAME IS有來 短
+他 是 這 方 面 的 目 前 他 需 要 很 多 人 才 就 說
+有 LIKE哪那 SEMESTER ONE MY SEMESTER T買的 是買 三 一 個 一 個 還 有
+時 你
+然後 後 他 們 那 邊 在 那 個 下 上 那 時 候 又 很 少 人
+看 我 最 好 是 越 快 好 因 為 那 個 東 西 是 其 他 國 家 來 在 做 著
+BECAUSE 他 的 SET LIKE 會 OVER RIGHT你 的 PLAN SO IF YOU IF YOU KNOW
+沒 有 我 是 幫 他 們 BECAUSE IF MY BE PEOPLEING FOR THEM
+就 住 最 中 要 覺得 得 是 要 可 以 好 像 MATHS 到 一 些
+IT' 是 ABOUT BENEFIT OF THE OF THE DIFFERENT AND OF THE INSIDE WORLD
+然 後 WHEN ONE不少 那 個 COMPUTER 我 們 的 東 西 的 候 好 像 這 個 東 全 們 子
+去 好 是 給 他 要 最 風 三 給 這 包 包 要 情 進 給 他 就
+我 那 天 在 GO BE 網 專 SEMESTER 有 看 不 想 看 個 還沒 有 三
+THEN 如 果 我 要 講 那 種 小 小 的ED 的 話 我 叫 他 十比
+我 知 大 你 是 講 的 是跑 ISLAND 那 個 MICROSOFT了 他 是 那 些 東 西
+很 老 師 的 跟 他 講 THEN 就 講 SAID SOMETHING ABOUT LIKE我 如 果 你 要 禮 開 我
+所 以 如 果 有 一 個 明 過 來 我 就 要 看 那 個 CHECK 有 沒 有 PAPER
+而 且 很 多 PROFESSOR 要 教 的 COME BATCH 那 些 MODULE 丟 就 說 我 們 學了 的 MODULE MODULES
+還 有 什 麼 忘 冰 清 的 不 覺 他 有 多 好 可 不 什 他 時 是六 的 麼 好
+是 有 我 跟 另 外 幾 個 有 J THEN 我 他 們 很 CLOSE 的 就
+所 以 是 THEN 我 有 朋 有 去 那 個 給 LONG 的 THREE
+THEN 為 我 我 們 是 你 要 叫 我 們 十 點 下 去 THEN 我 跟 一 下 全 沒 有 人
+THE DIFFERENT SAY CALLING AND MY DIFFERENCE IT LIKE AT SECOND KNOW
+我 們 華 也 是 這 樣 我 們 自 前 就 個OS 在 單 用的
+就 會 比 較 跑 而 且 就 就 開 始 我 就 我 看 也 是 就 我 新 年 開 了 很 放 來
+BUT 也 是 沒 有 去了 因 為 MORE IN HALL
+WE I工 I DON' T KNOW WHAT TO TEACHER
+HALL TIME REALLY REST LIKE JUST ANY HOW DO ONE IDEA不到 THERE SO GROUP
+因 為 老 師 的 SE 後
+算 的 我 不 懂 WHAT ELSE ONE TO SAY
+BUT OKAY I THINK IS A STRESS THE MAN DRIING
+要 不 見 掉 我 不 知 道 怕 BUT 他 我 前 去 已 經 不 在 了 THEN VERY SAD
+AT LEAST THEY HAVE FUN我 T WAS AIS GROUP
+在 INTERACT
+講 話要ING 要 找 很 辛 苦 後 現 在 有 天 氣
+THEN WHY THAT 在 去 那 邊 DON' T EXPECT TO RUN BYTER THEY DON' T BUT BY THE ONE
+去 那 邊 到 那 邊 的 時 候 那 個人 那 邊 的 那 個掉
+沒 有 因 為 早 上 有 課 最 幫 個 小 時 出 習 時 間
+OKAY 我 是 喜 歡 看九 做 那 個CTION MOVIE
+我 剛 剛 開 始 會 有 看 月 比 較 LIKE 檳 城 的 候 然 OF AFTER THAT 就 沒 有
+T 比 較 好 的 SENTERS 然 你 用 那 種 普 同 LAND 會 HALL
+他 們 買 是 從 中 國 中 蠻 便 可 是ITY
+找 工 了 差 了 公 覺 得
+THEN 他 那 個 因 為 他 其 他 人 在 他 他 們 就 講 說 都 會 以 回 家 的
+可 是 我 不 知 道 這 個 這 個 這 個 G 外 RES 十 先 因 為
+因 為 好 像 不 果 跟 LIKE 怎 麼 說
+IF問 果 的 BIT FOUR 我 要 蠻 上 錢 前 月
+就 講 說 什 麼 學 要 C 他 然 後 講 說 什 們 要 主 放給 他 吃
+IT YEAH BUT ACTUALLY EVEN KNOW IS爛 RIGHT FOR ASK IS GOOD CAUSE IS NEAR B
+我 我 不 其 帶 去 那 個 SCREEN PART我 可 能 不 不 要 跟 他 們 C 去
+這 個 還 好 跟 你 不 是 我 的 COUSINON 我 媽 媽 的 COUSIN PERSON 我 的 較
+THEN LIKE SOME OF THE SENIORS 有在幫忙 BUT THEN LIKE STILL OKAY
+他 有 他 用 它 的 我 不 道 他 用 很ECT 是 什 麼 他也 就說
+SO他 USUALLY 是兩 個 THEN 你 就 的 HOTEL 他
+所 以 那 個 那 個 那 個 東 西 你 跟 很 講 的 是 LIKE SO OR IS LIKE A PRI SHO
+是 前 是 不 是 白 那 個 好 像 時 那 個 藍 車
+LIKE WHEN YOU GO OVERSEAS YOU人的 CAR THEN SHE PEOPLE的 VERY MAN DAY MUST ALSO JUST DRIVE IT
+其 實 我 很 他 其 就 是 說 為 什 麼 他 等 到
+現 在 還 又 在買的 了 因 為 不 好 好 像 去 年 月 START
+有 好 有 問 你 要 說 不 過 TRANSATION 那 些 你 就 自 己 包 到 玩
+就 是 TRANSPORT SUPPORT 其 是 要 要 種 TRANS SUPPORT的 RECATION 所 以 他 們
+你 如 果 你 做 弄 他 邊 弄 TIME 有 空 話 他 都 不 有 喜 比 說 PART TIME 的
+沒 有 他 們 的 TE 其 實 比 較 他 的 聽 COM 我 們 多 比 較 美
+WILL BE PLANNING ONE出 MONTHS TIME所 IS MAJOR買 東 西 的 EVENT
+然後他 AFTER THAT 因 為 那 時 候 是 YOU KNOW 那 個 那 個 女 小 講 是 他 只 後 一 年
+如 果 正 是 種 那 做 是 二 個 種 的去 的 話 就 是
+在 讀 書 上然 後 做 LAB 做 LAB 的 話 就 是
+然 後 我 就 一 直 過 我 們 樣 就 是 要 我 們 在 才 回 到 問 題 或 是 什 麼
+已 經 玩 說 他 就隨便 有 B 也做 他 就 給 一 個比 較 好 的
+新 SINGAPORE大 頭 THE ALL THE H ARE HERE來 SINGAPORE BUT THAILAND THEN
+MOST BUT THERE THE STILL I OTHER STUFF ABOUT LIKE THINK LIKE GOT
+那 個 大 的 是 他 要 己 LAND的 然 後 我 們 才 跑 去 跑 進 去
+在 PASS THIS D THAT AND FOR
+就 就 DESIGN GENER 之 類 的 說 他 們 有 什 麼 ORIENTATION CAMP
+AS IN 可 能 在 這 個 是 LIKE 可 能 說 這 個 時 間 類
+YEAH A ONE BUT END WE JUST COME OF ALSO OKAY
+畢業 過 後你 的 STUDYIZE 跟 你 的 WORKING LIFE 有 什 麼 DIFFERENCE
+THEN 就 是 我 是 做 好 我 了 我 才 去 看 戲 的
+THEN 我 為 剛 他 是 ROOMAT THEN 就 是
+好 像 上 感 請 這 樣 所 以 還 好 是 我 不 是 我 PLAN
+現 在 有 蠻 多 的 BUT 我 JOIN 的 COMMITTEE 都 是 比 較 喜 歡 個人 INTERACT
+I名 是 CHINESE的 因 為
+BECAUSE THE AS SYSTEM PART你 DO A LOT THEN LEFT ONLY TUITION BUT
+我 CLASS 的 就 是 我 們 的 可 就 是 全 部 都 只 是 一 個 名 字 而 一 個 聲 音
+這 些 那 個 我 是 說 不 了 了 我 可 以 喝 AND N出 了
+AS IN 他們 太 掉 先 長 的 他 的 PERSON
+一 定 有 一 個 目 較 就 每 天 就 有 時 候 不 平 他 這 想 個 目 比 較 為 什 麼
+RECENTLY I BEEN WATCHING BIT BANK THERE HAVE WATCH WEEK BANK THERE
+I DON' T KNOW WHETHER THERE CAN C BUT SOMETIMES在 THE LECTURE CANNOT REALLY CAN UNDERSTAND
+我 那 是 剛 剛 因 為 我 BEFORE來 N T 我 是 做 工 一 年 THEN我 還 進 來 的
+他 一 看 到 你 走 過來 他 那 個 人 會 跟 會 跟 正 有 整 你 可 以 去 U 就 找 看
+你 好 你 沒 有 說不 不 懂 我 最 在 兩 種 MY
+我 穿 的 是 那 個 長 那 就 幫 我 一 個 那 個 什 麼 近
+我 們 有 這 個 IMAGE THEN 我 不 明 百 的 IMAGE THEN 我 PERCENT 上 去 我 開 一 個 FOR人這 樣
+對 對 對 對 對 SING
+我 的 不 們 是 我 現在 幾 樣 去 的 一 個 DEPARTMENT 們 就 是
+THEN UP TO J C J C 就 比 較 少 BUT 因 為 J 是 在 家 裡 有玩
+然 後 他 們 他 們 都 會 下 半 就 會 去 跑 步
+所 以 就 是 蠻 貴 的 如 果 是 是 課 話 就 找 的 兩 百 多 SUB 百 塊
+BUT我 懂 那 個的地 方 就 你 們 的 COURSE可 以 選 OTHER COURSE都 全 不 了
+對 有 是 蠻 在 成 才 一 下 這 些 的 東 東 西
+較 有 他 每 個 心 期 都 會 UP 最 一 心的
+WELL UN I MEAN NOT ISBALL OF IS YOU
+我 們 穿 著 過 後 我 們 我 們的 FOR 和 成 因 為 那 那 個
+我 前 是 在 去 LAB 那邊 做 那 個 TRAINING FOR P一 些 東 西
+他 有 分 那 個 對 有 給 我 們 他 我 是 給 我 們 學 這 個罷 的
+我 我 沒 有到五 大 貴 家假了 THEN 是 在 房 近 要 就 跟 我 的 朋 有 在 外 面 了
+沒 有 MEAN 很INE 然 現 在 點 喝 水 有 時 都 廢的
+YEAH BUT FOR N ENGINEERING USUALLY 是 MOST DAY LIKE FOR ME ACTUALLY 我 拍 上 是 FREE
+我 根 本 都 不 懂 有 什 麼 SPECIALATION 什 麼 東 西 I DON' T EVEN NO 有 SPECIALATION 的
+我 I THINK CONSIDER 錢 多
+這 個 時 WHEN HE HAS THIS KIND SHOULD GOING ONE我 這 個 是 最 歲 的 時 時 候 他 的
+那 個 做 以 是 那 紅 著 特 比 較 好 做 然 後 那 個 英 目 差 帶 一 個
+所 以 你 高 點 公 常 的 後 已經 定 那 公 常 你 可 以 去 做 好 心
+YEAH I ACTUALLY IS THE 如 果 一 直 這 樣 下 去 有 不 懂
+後 你 跟 他 們 好 東 西 的 候 他 們 家 頭 頭 頭 頭 的 很 久 這 樣
+有 你 要 只 道 去 裡 THEN YOU CAN GOIC ALSO 有 很 多
+他 們 的 英 文 是 聽 幫 的 SO LANGUAGE VERY IS NOT PROBLEM
+AND 就 AND ANALIZE 就 分戲 對 我 我 是 就 對 種 會 較 有 去
+IT' GOING DURING SCHOOL 點 是
+HE SAY MAYBE WHOLE SHOPPING THAT HE WILL SAY 沒 有 不 喜 歡 你
+對 不 為 你 如 果 你 在 邊 公 作 話他 SET 飯 你 在 面 做 種 的 面
+改 的 我 很 好 來 種 SO THAT S WHY FOR別 DAY 我 會 選 擇
+同 聽 就 MORE TO C S BUT TEAM 他 的 那 個
+雖 然 那 個 那 個 可 能 那 SO I THINK 我 們 我 過 我 FRIEND 去 OKAY L
+他 吃 開後 CLEAR 近 好 跟 BUT HE JOB
+PARENTS AND LIKE C JUST 去 做哪 一 個 今 年的 STUFF
+那 天 POST的 只 是 還 沒 有 講 在 哪 裡 孩 只 是 點 講 不 爛 蠻 的
+THEN 還 一 個 是 去 決 F J F 他 們 就 較IVE
+對 近 天 出 哪 有 有 月的喜 ONE TEN
+THE MASTER 全 部 會 MODULEIFY 因 為 很 多 BLOOD 會 R你 的 MUCH LAST 那 邊
+你 樣 小 就 說 他 們 很 難 會 有 一 個 會 有 一 個 地 講 要 多 少 FAMILY 還 的 穿
+然 我 要 做 REPORT 兩 輕 個 是你 MAX WORK考
+那 個 多 拜 有 那 個 上 是 蠻 大 的
+算 少 也 是 LIKE 那 種 十 幾 二 十 界
+DEPENDS 你 沒 有 以 前 那 個 小 時 候 WE HAVE 的 就 是 花包 RIGHT
+SOME上 是 DIFFERENT SOME 下 是就是 SOME WEEK 到
+我五 老 我 聽 出 近 有 寫 ALREADY THEN 你 這 樣 這 樣 來玩 我
+THEN THEY DON' T LIKE MORE THE GUYS THEY DON' T LIKE THE WAY THEY TRIP 那 個
+OKAY THIS SAID THE DOT
+對 下 可 以 去 看 BUT THEN 你 現 在 還 有 時 間 面 他 現 在 不 給 我 知 道 我 可 以 在 這 裡 用
+TEN PLUS 他 的 考 要 到 了 他 考 是 能 那 起 我 在 考 是 也 是
+YEAH I DON' T LIKE THEN STILL FEW VERY I IT CAUSE BECAUSE LIKE LEAST FOR YOUR GET TO FOR
+睡 就 是 然 你 的 做 片 的 朋 友
+然 後 你 看 照 片 出 會 有 你 去 北 近 也 不 是 這 樣 我 像 去 被 近 是 這 樣
+第 二 多
+飛 機 票 做 大 個 會 比 較 便 宜 用 你 去 飛 去 上 還 的 講所 還 是 來 間 你
+旁 也 有 己 的 了 而 記 很 YEAH什 SOMETHING I THAT
+然後 他 有 些 他 又 沒 有 TO TUTORIAL CLASS 做 直 接 LECTURE BASE 全 部
+因 為 我 大 玩 PLUS 所 我
+因 為 我 不 他 清 楚 我 的 PRODUCT 是G 什 麼
+要 好 還 不 錯 了 因 為 直 這 個 學 去 是 蠻 LUCKY 的
+OKAY YEAR TWO 我 JOIN MODULE我去 TRAINING BUT OUR WAS LIKE個LETE
+不 同差 因 為 我 們股樓 的
+你 會 看 到 很 不 同 的 東 西 這 樣 子 THEN 個 他 就 一 個慮 我 出 這 樣 子
+BUT JUST SPORTS你蠻 LIKE 每 次 沒 WEEK 只 一 個 樣 是
+通 上 還 是 DAY USUALLY 寫 一 些 們 的 OVERSEAS 的 那 些 東 西
+媽 他 主 蠻 輕 單 的 對 可 是 我 喜 歡 吃 因 為 很 近 看
+I THINK 個 IN INDIAN 不 第一 個要黑 我 經 很 黑了
+THEN然 後 就 回 去 投 說 的 又 講 這 有 教 我 給 最 在 有 玩 然後
+他跑 了 RESULT 給 他 他 全 部 是 用 從 ATION 所 所 以
+我 我 一 個 TRAVEL 我 寫 是 好 然 後 寫 三 是 行 是 好拿兩分
+YEAH MY LIKE ALL QUITE ONE ON THEN MY THAT GOT CHARGE
+那 種 BIT 出 一 個 很ED 的打 單的 SYSTEM
+THEN 他 們 是 從 四 點 路 到 零 成 兩 點 所 我 覺 他 們 不 是 SAD 的 是 真 的
+因 為 你 只 有 一 個 SEM 現 在 你 的 THREE POINT 都 是 兩 個 SEM 機 起 來 的 UNDERSTAND
+還 年 輕 所 以 WHAT MYMENT跑 C 會 比 較 SHOULD MORERESS是一點
+有 BADMINTON THEN THE
+YEAH SO I CAN HAVE SOME ENGINEERING SUBJECT DOING SOME FROM
+LIKE VERY到 一 點 點 點 點 就 是 CAN ORDER FOOD THAT
+沒 要 開 電 要 做 這 要 做 那 為 以 前 是 想
+THEN 可 能 你 就 要 CONTRACT 那 個 RANDOM 的 那 個 他 的 網 工
+就 是 你 不 能 去 問 別 人 因 為 別 人 的 請 空 跟 不 樣
+因 為 一 個 一 個 一 走 一 個ATE OKAY
+SO REALLY TAKE UP QUITE ALSO QUITE SOME TIMES THEM
+FINANCE FINAL IS ITSELF
+你 就 拿 去 他 是去 PAPER 掉 住 後 你 就 西 來 掉 那 個ONE
+EVEN IF YOU ARE SUPPOSED TO STAY IN HALL RIGHT 你 有 ALSO LIKE
+為 BUT 便宜 BUT 你 想 下 你 買一 個 BUT OR LIKE 可 THREE去 FOUR OKAY
+你 前 在 那 裡 你 間 的 你 開 灣 就 部 說 很 間 一 個 BUILDING
+如 果 你 在 那邊部 就 是 樣 NORMAL MORE PRICE 樣 就 是
+他 的 個 CUT一 EASY 定 可 以 直 接 BUS 我 車 全 都以
+他 們 真 很 需 要 這 個 SOFTWARE WORK 他 們 要 工 做 像 那 個 OUT路 這 樣
+OKAY TO ASK HER TO FOR TO HER OTHER FRIENDS LIKE 這 個 RESEARCH PROJECT
+BUT 你 的 HISTORY OF TO JOB 是 什 麼 就 他 有 有 給 你 跟百 FOR
+THEN 很 像 近 天 學 粒 時 然 後 我 們 就 會 去 小 的 校 的 IS'
+一 個AGE 然 然 後 你 從 裡 面 你 這 樣 你 樣 出 是
+我 們 兩 個 WILL JUST CERTAIN THEN THEY CAN LIKE 道 我 們 兩 個 的二ENDATIONS
+I DON' T THINK THERE ALSO 我 拿 不 懂 我 不 到
+我 是 ACCOUNTANCY 戲 SO 沒 有 SPECIALATION 的 就 是 PURE 一 點 對
+以 前 我 都 很 像 玩 GAME 我 就 好 講 到 的 那 些 GAME 下 來 玩 這 樣 子的
+我 們 九 點 就 要 到 而 且 我 們 一 直 STUDY 一 直 STUDY
+同 一 個 十 粒 我 去 這 個他 不 然 我 什 麼 不 叫 人 家去
+AND THEN AFTER THAT TRANSL 來 這 個 工 他 的 日 公 司 是 最 STRESS
+然 他 FOR 裡 面 給 有 他 沒 有 像 我 們 P C S
+怎 樣 的 跑 在 的 東 西 SO 他 的 CH BUT 就 是 在 這 邊
+很 多 地方 I現 在 LIKE A LOT OF A LOTS ALL人 FOOD
+他 們 有 很 多 個 RIGHT 的 可 能 他 們 會 這 個 SERVER 去 去 差 去 別 個肉
+所 以 他 就 會 AFTER THAT 講 他 是 FINISH 的ATION 了
+如 果 家 車 THREE 就 差 大 十 分 種 LIKE TEN MINUTES YOU 到 了
+AFTER CHRISTMAS AFTER 時 是 他 我 就 黑 怡 包了
+THEN YOU CAN JUST PASS ALSOLY YOU TRIP IS STUDENT THEN CONTINUE TALKING
+YEAH對 OKAY 對 大 那 個 COACH
+但 是 他 可 以 拿 來 做 一 個 一 BOOKRONIC BOOK
+他 們 他 們 會 LIKE TRAIN 一 個 COMMITTEE 來 教 一 下 NEW GENER
+HOW 的 PAY 生 千 八的 STARTING THING
+YES 就 是 跟 我 主 要 是 要
+會 他 我 去 吃 法 要 分 是 什 麼 樣 姐 只 是 要 的 SHORT CULTURE LIKE
+為 我 接 到 這 樣 都 是 過 我 這 邊 還 沒 有 動 過 I NEVER MOST BEFORE
+我 們 要 那 個
+是 是 我 的 有 在 那 邊用 怕 你 可 以 用 MALAYSIA的 POINT 那 個 SECOND
+因 為 如 果 你 要 真 是 買 到 A YEAR便 你 要 BOOK 很 長 AT MONTHS
+NO ONE NO我 THE 那 個 就 是 每 次 做 PROJECT 後 面 不 是一 個 DIFFERENCE
+我 覺 得 得 你 要 去 做 才 房 這 個 也 的 話 不 大 十 候
+可 人 個 人 個 人 會 多 少 會 點
+要 之 我 們 是 CUSTOMER SERVICE C 關 小 生 去 對 你 的 CUSTOMER
+過 我 們 走 子 過 後 面 個 男 子 走 很 塊 從 們 個 TOPIC 走 過 這 樣 子
+那 時 我 們 是 我 就 去 到 好 它 是MENT 的 PART STUDENT THEN
+所 還 好 有我 我 一 個下 跟 TE非 講 個 叫 些
+ONER THAT UP YOUR ON COMPANY OR SMALL BUSINESS LIKE THAT
+BUT THEN 會 不 是 講 說 他 們 沒 有 OFFER 這 個 東 西 了
+大 孩 子 三 十 睡 才 結 現 在 要 算 下 哪 子 三 十 歲
+當 講 貴 話 裡 友 我 得 超 快的 因 THAT WAS QUITE果 LIKE 一 年 多
+SEE ME Q PIN 幾 個聲
+THEN J C 我 就 JOIN THAT ALL AFTER CLUB
+不 是 要 講 I JUN 他 們 是 你 的 BLOCK的 BUT OKAY BUT THINK IS
+要 CAN BUT一FUL POINT過來 SIDE的 THEN THAT BRING BAD
+我 每 次 來 我 多 在 開 很ING MUSICING TAKE
+所 以 應 該 是 沒 有這 樣 難 BUT AS COMPARED TO
+你 平 時 有 沒 有 負 候 那 個 THEVICE 是 應該 有 年 緊 的
+因 為 LIKE 因 有 PASS是 快 FOR NORMAL MEMBER
+就 不 能 玩 千 給 就 不 是 講 然 錢 是 出 到 完 你 他這 樣
+有 有 有 在 那 邊 我 學 的 有 這 個 一UN 的 東 西
+還 好 SO 到 REALIZE 的 候
+因 為 我 個 能我國 出 的 AT
+有 一 點 點 那 可是 THEN 他 有 講 說 不 什 麼 個 蠻 的 不 不 只 最 講 你 不 要 走 不 較 好
+多 的RICITY CONATION 那 種 東 西 我 們 就 好 樣
+是 我 們 存 在 多 很 想 去 BUT 不 是 想 有 些 很 講 月
+JUST THAT I LIVE THE HOUSE BEFORE THEY DID AND COME可能 LATE
+他 他 可 以 樣 沒 有 人 教 他 那 候 還 沒 有 去 政 同 的 CLASS
+I SEE NOT BAD SO 你 沒 有 想 過 回 去 做 老 師
+考 STAY 在 MAIN THEN 可 能 LIKE 不 果 地 三 年 第 四 年
+YEAH SO LIKE 我 沒 每 他 就
+我 不 懂 是 來 為 你 還 是 在 是 在 還 是 他 們 真 在 NEXT EXPERIENCE 的
+每 一 個 單 們 的 你 們 放 上 放 之 裡 面 的 沒 個 們 都
+比 較 忙 是 ONE THING BUT I DON' T KNOW 就 是覺 得
+CANNOT BUT BECAUSE SOME FRIENDS RIGHT
+THEN 那 個 候 去 那 邊 覺 得 好 像 很 代
+他語 END也是 AGAIN MONEY INTERESTING 的然 後 在裡 YEAH
+那 個 該 蠻 容 易 的 對 可 能 較 靠 近 點 時才不
+YEAH THINK ARE WE YOU ONE PERSON WE REALLY ONCE TO BE A NORMAL POLY
+LAST WHY I QUITE 可 他 的 OFFICE 的 THEN 他 好 從 後 面
+SO我 的面 ABOUT THERE YOU BUT YOU KNOW NO DAY A AROUND的
+BUT個 MATHS第O這 樣 樣 樣 講
+好 像 DEPENDS 是ATION 他 們 很 住 重 的 就 是 講 麼 有 輕
+沒 有的 SO 我 不 能 進 SIX
+所 以 其 實 好 像 在 中 過 也 是 有 所 一 的 THEMY 的
+還 有 不 要 講 別 的 THIS下 笑 我 SO的 CHANGE二 ALSO
+有 但 是 你 不 是 那 個 在 那 個 CAMP ONE 的 THAT' S ONE HAVE TO
+不 他 就 不 要 我 不 要 去 個 很 拿 那 個 TAKE FORM EXAMPLE 候麼
+這 東 西 然 我 我 老 本 是 沒 有 什 要 給 我 接 東 西 來 因 為 他 講
+CAUSE MY GO FOR SHORT RO THREE TO MALAYSIA
+OKAY 因 為 我 們 的 RESEARCH 會 在 這 個 很 於 做
+然 貴 是 貴 在 還 心 跟 上 面
+MAYBE IS THE RIGHT PEOPLE
+然 後 印 國 可能 久ATE CASE CAP
+THEN I KNOW CHOICE也要 跟他 TRY TO EXPERIENCE AND MAKE BOTH SIDE GOOD AS IN
+我 們 這 邊 是 MAJORIA 有 很 多 長
+LET IT BECOME SOURCE THEN YOU BENEFITATE
+不 MANAGER FOR 的後CTIONATE
+' T THAT WHAT CHRISTMAS QUESTION ALWAYS TALK ABOUT ARE FAIL SO I
+什 麼 了 我 不 會 讀
+他 會 給 你 兩 三 個 人 的 公 作 如 果 你 做 不 到 你 不 走 沒 人 做 到 你 就
+然 後 大 的 是 人 的 講 讀 外 一 變 了 看 一 邊 了 不 知 道 幾 屋 記 的
+OR DEPENDS ON的 PLAN因 我 知 道 只 是 在 新 加 坡 他 們 的
+BECAUSE IF YOU ASK A THEN SHOULD HAVE TO THING為什麼 我 要 ALSO 說 可 可 以
+AND SLEEP
+OR ALSO SO AS IN YOUR ASK SHE YOUR ASK SEE TO ROOM沒
+INDIAN END 還 是 還 是 很 CREY 都 是 蠻 蠻 的
+沒 有 家 COURSE 沒 有 考 不 會 這 是 裡 考 考 是 要 去 懂
+IF 他說 TO 有IT 如 果 你 還 有 時 間 的 話
+到 了 最 會 一 小 個 候 每 個 是 真 THAT 這 是 超 開 近 的 從 去
+NO 我 跟 來 分 講 那 分說 OR SE CLUB COME TO MY ROOM THEN WE SISTER的 SONG EFFECTING
+WHEN WE A POST OUR FRIENDS SHOULD NOT THE 出 進 的
+我 們 是 BEFORE THAT DAY RIGHT 我們 LIKE ONE WHOLE DAY I WAS SLEEP
+SO YOU HAVE TO 睡 是 FIRST STAND YOU有 NO
+然 後 他 們 就 過 後 也 沒 有 什 麼 在 因 為 人 家 自 少 在 那 邊 出 一 個 SEMESTERAL
+所 他 們 很 多 都 是 會 做 那 個不ING 就 是 後 面
+THEN OKAY自選
+UDING ALL THE PROP AND SAD BUT THEN IN CASE WE CANNOT BECAUSE THEY
+我 不 只 己 道 那 邊 看 看 海 下 然 後 去 那 邊 是FUL
+我 有 個 很 有 WHO FINDINGATION VERY DIFFICULT
+THE 他 們 能 朋 有 是 人 知 道
+YEAH THEN 就 是好 看 的
+那 個 只 只 的 長 唱 的 是 比 怕 有 薪 是 比 較 小 個 他 是 較 間
+就 是 那 個 時 候 他 說 I WANT TO BECOME AND CULTURE
+I BODY UP FIRST BUT THAT' S OKAY SHE BECAUSE SHE FIND
+他 可 能 是 他 們 會你 REST 那 些 幫 在 他 們 的 MO包了
+ACTUALLY我 我 在 學 校 HALL 的 沒 有 什 麼 知 道 CUR PASS 因 我 怕 我發了
+那 些ONCTION LIKE 是 蠻 貴 了
+他 們 是 華 人 不 過 也 是 比 較 三 參 這 樣 英 文
+現 在 的 小 學 年 去 要 跟 我 們 當 年 的 你 很 不 同 了
+ON THE NEW PEOPLE BEFORE ABOUT I THINK ABOUT 我都 POL TEAM
+A BIT HERE AND THEN LIKE CERTAIN TERMS BUT WE HAVEN T REALLY GOING IN THAT YET
+有 些 人 是 LIKE NICE YEAR 你 看 到 那 個 子 讀 不 出 來
+INTERVIEW 就 他 們 會 有 一 個 CLASS 這 樣 子 給 那 些
+CULTURE J C COM AND
+剛 動 的 ININ
+WHEN BETWEEN 就 是 我 家了
+BUT WE 覺 他 就 不比 較 去 他 又 講 太 貴 了
+我 爸不 爸 就 是 近 近 的 THEN 就 是 看 REPORT的 的 那 種 THEN 我 媽 媽 就 是 在 邊 樣
+除 了 TEXT SURVEY 之 外 另 外 一 點 可 能 就 是 POLYICAL
+為 有 什 麼 好 屋 子 接 下 可 是 想 要 屋 是事
+個 COASTER 我 不 那 個 走 錢 錢 的 為 很 IN
+還 沒 有 講 要 去 L A
+我 覺 得ING 放 是 THE MOST DIFFICULT THING
+就 是 覺 得 有 點 對 不 起 那 個 CLASS
+玩 的 什 麼 GAME 就 大 概 講 你 叫 我 記 的LY WHAT HAPPEN
+THEN 有 一 次 我 們 就 去 到 那 個 一 個AD RESTAURANT
+沒 有 他 不 是 SYATE 他 就 是 跟 你END的 MOVIE 那 種 的 東 西 一 樣
+然 去 那 邊 他 們 會 好 那 些 很 樣 每 個 過 家 什 麼 東 西 他 的
+可 能 如 果 我 的 FRIEND 就 叫 我 起 去 我 可 能 會 跟 他 們 一 起 去
+那 個 POLY 就 不 知 道 有 些 人 是 比 較 想 吃 檳 城
+HAVE IS 那 種 LIKE MIX IN THE CHINESE PLACE 那 種 的
+開 等 來 然 他 們 就 會 這 重 開 真 的時 候
+ABOUT OKAY MY BROTHER SISTER T我 QUITE A LOT BUT THERE A LOT OF
+EVENT的 不 是 EVENT 的 他 是 在 EVENT COMPANY 做 工 的
+OKAY 瞭 姐
+我 的 朋 友我 飛 到 北 近 來 教 我玩 然 後 我 們 就 一 起 去
+然 後 如 果 有 TEN PERCENT TWENTY地本 PERCENT 是 少 們 有 幫 當 他
+還 也 去 小 就 OVER 了 對 去 的 歌 他 說 蠻 BY MONDAY OKAY
+THEN CAN IF YOU DON' T NOT SURE OF FOR THE JUST KIND WE ONE THEN UNTIL GET
+LEFT OF MY MANY HOURS MY LAST HOUR WILL BE YOU KNOW
+CAN WHEN I IDEA OF LIKE WHO YOUR I DO YOU GOOD OF PEOPLE BE ALREADY
+就 說 LECTURE LUNCH AFTER SCHOOL 只 是 跟 我個 FRIEND 來 起
+SO THAT WHY 他 他 他 們 的 PROGRAM 很 高
+是 五 快 的 那 個 ONE 一 吃 去 吃 你 會 自 以
+我 沒 有 樣 覺 得 我 就 我 樣 也 是 可 以 可 是 我 不 需 要 像 你 樣
+他 灣 的 日 本 參 好 像 比 近 加 坡 便 一 很 多
+有 有 就 說 那 個 個 五 去 他
+就 THEN 樣 有 去
+AS A OVERSEAS NO 做 一 些 MAKEATIONS 然 後
+對 好 像 THEN 他 人 以 前 PROFESSOR 會說 好 像
+我們 TRY TO 早 上 跑 跟 是 這 跑 不 起 來 而 些 很 熱
+買 有 們 等 到 去 年 他 在 買 買 也 是 買 種便 YEAR
+就 說 這 是 還 是 還 很 還 是 可 以 做 因 為 你 道
+YOU JUST GOOD AND THING THEN JUST MORE THAT THERE INTO ACTUALLY ALREADY
+我 就 靠 近 還 邊 很 兩 爽 然 後 當 學 有 很 多 地 方 可 以 空
+I THINK 那 時候 有 我 一 教 我 可 是 我 就 沒 有 上 以 我 不 講 去 到 LEARN
+我 國 講 他 去 DRIVE HE 他 不 要 半 什 麼 東 西 他 去 PASS 的
+JUST LIKE OKAY LIKE JUST放 LIKE一 EVENT 然後 AFTER我的 聽下
+很 容 易 其 實 是 跟 寫 罷 的 邊 他 只 是 你 前 面 講 一 個VICE首 之 類 的
+是IFY SOFTWARE ENGINEERING SOMETHING TEST 就 是 SOFTWARE 的 東 西
+ME WILL JUST OKAY IN ONLY THEN THES WILL COME OVER
+一 一 一 一 一 樓 你 CERTAIN的 V一個 POLY一 個這 樣
+有 就 是 會 會 老 會 BREAK FOR ONE 的 吃 飯
+真 的 是 我 他 們 講 你 們 次 東 西 煩 的 們問 一 下
+BUT WHEN SEE MEAN I HERE THEJECTAT
+好 像 我 們 一 起 講 話 走 走 走 然 後 們 就 大 種 們 他 們 就 走 塊 兩 坡
+兩 年 是 是 ABOUT TWO FOR THEN 我 朋 友 剛 的 朋 友 那 他 過 講 對 果 SERVICE SURVEY 就
+BECAUSE I GO THOSE DAMN EXAMPLE OR THOSE CHURCH VERY煩很 SO
+剛 奇 部 所以 就 會 我 們 要 想 我 們 自 己 這 方 面 我 們
+你 IT 你 懂 的 ABOUT 那 個 RECENTLY PASS WAY的 RIGHT 那 個的
+AND 也 不 是 說 一 有 這 個 機 會 你 就 CLUB
+THEN 那 個 要 我 就 前 的 你 朋 就 分 就 問 他 講 A
+THEN 有 時 候 就 明 也 是 會 跑 就 找 們 THEN 有 吃 SUPPER 的 些
+VAL WORDS 後 你 又 己 因 為 你 知 道 你 那 個小在 英 不 好 了
+在 再 家 看 孩 子 THEN BANK IS FOR YOU WHAT IT OKAY
+還 是 先 就 是 有 一 個 CORE 他 那 個
+THEN 我 爸 不 知 道 所 所 他 一 直 當 那 個 沒 有 裡 那 個 電 是 不 裡 他
+你說 U 的 種 那 個 生 績 大 大 個 叫 比 較 小
+要 不 懂 了 多的 對 可 是 是 就 聽 到 也 要 不 懂 上 面
+你 直 可 以 從 那 個 JAPANESE PLACE AATION 的 人 大 裡 才 買 的 到
+I WILL LIKE TO BE A TEACHER SOME
+因 為 他 們 是 要 覺 得 很 難 可 是 我 們 因 為 去 THEN 有 FITACK 過
+我 們 真 的 跟 他 回 去 想 所 他 的 住 的 地 發 是 那 的 種 目 班
+OKAY 去 CAMP 他 們 就 覺 是 一 個 CAMERA 裡 面 他 們 放 兩 個 LAND 在 起
+因 為 我 講 他 們 是 最 是 POINT 的 機坡 的 方 事 機 去 算 的
+BUT 他 一 直 跟 HALLER 又 講 他 不 要 出 HALL FOUR
+人 還 是 真 真 在 海 上 就 過 那 種 可 是 只 少 我 們 知 道
+OKAY THEN NEXT蠻所 NOT NEXT飯 下 個 月
+WHY I THOUGHT THIS SEMESTER OR NEXT NORMALLY MOST THE
+然 那 個 那 個慢 他 就 每 次 會 主 會 給 我 很 那 個
+說 這 點 你 在方CY 買 的 就 說 他 會 沒 有 沒 有 這 樣 東 西
+I會 IS小 SCHOOL I KNOW AS FIVE HOW CAMP
+可 是 我 歡 我 比 較 I PREFER一打裡
+如 果你 真 正 要 讀 DEGREE OF CAP LECTURER的 ONE 你 要 拿 多 兩 年 就 是 PART TWO
+I DON' T KNOW 就 很 像 沒 有 OWN PLACE這 樣 THAT' S WHAT I FEEL
+WE ARE THE NEXT WE ARE GOING TO GO TRIP THIS YEAR AND I GOING GO SOME MANY
+昨 天 我 對 還 是 一 比 一 點 八 九 去
+而 且 他 的VER 也 是 要 好 像 們 的 GO THEN 還 是
+然 然 就 三 個 在 然 後 就被 不 出 去 你 去
+其 實 最 我 的 瞭 就 是 聽 他 們 說 好 像
+可 是 因 為 去 年 沒 有 所 以 以 去 NOT NORMALLYLY 不去
+就 不 會 講 因 為 BY PLAN BUT PLAN 是
+可 是 APPLY FOR J C 的 SYSTEM 很 像 是 PLAN AND PAPER 的
+OKAY 最我 我 吃 的 OVERSEAS 去 很 像 是 我 要 ORGANIZE的
+就 是 I THINK 新 加 坡 大 都 是 都 是 只有 跟 GRAND PARENTS
+我 中 學 的 時 候 I WAS IN BADMINTON
+你 知 要分 有 什 麼 的 經 點 那 個 EFFORT 倒
+什 麼
+是 很 奇 怪 是 我 都 PROJECT MOVE FINISH的 是 我 會
+可 是 我 每 個 人 都 不 要 做 因 為 很 很麻 煩
+AND 這 個 INSTRUMENT 全 部 都 是 CUSTOMERMATE 的 OKAY
+THEN IS SAY TWO I LOT MY HAND FOUR
+在 有我 不 到點 因 我 們 那 你 該 看 始 是 SO
+不 懂 因 為 有 時 是 想 說
+很 對 可 是 我 不 道 什 麼 餐的
+所 以 以 是 一 個 如頭
+就 有 到 很 像 AROUND 三 四 十 PERCENT 都 是 女 的
+都 會 銀 想 到 起 他 人 是 的 UN 千
+候 好 在 LIKE YOU HE DON TERS WAY FROM
+CAUSE THE GUYS IN FROM ME 我 就 是 蠻
+我 人 WAY SINGAPORE是 EDUC SYSTEM IS TWO G
+很 通 作你 我 比 較 去 大
+然 然後 有 不 要 演 出 來 還 是 拍 來 的 就 會 有 PROP 所 就
+誰的 的 會 較 種我 CLASS
+因 為 太 多 人 了 THEN ALL DIFFERENT GROUP PAPER
+THEN 他 的 也 是 VERY SMALL THEN 那 個 人 就 講 YOU CANNOT NOT DO YOUR
+ATE V了 最 跟你 講 這 這 個 是 他 的 不可 以 CLOSE
+就 好 像 有 那 種 PLANNING PAPER 不 最 語 子 我 們 少 機 就
+好 I DIDN THEIR WHAT THAT SONG SO ABOUT GIRL
+那 個 那 個 主 是 張 跟 戲 BUT 會 教 YOU NOT BAD
+可 是 HOW YOU DO IS YOUR YOU CAN PLAY BIT
+那爸 哪 只 是說 聰 明 要 動 有 只 是
+LIKE SHE SOME WHO IS VERY OKAY SHE GOT STAGE RIGHT SHE WAS C SIX RIGHT THEN
+WHY 有 比 們 講 出
+YEAH BUT THEN MOTHER ALSO LIKE TO WATCH THEN
+THEN 我 的 FEWJECT BECAUSE I GOT KNOW LIKE VERY 種 為 什 麼 要 P
+因 我 們 會 好 像 每 一 個 SENIOR 都 會 有 一 個 DIRECT 個 JUNIOR
+不 沒 有 在 在 種 賺 沒 有 在 新 要 專 裡 裡 人 後 是 寫 給 孩 子 了
+就 跟 講 又 看 有ING 樣 講 我 要 去 THEN 他
+INTERNET 又 又 不 是 很 好
+THEN NOT WORK THE TIME TO TRAVEL STAY NOT SAY AS IN
+然 後 他 那 是 可 有 兩 課 其 實 我 們 可 以 的
+中 學 過 後 就 J C J C 三 上 J些時候 就
+以 我 覺 得 HOUSE 沒 有 SPORTS 的 CAP PASS 是百二嗎
+ONLY心 GENERIS DANCE 沒 有
+可 我 跟 我 附 近 做 久 做 到 本 做 角 能 後 最 會 也 是 一 做 BUSINESS 這 樣
+AUSTRALIA AFTER THEN 就 C一下 大來 兩 上 個 星 KEY
+如 果 你 真 的 是 要 從 明 開 始 拍 情 很 多 多 會 給 要 賺
+I SAY FIVE VERYZY THEN 你可 以 幫 講
+應 該 是 DIFFERENT DIFFERENCE SCHOOL GOT DIFFERENT CLOSE
+他 他 這 邊 就 很 玩 的 對 他 這 邊 就你 NOW YOU 只 不 是
+ATION THEN 他 好笑 THEN 那 個我 就 問天 是
+SO MORE MONEY IS GOOD MONEY BECAUSE CAN SAY FOR NEXT YEAR
+要 出 大 路 的 然 後 要 玩 然 後 過 後 玩 走 的
+應 該 是 上 是 他 是 叫 LIFE SAING
+我 的 MOTHER SORRY 有 跟 我 講 我 的 名 字 的IN
+有 沒 有 好 像 便 的 MO掉 這 樣 時 然 後 他 講
+NOT AORT LIKE FOR YOUR JOUR
+可 以 以 好 像 這 樣 子 裡明 過 可 是 他 那 候 也 是 跟 我 記 他 講
+THEN 他 的 太 TWO 好 像 畢 業我 跟 別 業 之 前 有 一 個
+差 不 都 所 以 我 們 去 我 就 能
+I THINK 我 為 比 較 慘一 點 BUT我的 GO INTO THE J
+就 是 少 第 他 是 你 孩 子 講 然 後 如 果 是 男 生 你 要 講少 CLUB
+就 不 要 穿 色 有 不 要 穿 網 色
+FOR TEAMOOD AND FAIL KIND THING CAUSE IS VERY
+YEAH BUT 你 跟 本 是 不 你 一 個 TERMS 都 不 可 以 吃
+對 多不 就 要 給 他 那 時 分 THEN 都 最 有 也 是拿 PLUS I THINK
+以 前 是 可 T 一 前 是 是 個 CHURCH
+這 樣 做 AS IN LIKE THE TALK FIVE OR TIME AND PERSON GRADUATE
+我 知 道 樣 來 不 說 你 有 多 錢 擇 你 可 以 做 些 很 多 多 做 東 西
+你 有 邊 也 塊 的 時 候 你 也 去 就 月 多 後 就 媽 蠻 一 直 上 直
+THE WHAT I NEVER TURN THOSE所以 YOU FOR I
+SECONDARY SCHOOL I THINK CAN SCHOOL跟 J C
+很 多 人 YOUR CHANGE TO ANOTHER OTHER ANOTHER OTHER CLASS
+THERE BUT DON' T KNOWIVE粉 BECAUSEIVE FOR THEN FOR ME
+我 又 是 我 到 的 我 放 的 是 包 我 就 跑 去 太 品 了
+H SHE ONLY PRESENTATIONED FOR TO GAMES
+一 EVEN 你 你 沒 有 時 間 跟 他 講 話 RIGHT 他 都 IN OVERSEAS 下 可 你 講話
+後 就 懂 講 容 西 THEN 因 為 那 電 早 上 I THINK 我 為 者 這 個 BUT 果 那 個
+那 覺 DOCTOR 過 後 就 給 我 一 個 要 過 去 買
+都 是 歡 NET我 然 後 就 是 要 同 過 人 是 人 少
+他 們 我 就 百 了 四 五 經 就 百 到 晚 上 就 點 這 樣
+沒 有 的 在 那 個 故 是 就 是 講 那 個 三 很
+EVERY KIND OF GIRLS 好 像 你 車 上 面 拿 那 種靠
+YEAH TRY RIGHT CUTE THEN後 我 要 跟 你 講
+他 們 的 到 也 要 幫 他 們 LIKE CHECK 一 下 UPDATE 一 下
+你 是 CLEAR 什 麼 YOU ARE ELECTIVE 的 U 還 是 ARE CLEARING CORE 的 A U
+你 是 NICE 家 還 整 SET 奇 塊 多 參 遠
+I THINK SO YEAH THEN 個 就 是的ANT 的 TRANSPORT
+L AS M 忘 這 樣 什 麼來些 MALAYSIA 這 樣 子 東 西 過 後
+不 知 道 全 都 是 我 的 CORE DO
+就 跟 那 個 的 公 常 的 人 DEAL 還 是 講 就 打 電 話 這 樣 子
+THEN 然 後 就 會 做 那 種 OR SOURCE PLACE QUESTION 那 種 麼 接 寫 要 腦
+因 為 我 一 一 個 ELECTIVE 以 那 ELECT ELECTIVE 就 SHORT 做 PROJECT
+IT SOME HAS NEVER MOST TO YOU BEFORE AND OF
+然 後 果 你 三 他 跟 三 上 又 不一 樣 然 後
+的 要 之 在 做 這 就 是 這 樣
+這 個 真 的 是 LIFE STORY I READ STILL THEY END I JUSTIZE ONE
+就 是 就 是 看 你 如 果 你 自 己 有 沒 有 興 會不 對 你
+拍 那 個 十 頭 要 時 才 給 給 P 是 子
+想 到 就 同 通 然 後 正 去 參 加一 個 MAJOR ENGINEERING SHOP
+要 過 叫 我 只 接 吃 湯一 SHOULD個 SLEEP
+YEAH 你 真 很 講 打 他 們 人 大 你會 心 過很
+包 清 天 也 是 蠻 久了二 零 多
+OKAY BOTH OF THEM THEN THEY WERE HAVE DIFFERENT ALWAYS OF SOMETHING SO THEY BOTH TIME DIFFERENT THINGS
+THEN 就 也 較 睡 講 CHINESE 的不 為 什 麼 就
+THEN WAS LIKE NEVER MY I CHANGE PUT HIM IN YEAH THE GOOD A OKAY
+LOOKING GOT ONE THE WHAT JUST兩個兩
+BUT 是 有 一 點 興 去 我 我 前 有 讀法
+晚 小 的 一 個 地 方 他 其 去 很 好 帶 的 對
+他 有 他 有 自 每 次 去 上 COURSE
+WHICH 那 邊 有 一 個 CFUL MARKET THEN
+那 是給 BUILDING 跟 你 身 是不 一
+就 是 因 為 他 是CEPT 他 OVERSEAS的
+因 為 他 們 拿 不 他 們 的 FOUR POINT 是 們 那邊 FOR FOUR 有 FOUR 提 下來
+BUT 我 覺 得 很 CUTE BECAUSE 我 的 最 I DO THE戲一 個 MULTITIES
+為 那 個 候 就 剛 他 看 的 時 候 壞 掉 所 以 他 就 去 換 的
+ACTUALLY OF COURSE I THINK 每 個 人 都 會 想 這 樣 做
+然 後 所 以 上 的 時 候 我 們 要 CAMP LIST 出 來 所 以 聽
+然 後 我 THEN 我 就 看 前 面可 超的 早 心 歌 接 過 他 還 是 己 明
+我 們 就 會 SEND N 是 幫們 ON SIX SERVICE
+所以 他 比 較 機 而 且 好 像 們 不 懂 東 西 他 比 較 容 一 教 問
+PRIN 的 個 他 就 是 他 們 用 很 多 那 些 NET WORK的
+WHY
+我 比 較 害 是苦 的 東 西
+TIME SAY 玩 在我 就 就 家 過 才一 從 那 邊 去罷 個 玩
+他 們 就 會 開 始 要 給 什 麼 要
+NOT JUSTING 我 們 還 有 DANCE心 ANDING
+ALSO THING THERE ALSO YEARS AND LEVELATE
+YEAH WEEK DAYS 如 果 你 星 起 三 來 你 是 RIGHT
+BE UP AND RUNNINGING IN LIKE MAYBE ONE YEAR
+很 之為 很 辛 苦 也 是 很 十 然 後
+TO 從 改 我 就 不 要 如 果 我 這 樣 子 話 那 個 東 西 電 會VER 的
+NO I WILL COM CONFIRM BE GOING AUSTRALIA BECAUSE I EVERYTHING A FRIEND
+以 前 要 做 在 那 邊 等 THEN
+BUT 你 高 裡 們 JAPANESEEND 的 那 邊 的 公 錢
+其 睡 回 是 一 個 小 時 沒 有 人 有 那 些 找 常 沒 有 玩
+覺 得 P第 的 錢 住 比 較
+另 外 一 個 人 會 百 要 一 EAST CLOSE
+ONE THEN HARD OKAY
+如 果 沒 有 說 發 他 們 應 該 文 應 該 是 還 OKAY 蠻 出 問 的
+到 了 下 對 都 你 想 要 就 可 以 到 下 還 沒 有 TRY
+可 是 就 你 他 不 要 弄 到 我 是 OKAY的
+所 是 寫 書來看
+他 們 不 會 他 們 接 在 那 邊 GET THEN WHAT CANNOT WHY CANNOT THEN就
+他 們 DESIGN 然 們 用 來 I UNDERIZE一 RESULT
+SECOND DAY MAYBE 就 去 T HOUSE IT SLEEP WORK OR SOMETHING
+SHE WORK FOR C WHY A 種 東 西 看 那 種
+我 玩 兩 的 了 不 能 做 不 近 的 我 自 姐 得
+那 個 就 是 錯 一 個 老 師
+當 人 放 的 可 是 FIRST YEAR 都 住 ROOM
+我 不 懂 英 文 應 該 不 是 我 就 是 有 EUROPE 不 知 道 個 國 家 的
+然 不 是 每 次 在 是 其 的 就 是 跑 去 ROOM
+VERY MATHS VERY
+當 你 喝 這 個 RECON 也 時 候 也 也 不 要 跟 LECTURER 這 樣
+跟 GROUP FRIENDS C 去 的 話 去 同 一 個 國 講 出 在 一 起 THEN I DON' T MIND
+像 早 上 一 那 中 一 了 然 後 我 們 有 難 對 你 對
+AS TAKE FOOD 就 是 那 種 好 忘 也 為
+拿 可 以 在 覺 的 後 在 讀 因 為 我 要 讀 的 是 CHILD OOD
+還 也 是 哪 然 後 在 去 別 的 那 個
+AND NOTHING HAVE HAPPEN LIKE THEIR THREEMENT RIGHT SO LIKE EVERY THE AFTER THE FIRST MINUTES
+ACTUALLY FOR MY CASE RIGHT I TAKE A LOT WITH MY SOCCER FRIENDS IN THEN
+比 臺 問 海 還 大 OKAY
+大百 天 RIGHT 個 太 很下 RIGHT 我 們 要 穿 LIKE LONG
+BECAUSE 所 所 你 是 在 是 在 叫 CHINESE 還 什 麼
+因 為 LIKE的 THEY CALL THEY SAY IS VERY SO
+就 說 他 們 要 讓 跟 多 人 會 接 出 只 說 CHRISTMAS MARKET
+那 個 AGE 因 我 在 J C 的 時 候 老 師
+IT' T THAT LIKE SOMETHING 像 那 個 MEM PHONE 這 樣 子 的
+我 想 麼 候 是 為 想 住 去 大 有 不 要 樣 開 一 心
+THAT
+有 時 也 是 孩 在 還 在 想 著 要 怎
+所 以 你 的 住 是 要 SAY BUT
+好 多一 半 的 人 數 是 所 以 很 明 他 不 是
+IT STUFF 就 較 文 學
+我 們 去 MALAYSIA 去 ACTUALLY GO FOR HIGH
+GO TO ALL EXAM TO TRY BEEN THE GAME FOR THE FOR他 的 O
+那 才 也 是 種 幾 的 講 路 機 也 是 道 很 打 也 是 不 懂
+關 他 那 些 COMPANY 的 WHICH LEVEL
+THEN I DON' T THIS OTHER COMPANY ONE
+去 A FIRST OR去 THECY
+LIKE WE CARE AS IN BIT AS IN LIKE ANY ONE CARE WHETHER THE WE KNOW
+YEAH ABOUT AROUND THERE 就 就 住 過 了 也 沒 有 什 麼
+兩 個 兩 個也穿 DI SO
+就 他 的 參 他 那 種 很 到 太 高 的 跟 我 就 可 以 就 那 種
+然 後 第 的 是 去 上 前 部 的 時 候 過 以 想 就 六 屋 子 的 THEN 他 們 就 講 他 像 進 成 五
+你 很 難 做 到 那 些 都 的 很 活 越 你 的 FOREIGN
+為 在 水 裡 面 部 在 水 裡 像 跟 跟 著這 樣
+然 我 們 三 能 吃 到 就 說 NIZE 上 參 來 方 面 我 們 要 走
+是 比 較 很 少 人 知 大 對 全
+SHE HAS MORE OF EX FACT
+NOT THAT I THINK 我要RESS STRESS
+我 FINAL我 最 主 要 我 們 的 可 是 要
+IN我 種 這 樣 東 西
+不 不 好 樣 講 有 YOU SOME BUSINESS BETWEEN
+多 從 說 們 在 的 禮 樣 種東 西 可 是 去 臺 灣 就
+所 以 要 找 也 是 講 EXPERIENCE 比 較 一
+我 THEN我 麼 ONE POINT SEVENTER
+BUT 我 現 是 我 不 會 去 為我 CHRISTMAS讀 FOR CHRISTMAS
+臺 部 是 子樣 因 我 們 檳 出 來 是 這 邊
+放 也 SOFTWARE 跑 看 SOFTWARE 的 不 能 拿 到 這 樣 好 的 RESULT
+還 有 如 本 也 是 有 一 個 買 個 那 個 四 歲 從 到 演 的
+SO ALSO I T LIKE IT' SO NOT HER CAUSE
+就 是IFY BY IN STILL SERVICE SURVEY MALAYSIA 就 是 I S M
+是 你 們 那 天 講 的 忘 班 就 那 你 煩
+IN THE 我 不 懂 SECONDARY SCHOOL 就 就 最 睡 你 間 去
+因 為 我 在 檳 城 時 候 玩 全 沒 有 是 來 參 的 我 的 媽 都 沒 有 去 的 那 時 候
+你 的剛 是 要 一 些 人 有 那 些每ICAL BACK 會 跟 好
+LIKE JUST AS STILL I STILL ABLE TO KEEP START HER SO
+是 換 皇 色 的 歡 這 樣 看 的 看 幾 類
+THEY PARENTS HELP THEN DO WHOLE WHEN MOTHERUSE THAT LAST TIME
+IC 個 CHAIR 個 那 些 東 西 旁國 自 己 旁 過 去 那 個 己 幫 過 去
+MY 可 可 是 前 喜
+不 是 就 是 那 個ARY 已 經 有 變 少 了
+THEN 我 要 大 回來大 我 每 次 當 那 個以看 I GOIN THEN
+就 是 我 雖 要 不 可 以 REPLY 你 IN CAN能 BUT LEAST UNDERSTAND
+TAX STILL
+因 應 該 很 少 人 會 去ATIONAL來 的 出 會 考 的 時 候
+過 後 很 少 可 是 過
+GO BAND THE AGAIN THEN LIKE BAND NO CAUSE I BEEN BAND FROM SINCE 中 學
+就 是 DO 下 來 STUDY THEN 每 次 沒 有 重 一 吃 ON三 SUNDAY 很 麻 煩
+THE THAT THE SO BECAUSE THE THAT FOR THE SONG IS THERE
+OKAY NO 我 沒 有 看 國
+不 那 些 東 西 你 做 了 自 主 來 吃
+ALL LIKE C DRI MUST RUN BYTER 很 在 新 加 到 RUN BITER
+I TO BE DOWN MOST MORE EVERY TIME GAME SO
+WHAT CULTURE SOMETHING去 AND
+YEAH 他 在 會 LIKE 他 講 THEN 我 得 不 要
+也 是 美 你 個 個 真 的 是 差 片
+他 經 跑 到 是 十 塊 來 是 是 LIKEATE THEN
+THEN 有 NOW一經 TWENTY 低 THREE YEAR候
+我 覺 得 我 可 以 在 會 點 的 其 實
+我 以 前 參 加大 ON SONG
+他 們 是 用 就 是 然 後 在恐過 去 去 三 的 B較 走 的
+他 灣 人 很 歡 帶 那 種 大 然 他黑 那 個 最 近 很 六 西
+對 每 每 個 人 都 樣 講 他 是 候 很 OKAY 的 IN 要 認 是 他
+如 果 是 我 我 不 講 好 我 東 西 都 放 不 戲 的
+TAKE ME A ABOUT MINUTES IS REACH HOME ALSO AS COMPARED TO 有 些 人
+FUNNY SMALL方 那 種 他 們 MAYBE LIKE
+我 這 幾 是 之 BAND 的 BAND 是 BAND 自 己 的 OWN WORLD 的 真 的
+我 覺得 THE NEXT F COM IN INTERESTING 對
+THE BIT 那 個 個 不 是 那 個 是 好 心
+YEAH 你 會 為 去 用 緊 I DON' T THINK WE GOTRESS問 NOT TO GIRLS你
+THEN
+THEN THEN 他 就 講 到 THEN 我 就 提 到 THEN 他 就 講
+像 時 點 蠻 就 玩 的 所 以 我 可 能 就 會 回 加百 二 才 進
+華太 I OTHER I DON' T SPEND TOO MUCH TIME OF IS
+第 也 是 放 別 可 是 BUS 會 比 要 你
+SO WHAT ONE FOR ME YET IS A VERY GENER OKAY
+因 為 很 有 零 氣 所 他 們 就 不 打 算 好 像 賣 多
+對 現 都 沒 有 PROJECT了 就 都 是
+他 它 的 SPEECH 很 很 厲
+表
+那 天 他 過 我 講 他 每 個拜 三 去 那邊題 球
+A算說 也 是 有
+YEAH LIKE 不 要 聽 天 加 就 不 要 家 最 有 家 車
+所以 就 是 有 去 下找 個
+BUT SO 會 FAIL 是 BECAUSE THAT 他 的 在 錢 音
+不 是 文 就 是 PART TIME要 電
+美 還 那 邊 就 要 有 真 在 那 邊 U 的
+SO 不 是 下 個 明 年 會 講 什 講 不 清 部 吃
+說 我 們 自 己 的 公 司 DEVELOP 的
+我 覺 得 COME TEACHER IS VERYING
+YEAH I DON' T LIKEREAM STUFF LIKE VERY
+LIKE PEOPLE LIKE 像 我 這 樣 比 較 近 的 我
+他 公 只 是 他 邊 特 定 幾 子 罷 沒 有 什 麼 的
+原 全 面 的 ONE 兩 兩 餐 個 小 時 就 回 家 就 好 了
+晚上 的
+EX 近 BUSINESS 是 種O 那 種
+然 我 裡 們 幾 個 蠻 OKAY的 每 自 一 己 出 氣 的
+真 的 沒 有 LIKE SPECIAL 時 間來 LIKE
+其 實 好 像 剛 才 那 個 PROFESSOR 是 講 的
+上 的 課 也 是 有 上 那 些 WEBSITE
+不 那 種 睡 錢 單 了 國 過
+跟 很 多 L ALREADY 也 是 在 臺 玩 出 參 的
+TRANS FORM 有 不 過 不 是 腦 看 的 的
+我 第 一 個 到 那 個 人 你 也 我 我 是 那 個 BREAK 能 GROUP 了
+天 便 到 些 DO BY你 FE
+OKAY 除出 了 住 的 睡 過外 我 還 喜 歡 我 喜 歡 是 機
+PROJECT MANAGEMENT 變 成 他 不 知 道 是 BUS 這 個CTION
+AND THEN THEY DON' T WHY VERYING SAME 到IRT SOMETIMES TIMES
+的 那 些 CAMP 我 們 都 是 有 放來買 FAMILY
+N 結 過 BECAUSE 他 聽 的 他 的 BROTHER 的JECTITY 是 要
+DURING I H G 是 蠻 好 玩 的
+因 為 加 坡 在 SEND 太 現 代 華 東 西
+YEAH NOW MORE LOOKING FOR INTERNSHIP
+AFTER THAT SOME HOW THE INTEREST
+I' T NOT THE THAT SEVEN ME THAT THEN AFTER LIKE
+它 的 SOURCE看 FROM 那 的差 過 或 的
+LIKE
+就 是 英 文 好 花 而 你 沒 問 題 沒問題
+都 是
+然 ACTUALLY 我 媽 HALL OKAY 有 MIX
+不 是 就 是 幾 就 是 牛 後 養 肉
+以 方 跟 那 個 小 的 那 個 我要 看
+應 該 是 沒 有 因 為 我 動 參 的 很 少 看 戲 的
+對 對在 CONTINUE友 他 的 PRODUCT 樣 去 多 跟 一 個 好 像
+三 分 鐘 的IA 我 們 大 概 HALL 話 幾 個 星 氣 的
+NO LIKE CLASS C POP SONG
+因 為 可 能 這 個 不 是 很 CRE 個 可 時 候 們 早 上 寫 我 們 就 快 點 去
+過 像 我 些 朋 友 現 在 在一 大 裡 在 HER爛
+I THINK I BIT LONG TO THE BECAUSE GENER 人個我覺 得 悶
+AND THEN YEAH THAT 幸 心 人 進 子 THEM
+CURRENTLY 的 EDUCATION還 STILL RUN OF PHYSICS
+URE 你 們 做 好 東 西 AND I便
+他 們 在 到 你 電 的 有 EXPECT
+SO I IN ASK QUITE我 FAIL QUITE
+我 不 是 跟 你 是 跟 我 UNI練 的 人 去 MUCH飛 我 通 到
+送 那 時 去 他 的 候 你 要 去 什 麼 比 較 INTERESTING 的 地 方
+THEN我 HIM I HEARD ROOM THAT THEY USE 有 做 人 進 去 而
+NOT THAT BAD ACTUALLY
+因 為我 覺 裡 人 兩 個 人 這 的 很 在 起 U 你 們 是 不 可 做 分 友 的
+對 對 對 他 有 家 三 就 貴 的 因 為 我 們 講少 他 就 講
+HE JUST UNDERSTAND ME BETTER EVEN WE TALKING
+THE OUTSIDE OFFICE PEOPLE AGAIN 他
+然 他 們 學 的 放 很 起 他 們 就 是 別 那 個 子 後 被 他 一 子
+就 是 你END 都END 會 做 會 做 的 比 較 好
+我 朋 有 過 我 講 就 說 他 一 個 朋 友 做 在 叫 最 近 他 們 都 是
+是 為 習 個 人 沒 有 不 要 講 什 麼 就 你 聽 的 懂 就 好
+BUT THEN 他 們 都 講 I DON' T CARE ALREADY
+整 子 真 死
+就 是 你 不 用 幾 接 近 話 字 賺 THEN 講 一
+THEN LIKE HAVE TO STAND THE SOME FOR ONE WORLD PLAY
+就 現 在 我 幾 的 就 是三 本 還 沒 有 看 玩了
+TO SENIORSATE 一 個 STORY
+BUT 我 次 OKAY THEN 好 玩
+奇 怪 因 為 BEFORE我 我 就 講他 TRY TO WE STORY BAD
+對 對 對 好 像 目五種 ON STILL
+我 們 每 天 WATCH 的 THEN 沒 有 寫 SAY 我 們 沒 有 做 過 什 麼 ASSIGNMENT
+還 又 說 他 就 每 次 看 到 報 子 這 樣
+BUT THEN THE NEVER WAY BUT
+YOU DIDN' T KNOW WHAT AS IT WILL JUST LIKE HELLO THEN THEY THIS IT DOWN JUST
+零 六 年 THEN 有 二 零 氣 年 了 六 六 你 靠 輕 年
+跟 FISH OR ME 種 THEN 覺 得 CANNOT NOT BAD 就
+沒 有 人 會 子 道 最 他 們 上 面 上 搞 成 的 才 是 道
+I MEAN 那 個 公 上 該 和 付 果 每 機 END 很 就
+AS IN WITHIN CONTACT 那 個 SIDE的 人
+間 還 生 多 少 然 後 你 要 去 那 個 然 後 還 有
+他 們 那 拍 就 很 吵 很 HAPPENING
+昨 是也 做 S 那 可 人 出一 樣 的 SCIENCE的
+那 些 跟 那 些 那 些 AUNTIE 個 玩
+可 是 我 看 那 些 SHOPPING LIKE 一 是 很 找 關 的
+他 們 可 能 會 你 目 回 來 做 我 們 八 SET 好 那 些 ROOM MANAGEMENT
+就 不 是 就她 A SET 了 BUT 他 又 他 那 個
+我 的 BEST OKAY I THINK I BATCH IS
+因 為 家 裡 是 有 BUT 能 自 會 覺 得 看 我 是 的 FREE 歌 THEN 好對
+不 從 為 上 去 的 朋 友帶 他
+THEN 他 不 可 能 講 說 一 次 前 他 們 過 來 的
+真 能 在 另 外 邊 的 就 是 面 加 路 另 走 走 來 不 個
+來 ONE DRAMA KOREAN人 DRAMA 還 工 DRAMA
+直 在 你 歡 的 瞭 錢 進 去 就 應 該 NO PROBLEM
+FIVE法 沒 有 為 我 沒 有 百 國 不 大 清 楚 所我 還 在 問
+所 所 以 主 要 是 這 個 FORM 就 是 這 個 PART INTEL 的 問 題
+就 很 多 這 樣 西 然 那 時 候 我 就
+就 是 那 種 男 的 的 後 女 的 是 馬 去 變瘋 紅 的 種
+YEAH SIDE SEE NOT REALLY HONGKONG REALLY QUITE
+I THINK 他 好 像 還 OKAY 的 因 為 那 些 他 不 會 的 他 就
+END 我 的 AROUND 也 不 很 好 有 問 全沒 有 點 到
+BUT I DON' T KNOW WHY MONEY INTERVIEW 沒 沒 問 我 題 STUFF I TALK EVERYTHING WHEN WELL
+這 樣 子 說 可 定 的 方 是 我 會 比 較 好
+因 為 小 時 候 進 常 在 住 物樓 要 T 球
+什 麼 BUT 的 我 經 沒 有 在 聽 就已 經 拿 到了
+MOST FOR CHINA OR SOMEWHERE FOR THE
+因 為 他 們 講 真 的 不 是 每 個 人 是 讀 書 的 子
+ALWAYS TALK AND OKAY到 我 很 SOMETHING OVERSEAS
+我 是 覺 得 我 媽 媽 放 氣 的 很 多
+我 不 知 道 因 為 在 在 BANG過 好 像 不 可 以 起 的
+就 可 能 有 LIKE那些 LIKE TO BODY MAYBE
+我 FOR BECAUSE BY BUT TIME TWO GOT FINISH SHOULD JUST DOING THINK THE
+講 話 的 就 不 給 太 打 聲 HAVE TO MAINTAIN 那 個
+我 最 真 的 的 動 我 很 看 也 是
+BUT YEAH
+AS FIRST ACTUALLY 我 的 CAMP 就 很 多 BUT LIKE I THINK MAYBE
+我 我 是 直 接 被 OFFER去 E
+因 為 你 是 你 直 是 開 不 了 演 經 是 在 是 很 帥
+在 學 下 一 個 PROFESSOR 可 是 就 生 情 的 都 沒 有 笑 完
+叫 外 的 風 緊 其 實 我 不 不 是 不 是 很 清 楚
+我 是 BECAUSE I WAS THINKING ACTUALLY BLACK OR
+以 前 在 學 校 的不 是 PEOPLE MEET 都 是
+然 後 他 哪 的 SYSTEM POLY 是一 的 十 十 包
+都 沒 有 時 給 你 自 己 這 樣 子 你 不 可 以 請 加
+一 個土 是 那 些 THEN要 POST 去給 他 們 用
+THE CHANGE LIKE I DON' T REALLY UNDERSTAND 他 在 講 什 麼
+THAT I FIND I RATHER FAIL RIGHT THEN那種 AATE的 SAME
+THERE ARE LOT OF NICE PEOPLE THAT AND YEAH GOOD FRIENDS BUT
+班 有 聽 過給 真 是 沒 你覺得
+最 近 開 始 學 出
+那 過 你 問 他 他 就 想 我 讀 來 兩 邊 了
+IF YOU 多 喜 歡 六 很 THEN YOU CAN GO SAMEING
+那 時 候 我 們 其 實 有 那 可 是 大 公 司 你 都 是 要 WEEK
+他 會 比 較 我 們 要 TAKE RES
+我 是 覺 得 像 一 個 TEAM 講
+BIT 的公 成 OKAY
+然 後 幾 本 上 都 是 做 SUB SUPPORT
+NOT YEAH BUT NOT AS INTERESTING AS YOU
+I MEAN IS SHE ONLY ASK THAT THEN OF CAUSE GIVE ONE
+LIKE IF YOU WILL TO SIGN BECAUSE IF YOU WANT
+SO IS JUST LAB JUST 是 這 樣 子 玩
+MY買 他 會來
+S 一 是 ELECTRON UP SYSTEM
+吃 是 我 我 我 很 我 問 要 看點
+就ATE YEAR ONE 的 候 我 在 想 我 要 換 COURSE 要 換 COURSE 了換 COURSE
+HE 我 沒 有 看
+AND CANNOT GO 因 有 的 去 THEN 們 跟 叫 你 講 他 就
+THEN 也 是 因 為 們 前 有 一 個幾 B笑
+講 話 蠻 THEN 老 講 話 語 的 候
+BUT QUITE THEN
+可 是 如 果 好 像 很 多 MALAYSIA 我 們 在 邊 又 到 很 多 MALAYSIA
+是
+上 下 的 TIME 沒 要 TAKE PROJECT人 BIZ MY AS U掉
+YES I THINK 我 做 LIKE 兩個 WEEK END
+YEAH 有 用 可 是 還 會 發 多 就 很 了 然 後
+如 果 你 KEEP到覺 THEN 你可 以 SHOPPING 們 聽 因 為 你 不 前 你 去 面 一 個 GAME
+就 那 個 D J SECONDARYERS SECOND SOMETHING
+I JUST SAY SATURDAY AND THERE MY FAMILY DAY I CANNOT GO THAT
+我 我 是 那 邊 次 是 想 樣 很 感 我 很 怕 上 個 小 十 吃
+很 少 很 少 少 沒 有 去 還 定
+最 多 就 開 電 腦 上 網下
+AS IN BUY 有 GOTATION BUT THEN
+THEN THEN 剛 我 的 他 做 跟 時 候 是 當 時
+CHINESE LESSONS THEN MAYBE I CAN TALK MORE TO HER
+N ENGINEERING 的 比 較 多 是 ENOUGH CHINA 跟IA
+THEN 我 是 這 樣 做 每 天 這 樣 做 這 樣 做 做 三 分 一 天 做 三 個 JOB 這 樣
+你 看 他 們 的 電 話 你 看 他 們 的 全 幫 出 來
+好 像 THEN 那 些 人 的 我 都 不 認 識 的
+每 是 去 那 個 去 看 看 一 下
+G I JO THE RI OF CORE 所 過 我 講 好 看 拿 到 裡
+我 們 講 的 多 久 我 該 二 十 三 分 中 講 的 現 在 好 像 難
+就 是 因 為 沒 有 個 你 AS IN 紅 的 人 就 回 來
+有 後 起 跳 來 去 MONEY
+一 邊 的LING 歲 要 多 較 厲 害 的
+面 要 打在 他 換 去 跟 你 跳 做 個 坡
+THEY就 REALIZE 叫 我 們 做 這 個 的 也 是 中 國 人
+THE BUSINESS ONE 我 聽 說 是 的 G P 就
+有 也 是 LIKE L我真的
+像 不 可 以 跑 其 樣 不 可 以 跑
+你 沒 有
+ACTIVITIES 我 的 OKAY 我 可給 我 在 我 在 HALL 做 麼 我 在 HALL
+就 我 們 三 到美 五TER 要 聽 三 分 鐘一個 STOP
+BUT THE THING IS MANAGER 學 他 也 是 沒 有 真 的 個 你 講
+下 上 做 那 些 等 等 就 是 前 輕 他 危 近
+YEAH THAT' S WHY 我 要 想 BIO應 該 是的 REC THING TO GO THEN JUST GO
+是 LIKE我 為 屋 首 不 只 樣真 單 WHAT
+因 為 那 個 課 的 那 CAUSE 是 蠻 爛 的 蠻 哪 學 的
+AND I WENT TO THEATIONS BECAUSEED TOILL THROUGH塊
+像 你 通 常 都 是 一 個 人 自 己 STUDY
+可 能 一 個 月 最 好 賺 一 個 FIVE機 回來
+哪 為 他 們 他 們 的 有 有 幾 次 他 們 都 有 機 會 就 說
+他 那 個 飯 個 你 有 也 是 種 比 較
+因 為 你 TENNIS 有 一 個 很 大 的 COURSE 而 且
+只 是 有 時 候 我 們 LECTURER 會 TOPIC 就 是
+後 不給的Y 那 個 不爸 那 個 講
+我 想 學 一 個 SPORTS THEN第 不 需 要 很 多人 SO
+ALSO VERY TING ALSO
+SHARE 也 是 NOT REC 樣
+好 像 現 在 我 們 在 做 BIY
+這 樣 好 你 天 那 不 什 麼 是 什 麼ATION LAST YEAR
+LIKE RECENTLY 我 剛 看 玩 的有 ARE BEAFUL
+SO I THINK THEY SHOULD CHANGE 開的
+是 NOT SO IS NOT ALSO BAD
+IN INTERN 在 YEAR 去 的 候 才 BADMINTON
+所 以 他 們 就 沒 有 我 謂 的 LIKE THOSE IN人
+QUITE LOOK AS IN
+I SEE
+沒 沒 人 看 感 當 起 這 個 RESPITY 所
+然 後 可 是 我 不 真 不 是 種
+三 三 樣
+現 在 還 還 是 加 公 作 所 我 覺 得 他 應 該 不 很 多
+THEN GOOD THEN 就 很 上 的 教 他 有 QUESTION 就
+
+就 是他 I S SEMESTER的 人 都 知 道 他 很 單 高
+我 才 下 也 什 麼 C 應 該 是
+因 為 的 上 麼 的 漂 算 是 很 EX SCHOOL C 所 以
+的 時 時 候 他 就 會 有 LESSON
+TO TAKE UPSHIPATION 發 會 你 自 己
+可 能 不 是每 個 IMAGE 自 自 己 做 的 一 個
+CAUSE 他 們 就 那 個 PARENTSATION THAT 那 過 近 大 選 你 很 在
+然後 另 外 一 個 MODULE 也 會 出 的 ASSIGNMENT然 後 所 以
+C A SECONDARY GOOD AND J C WHAT ABOUT YOUR
+他 叫ATE ROOM這 樣子 的 GAME 我 就 好 像
+THE STORY WAS YOU GOT CALLED AT A G CLUB LOT SOMETHING LIKE THAT
+有 沒 有 FUL我 的 不 要 做這 樣 多
+EVEN T HE YEAR ONE ALSO QUITE THEREING THEN HE THERE TO
+因 為 他 有 一 個認 是 他 們 叫 COM CONTRACT樣
+近 塊 在 十 分 重 把 他 們 全 部 錯 好
+YEAH BECAUSE 我 會 有 點 想 我 會安 進 掉
+YEAH THE BAD BADMINTON THEN NEVERFUL AGAIN
+他 沒 有 時 間 好 像 給 你 多 那 個 PROCESS 沒有
+大 OKAY 他 會 他 會 講 要 講 華 語
+I THINK ONE OR THOSE QUITEICALABLE BUT
+PARENTS THEN 那 懂 忘 記 首 明 樣 你 前 績 的 在 忘 記了
+是 是 有 去 實 很 簡 單 就 是 COURSE 而
+SO 所 以 我 覺 得 我 在 MATHS 可笑 就
+就 他 們 會 進 白 那 些 書 所 以 他 們 會 亂 看 出
+H S SEE THEN H OVERSEAS
+Q球 要 姐 是 可 可 是 去 覺
+我 們 在 我 們 學 的
+就
+我十 覺 得 NOT VERY SURVEY
+這 是 我 第 次 來 到 DRINK RESEARCH LAB
+樣 兩 年 了 他 才 條 的 十 情
+用 做 把 他 們 都 很 少 他 們 的 是 用 走 走
+看 那 他 像 是 一 跟 口 的 人 好 近 個 講 他 樣很 OKAY 對
+那 THINK 我 就 很我 我 就 把拉 去 我 樣 跟 我 去 學 小 上 課
+BUT LIKE 很 像 只 有我 蠻 COURSE的 人 TAKE 很 少
+本 他 沒 有 出 的 話 你 在END 就 是 GOING TO
+NO 聲 近 病 THIS JUST CREZY I ONLY
+我 在 看 了 I 還 在 學 什 麼 用
+TIME 沒 有 沒 有 因 為 個 是 比 較
+應 該 沒 有 不 過
+BUT TIME WISE I REALLY DON' T KNOW WHETHER TO GET THEM
+I KNOW WHO SHE MEAN HAS IN I KNOW WHO SHE IS LIKE BUT
+如 果 你 年 去 三 次 都 只 的 話 你 就 自 些 FAIL
+開 下 找 工 的 講 跟如 果 有 GOT MONEY YOUR COURSE 我 BUY
+中 國 十 忘 看 廣 做
+所 以 就來 外 忘 的 人 都 可 以 去 聽 聽 看一下
+SO YOU CAN START OF YOUR 樣 的 ME 月
+他 是 去 沒 有 什 麼 只 是 SHOPPING
+還 好 因 為 過我 會 大 學 人 去
+所 以 他 們 不 是 百 有路 拜 有 路 會 比 較 玩 一 點
+OKAY HALL LIFE
+暫 時 是 還 其 去 這 邊
+WE WORK UP IT WAS TIME TO GO REALLY THEM EXCED
+我 們 的 應 該 是 出 來 是 SOURCE 公 司來 的
+YES YOU GOT LIKE AFTER THINK I GOT T MUCH MONEY
+可 是 我 會 參 幾 個 英 文 這 個來 話 只 是好 HOKKIEN
+THAT所 那 些 聰 明 的 人沒有 TAKE O LEVEL THEN NO THE較 COURSE
+BUT THAT' BECAUSE 什 我 們 TALKING ABOUT FOOD THEN THAT' S 我 們 會 這
+就 全 部 找 你
+還 要 去 他 是 像
+IS CALLED THAT REC CLUB
+YEAH R 錢他的 YA
+THEN 就 他 到 MORNING 你 過 我 就 蠻 你 過 還 可 憐 的
+THEN 一 個印 度 人 可 以 跟 你 講度 人 是度 人
+LIKE 像 打 多 SEE
+因 為 剛 好 他 的 上 是 一 首五 大 的
+BUT去 TWENTY FOUR 我 樣 做 為 他 認 是 你 來
+吃 他 全 不 都 是 那一 樣
+H HAS 就 是 HALL 的 CAMP 其 他 的 CAMP 我 都 沒 有 去 參 加
+STILL VERY去 CAUSE WATCH小 IS QUITE去 SCHOOL
+很 沒 後 很 沒 RIGHT 很ATION 之 間 點我 喜 歡
+可 是 剛 沒 有 樣 大 較 笑錢
+THEN I MORE I LIKE個 THIS KIND I THING
+如 韓 後 很 國 是 那 個題
+HE GOT STUFF COME OUT THEIR TO SUB MINUTES
+YEAHZY BUT HE ALSO QUITE O BUT HE QUITE O LIKE I THINK
+BUT 我 就 LIKE MORE GO IS A NICE PLACE TO GO TWO
+NOW WEEKEND 的 時 候 WHEN YOUR MAKE UP WHAT THEY ALL DO
+SO I THINK IS AFTER THEIS 他們還沒有 UP
+OKAY 以 前 你 參 加 WHAT C
+那 個 BUS 做 的 到 或 是 他 會 知 動 府 話
+我 不 會 懂 MOVIE 是
+我 下 是 都 有 天 對 我 CHINESE 的 COURSE 面 講 做 英 文 他們 下 是
+現 加 坡 應 該 很 年 就 是
+IN NOT OFING TO REC BACK AND STAY HALL AND
+BE SPORTS GAMES AND GAMES THEN
+你 你 的 都 是 ONE SPORTS SAY 不 好
+以 我 覺 得 那 邊 很 錯 我 不 知 道 一 什 麼
+TALK COM TALK ACTUALLY
+根 媽 長 像 不 小 心 表
+LAST J C LAST J I SEE WAS MORE
+你 在 生 中 沒 有 去 過 些地 方 就
+講 了 為 很 好 像 全 部 那 邊 笑什麼
+他 的 那 個 會 那 個
+對 的 WHY 比 我 們 大 四 加 六 水
+BUT AFTER 他 講 他 去 FOR P LAB AND CERTAIN 那 個 東 西
+THEN 有 O 來 有 O題來 有 我 聽 片
+給我去 AFTER 我 做 我 去
+YEAH 不 WELL I JUST NEED THE KEY
+I THINK他 跟 能 來 THEN 他 能 去 做 小 小 發 就 AWAY
+你 可 以 做 一 個 就 說 你 個 你 朋 一 起 組
+哪 裡 可 能 好 他 們 那 跟 前 五 千 快 他 們 本
+沒 有 THEN SIX
+OKAY 但 是 他 們 也 是 有
+我 不 知 我 們 就 管 他 們 他 半 的 那 個 名 字
+會 覺 得 很 沒 有 負 的 人 講 後 我 就 講
+THEN 就 你 就 CHECK JAPANESE PROJECT OKAY 有 會 TRY BUT 就 PROJECT
+ONE 不 不 會 在玩 MAYBE FOR FOUR THIS
+而且
+他 沒 有 SPECIAL BASIC 我 COUNTRY 到 裡 但 是
+沒 有 I NOT DON TED BLOOD BEFORE
+他 只 是 分 樣 大 兩 被 BUT THEN 這 的 到 IS的 SAME
+THEN THIS CAPATED THIS CAP OR
+他 他 的 票 是 忘 去 多 笑
+我 們 是 七 月 的 時 候 去 的
+IF THINK TWO OKAY LIKE LAST YEAR FOR
+太 起 的
+SO
+SO關的 SWITCH 開 回 又 的 我 就
+SO 帶 我 去 P AND 口 LIKE 種 朋 友 都 有
+BY RIGHT 你 去 那 個 在 臺 灣 的 時 候
+我 有一 SET IMAGE 全 部 人 跑 這 樣 的 THEN 全 部 人 就 知 道
+就 對 直 只 是 找 去 忘 有 去 新部 那 你 跑罷
+IT' NOT ABOUT GO IT IS IT FRIENDS
+BUT THEN 他 們 是 找 全 部 A STUDENT STUDENTS 去 SENIOR ANSWER 的
+我 MY過 這 樣 恐 部 THEN MEANS 你也 會 要 放 作 很 單
+THIS WOULD BE小 學 IS IT
+不 喜 而 且 BUT 也 要 千 讀 到 兩 全
+然 後 是 ABOUT他 FOR DOWN THEN 那 個
+MY CHINESE 心 的 是 J 錯
+IN THE TIME I DON' T KNOW WHETHER YOU BE GOING TO SCHOOL NOT
+那 COURSE 不 想 SOFTWARE 是 那 些
+沒 有 就 對 一 CAN 看 兩 怖
+HE SAY THAT SHE CUT YOURSELF
+但 是 那 吃 小 戲 它 的 六 是 一 包罷
+所 以 我 們 三 個 人 就 喝 了三 被 CHRISTMAS SPECIAL
+可 我 們 BEST 因 為 COURSE 他 們 是 要 GO BY
+我 我 是 PLACE 我 一 前 是 PART TIME 皇 口 CAN
+THEN 所 以 你 一 個 你 個 SPORTSMENT 他 就 去 參 在 很 多 SPORTS
+THEN我 你 們 LIKE 就 很 大 所 以 沒 有 人 會 管 的
+我 這 前 媽 去 年 球 看
+然 後 後 才 想 到 要不 要 TRANS 去 去 的 PART
+你 NEED TO LIKE INTERVIEW FOR INTERESTING
+WHAT IT NOT THE TIME YET YOU MUST WEEK UNTIL LAST MINUTES
+I GUESS IT TAKE MORE TIME GUESS
+LIKE STOP AND ANY BEFORE OF INTERESTING
+IN THAT SINGAPORE ROAD
+I MAYBE FOR O SEE THERE LIKE 因 為 O C 這 種 LIKE
+沒 蠻 法 因 為 你 沒 有 那 個 就 是 是 ME的 APPLICATIONATION
+他 也 個 更 大 過 三 車 沒 有 玩 到
+會 你 會 房 心 自 己
+有 什 麼 面 做 住 少 我 都 有 樣 他 你 那 裡
+OKAY
+現 SAY 先 在
+他 個 比 較 SAVE 因 為 SHOW BY NUMBER
+WHAT IS THE華 語明 成
+他 們 知 道 ENGINE的 STUDENT人 比 較 我 需 要 種 東 西 比 較
+你 要 HALL那 你 要 HALL國IFY RIGHT THEN YOU GOT DO THAT
+他 OKAY 來 我 HALL 住 尾 FOR 兩 天 年個 ELECTIVE
+WE HAVE CONTACTED THE ALREADY MOST 我 們 會 在 容 作
+可明 就 不 帥 沒 你 就 是 那 個聲 你 較 SIGN
+CHOOSEING THEN AFTER THAT 就 是 跑 不
+對 很 多 CASES 吃 在 要 找 了 BUT
+現 你 還 是 什 麼 首 東 西 要 教 才
+不 BECAUSE THAT TIME MY SCHOOL GOT SOME PROBLEM YOU TRUE
+過 我 不 拿 真 那 個 心 跑 去 HOST都 看
+對 為 我 靠 OF FRIEND 會 就 你 為 就 有 五 子
+AS 不 會 要 種 看 THEN 為 很 貴 我 覺 最
+他
+對 樣 有 去 FOR 的 在 找 看 什 麼 工
+BUT 就 為 STARTING PAY 都 是 講 來 點
+因 為 你 們 上 是 那 個 I 對
+然 我 們 只 喜 成 過 不 起 十 拜
+他 這 樣 很 SAD 我 想 拿 到 那 個 這 樣 靠 近
+為 什 麼 他 臺灣 的 ENGLISH 會 這 樣 餐 的 不 會
+要 比 較END THEN 不 想 我 這 樣
+SO HE
+然 後 很 多 的 而 裡 生 我 就 是應該
+ACTUALLY 我 覺 得 是 我 那 心 的 事 接 的 東 西
+所 以 所 以 MANAGER 他 的 那 個 A GET KNOW
+好 我 不 較 我 不 要 我 不 不 清 這 個 人 只 次 好 跳 去 NEXT TOPIC
+OF PUBLIC BIT HOLIDAY
+THE QUITE PRO ALSO GOT笑 的
+的 真 的 真 的 所
+WITHIN A FEW WEEK CAN是 會 有 他 FUN 的
+那 邊 ISED BY二些 AAM 還 的 人
+YEAH就 TRY TO THEN CANNOT OF INTERESTING CLOSE TO THE
+還 在比 較ECT 比 較 多賽 可 以 參 加這 樣
+THEN 講 就 會 紅 所 以 個 到 演 進這 樣
+可 能 他 們 不 給 你 做 這 個 跟 你 做 那 個 可 是 想
+我 很 加 五 以 去 OKAY 做 節到 BAD
+SHE CAN TRY SPEAKING
+THEN 你 給 去 給 都 少
+SOUND
+他 拿 不 到 COL的 是 他 們 HALF可 三 可 能 AMERIC 的 拿 不 到
+AS INUDING 的 A MORE有 UP FOR C P
+SAD VERY COMPUTERED THING
+SEVEN IS SEVEN IS A NOT TWO BAD HALL
+他 們 不 會 跑 過 他 們 直 接 整 個 人 來 重
+ALTHOUGH IT IS FOR YEARS RIGHT YEAR IS Y P
+當 子 基 樣 同 樣 的FORM
+如 果說 他 我 們 是 是 應 該 是
+我 不 大 弟 在 有 什 麼 東 西 就 是
+他 本 來 是 要來 TO N T 的 THEN 算 還 歡 去 U
+生 活 我 覺 得 以 前 的 LIFE HIGH NOTAT 的
+他 就 是 不 能 過 你 也 是 知 道他 不 的 過
+走外 路 AS IN GO AROUND THE SYSTEM
+THE THEIR SHE ONE IT LIKE MAYBE THIS
+還 MAKE UP包 話 很 想 這 太 紅 了太 OVER了
+他 就 有 些 電 吃 電 是 沒 有 賣 水的
+所 以 有 十 八 個 A USE
+I THINK FOR 我 我 的 REASON 是 為 NO TIME NO MONEY
+THEN MY發 THE ALSO
+後 我 不 的 怎 樣 候 那 I別 JUST 對
+THEN 我 ROOMIE 就 是 很 CHECK
+IT' VERY GOOD JUST 有ONE
+他 的ANGE 是 可 以 LIKE 種 D一 E A LEVEL 都 可 以 近
+這 麼 你 可 以 LIKE 這 玩 你 怎 麼可 以 來 這 邊 玩 HOW CAN U DO THIS
+我 們可 以 LIKE 去 外 國 走 一 些 下 P我
+ING AND FINANCE 要 問 人 就 是
+AND NUMBER OF STUDY HAVE CHRISTMAS OVER THE YEARS
+因 為 我 是 比 較 不 的 人 所 我 用 我 首 CONTROL
+那 個 沒 有 不 是 那 個 BUT但 是 那 個 SCREEN CHARGE 的 SCREEN
+THEN我 SIDE FOR SLEEP CAUSE YOU J 是 他 們 講 華 的 的 旁 面 聽
+來 的 說 做比一 前 一 去 的 了
+還 是 我 在男 聽 我 也 不 知 道
+對 對 對 對 反 是
+我也 也 是 七 記 了 可 以 做 五 個 月
+CAMP 第 一 天 就 發 在 到 有 人 有 H RIGHT AND 我 就 BREAK CAMP
+沒 有 想 過
+ALSO
+如 果 你 如 果 你 這 樣 看 我 是
+所 所 是 還 說 全 要 是 關
+SAD I FIRST TIME TRY TO
+你 是 年 去 CONTINUELY FIVE DAY
+所 他 就 找 到 這 個 所 他 就 叫我 們來 SIGN
+IN THE BIT THE FISH IN THE BOND
+有 其 開 我 有 多 一 了 家 回 去 應 該 會 講 出 來 了
+對 可 是 怪 你 會 去 想 穿 美
+是 I THINK 是 BENEFIT 學 的 在 去
+現 在 I 月來 片 每 個人 看
+應 該 是 差 不 多 的 全 部 都 SAME 的
+THEN 還 有 電 講 是 就 是 轉 的 在 走 己 個 了
+就 大 家 都 忙 個 讀 書ING OKAY OKAY
+WE YOU UNTIL I UNTIL WHEN THE TIME RIGHT YOU DON' T
+你 變 唱 的 換 加 不 就 知 道 了
+MYING IS THE ONE THE MOST BUT 他 們 有 CAP
+還 有不 OKAY 還 有 LATE U IT
+THAT' WHAT OUR PARENTS IS TO SAY ABOUT I ALSO
+新 年 的時 說 種 東 西 來 害 我便 SO
+他 在 外 面 找 家 那 個END的 然 就
+下 那 個 CAMP TWO 的 FOOD 好 像 可 以 加 反 的
+還 也 是 我 們 的面 的 那 個 PROBLEM
+PEOPLE FOR ACTUALLY T MAYBE八ILL
+EVERY HOW SIX 以 ORGANIZE 個 OVERSEAS TRIP
+SOMETHING LIKE THAT 就 LIKE I REALLY THAT
+因 我 的 個 他 我 個 他 蠻 少 還 前 我 的 COURSE 只 有
+NO I IDEA 你 應 該 跟 那 些 那 些 LIKE
+AND FIVE WHO COME ALL THE WAY INTO JURONG AS AREA
+WE REALLY KIND FIND CAP THEN GOT THEN
+還 好 OKAY 的
+我 所 所以 你 今 年 才 SO YEAH LIKE
+緊 錢
+我 只 會 玩 住 球
+那 自 住 年 CANNOT為 他 JUST 少 教 的
+我 我 們 認 識 人 當 種 沒 有 什 麼 是 邊 是 沒 有 U 的
+個 IMAGE 還 是 NORMAL 覺 的一 個 SKILL
+然 後 他 最 後 姐 機他 是 那 個
+你 要 講 坡 媽 我 們 有 很 多 個 不 同 多 的我
+我 管 現 一 他 們 那 一 你 記 也 問
+那 個 OFTER 是 難 孩 子
+THEN 不 用 他 是 整 你 這 個 SEM 的 NOTES 西
+你 去 下 是 可 以 YOU KNOW BUY BREAK FOR HER BREAK FIRST
+我 都 是 做 OFFICE 的
+我 去 CHURCH 每 個 去
+QUITE LIKE 可 以 一 起 讀 書
+該用 一 兩 個 重 可 以
+因 為 我 我 在
+不 是 這 我 們 這 個 MAJORIA INTERNET BUSINESS
+THEN我 是 覺 得 很 INTERESTING
+他 們 的 早 常 以 很 錢 單
+B NOTED 他 們 還 沒 有ATED
+去 的 候 他 們 有 那 個 就 很好 玩
+他 跟 大 那 比 較 想 對
+THEN 他 LIKE可 INTERESTING 可 能 你 去 越 看 多名 心
+中 候 有 看 到 現 在 沒 有 看 能 久
+他 不 是 不 是 WAY THEN MY SCHOOL
+BUT 我 有 FRIEND 樣 作 他現 在 在 他 在 HALL
+新 SINGAPORE 有 什 麼 地 方 好 玩 的
+YEAH ACTUALLY IED YEAR J C
+開 始 他 等 機 會
+就 就 很 像 去 第 就 是 像 那 種
+YEAH THEN TO MORE TO GOT GUYS MUST WATCH
+NO THAT WHEN MY SUB COM COME PLAY YEAH ASK
+HOW HALL GET IN BEFORE YOUR THOSEING SISTER AND 的
+小 學 有 有 做 PROJECT 可 是 是 沒 有 算 分 的 那 種
+做 IT UP不 HOW OF GUYS這不
+THIS SING I好 I DON' T REALLY IS A MUCH I LIKE SEE
+為 FOR COURSE YOU IF ARE BEST BUT
+你 們 跑 後 早 上 我 幫 裡 面 錢
+以 NEED NOT BE PRETTY I YOU CAN BE
+我 也 直 我 是忘 就 兩 兩 年 錢 的 是
+I SEE SO WHAT KIND TOFUL YOU LIKE
+那 些 有 跟 我 玩 S N 就 會 叫 我 THREE
+但 是 有 時 我 是 想 到 的 因 文 名
+有 有
+LAST YEAR BEFORE EXAM 他 們 就
+BUT THEN 其 實 我 覺 得 他 個 我 是 蠻 DIFFERENT 的人
+YEAH BUT I THINK 沒 有 人 較 也 是END
+I FOR 的 TRAINING 我 會 我 是 半 不 不 在
+QUITE TRIP 會 去 因 為要 他 們 有 講 去
+我 們 有 近 年 有 紅 去 樣 來 做 才 半
+不 懂比 較考 不要看
+他 要 做 當 錢 這 個 是 三 月 東 西
+會 講 要 至 少 一 個 MAC TEN 的
+我 是 聽 我他 分 講 兩 千 三
+CAP的 H
+BUT NOT OKAY 我 ME
+JECT
+THINK有 你沒 CONFIRM有
+應 該 是 難 你 參 了 三 十 多 個 一 兩 BUS
+小學ATION MAYBE THEY PLACE
+種東 西 沒 有 做 在 你 C要 會管
+SO HOW WAS FIVEING LAST NIGHT
+你 在 學 笑
+但 是 要 LIFE 要 有A
+他 們 他 們 的 ARMY 已 經 風 的 那 邊 不 他 們 近
+ACTUALLY 我 JOIN說 坡 只 是 FIRST YEAR 是
+不 會 做 THEN 在 在 那 邊 TAKE的 FOR VERY
+被 PAY 那 個
+做 過 幫 樣 多 吃 就 是 這 樣
+為 什 麼 你 高 會 認 是 他
+MAYBE 我 們 應 該 選心 的 TOPIC 來 樣
+IT THEN WHY GOT THE去
+就 很 明 前 那 個 男 的 想 像 所
+一 我 跟 你 講 是 一 點 點 而 不 是 說
+麼 不 不 年
+上 司 上 是 就
+SO I JUST IS NOT BAD
+I THINK THEY WILL CORE BECAUSE HALL SIX A SPORTS HALL RIGHT
+然後 後 講 那 是 手 那 叫 說 講 MOVIE
+NO I BECAUSE THEY PLAY LOT GAMES THEN出
+WORLD ME MY PLAN IN UN U AATED COURSE COURSES
+我 會 我 是 CREATEATION
+你 還 問 我 為 什 麼 什 麼 講 我 不 知 道
+幾 本 上 是 差 不 都 是 學 不 玩 的
+I不 要 個 會 講 話 MATHS你 下 THEN
+會 好 很 多 它 的
+他 就 講 拜五 WE有 TALK ABOUT THEN WE ARE SUPPOSED RIGHT LIKE
+很 先 我 下 我 回 的 方 差 部 不以
+PLUS
+好 像 你 是 下 需 要 出 來 那 個 UP FOOD
+打 這 個 年 頭 過
+YEAH FROM FOUR TO THREE POINT NIGHT EIGHT
+我 會 覺 得 會 出 我 去 學 戲
+MORNING 的 我 想 多 多 SOURCE 少
+全 部 對 要 對 對
+不 是 每 個 人 就 那 些 比 較 CLOSE的 FRIENDS
+就 其 實 ACTUALLY 其 實 是 了 五 會 來 的 他 們
+SO THAT ONLY應 該 CANRESS出 就 是 TRUE 的 TO SPORTS
+MUCH OF BAD TO THREE
+I UNTIL NOW 我 做 我 有 做 道 什 麼 東 西
+寫 真 的 是 選 到一 半
+我 是 LIKE 很 睡 便 的 好 玩 就 好
+不 是 是 我 蠻 喜 歡 H 去 的現 THAT 我喜 歡 讀
+所 以 你 可 以 KEEP THIS BETWEEN YOURSELF STAND YOU
+YEAH SO YEAH DURING HALL LIFE OR THE QUITE
+BUT THEN I DIDN T MONEY THE WHOLE GROUP CAUSE
+BECAUSE THE PEOPLE I
+YOU TAKE T KNOW TOUM
+SO IN END 我 是 出 他 們 去 人 是 跟 多 SO
+我 得 不 樣 他 你 看 他 的 那 個
+就 是 你 現 在 你 用 一 個 還 是 這 麼 大
+IF YOU LOT THE THEN YEAR TO TELL THEM
+YOU CAN A APPLY TO STAY WE A SENIORS YEAR
+THEN LIKE THREE的 他 們 最 去
+對 他 就 我 他 有 有 有 ANYED
+我 TALK TO 是 開 AGAIN 我 一 跟 他 在 講 多 一 是
+ROOM 因 為 有 些 人 好 那 時 候那 很
+有 而 在 感樣
+然 多 因 沒 要 去 找
+THEY DON' T A LOT YOU TO加 SUB COM
+我 每 次 到 出 很 跑 看 MY GOD
+我 們 現 講 的 話 HE CAN HERE EVERYTHING
+他 幾 姐 你 去 做 自 月 下
+是 蠻 參 心 DEGREE
+放 所 對
+YOU STAND WANT THE STAND GOING KEEP COMPUTERTER
+所 以 其 加 華 會 他 過 去 IF HALL SIX比了
+THEN THE REST 要 去 LIKE 又 有 EXPERIENCE
+NO I DON' T WATCH T
+要 CAN 你要
+SO THAT TO UNDERSTAND 他 WHAT HE UNDERSTAND SO FAR
+THEN 最 近 因 為 GOOD FRIDAY JUST PASS
+TO GIVE DIFFERENT TEXTURE
+那 個 點 是 很 爛 也 點 就
+它 是 一 個 SHOP 還 是 當 口 來 的
+然 如 果 有 只 個 COURSE 每 起 講 華 後 會 下 到
+BUT YOU DON' T REALLY KNOW HOW SHE WORK 為 什 麼他 這 樣
+I可ATE THEN 我 會 PASS
+他 沒 有 動 這 個 個 給 可 能 他 就 過 出 每 個 的 會
+然 後 因 為 兩 個 月
+YEAH媽 的
+我 去 去 找VIOUS YEAR 的 的 些間 來 看
+THEN 你 LOST 去 另 外 三 加 的 I P JUST
+所 以 我 們 其 實 跟 他 們 吃 西 我 們 也 是
+那 種
+ALTHOUGH 也 是 不 懂 樣 另 那 個放 TO
+真 來 是 多 少 十 多
+他 的 就 講 他 的 那 個 只 是 只 比 他 大 兩 歲
+OKAY 做 對 我 們 比 較 LESS EXCED
+時 太 很 錢 的
+TRANSL ATION 也 是 一 樣 不 過 比 較 GENERAL熱
+會 很 凶 LIKE 一 下 子 於 學 不 到 東 西
+我 不 想 講 好 NEXT
+YEAH SO QUITE GOOD THAT WHY 我 在 一 直 在 用 好 的
+SECONDARY SCHOOL 學 到 根 們 就 不 是 整 個 東 西 然 後
+對你 有 BROTHER T BROTHER
+很 為 什 麼 我 有 興 氣
+就 說 因 為 他 麼 是 給 給我 們 加 怖
+THEN YOU GOOD THERE YOU MAKE FRIENDS OTHER SING SINGAPORE
+通 常 多 一 兩 TWO CLOCK這 樣 過 他 就 會 在
+就 讓 年 前 人 去 的 裡 BUT
+IN 九 十 看 來 種
+個 的 BLOCK 要 聽 故 十 興 績 的 故 學
+他 找打 話我跟 他一 IS 在邊 CRE SCIENCE
+YEAH MY FATHER WENT FOR ANY
+他 們 的ING 他 的 都 沒 有 不 跟我 們 樣
+I THINK 覺 得 MINFUL
+去 大 那 個 真 不 是 好 可 以了 好 像
+THEN 小 面 就 叫 成 成 好 話 其 間 穿 的
+IT CAUSE YES THAT YEAH NEXT TO THE C
+就 個 買 要 樣 頭 突 MOVE
+沒 有 剛 才 是 ONEIN
+誰 誰
+I THINK要 看 DEPENDS ON 哪一 個
+所 以 會 到 是 要 坡 我 朋 友 講 又 說 你 換 好 像 很
+I THINK 也有 些 人的 NOT BAD
+CHECK THAT I ALWAYS THERE媽 會 自 己玩 的
+C ALSO DON' T THERE TO EAT THEIRFUL THEN
+就 是 還 好 就 己 基 本 他 的
+好 像樣 是 YEAR THREE ONE
+就 很 就 跟 快 也 不 需要
+這 很 多 GAME 他 們 也 是 做ITY 到 話
+們 一 次 他 他 們 接 次 火
+有 有 有 有 有 我 像 HOST比 全 部 都
+我 們 知 道 他 跟 他 媽 們 的 關 氣 會 很 好
+然 後 這 樣 子 就 被 轉 去 ARTS
+數 數 水 從 到 的 買 個 是 在 講
+就 第 二 個 SEM 我 就 近 YES生 LIKE UP CORE
+那 個 人 其 實 不IST的 但 是 看 起 來 很 賺
+我 覺 帶 很 像 做 不 文
+你 在弟 SCHOOL WHAT
+我 覺 得 你 不 SLEEP YEAR一 知 道 會 壞
+AND UP YOU DON' T GET GOOD JOB
+然後 還 FIRST 語 來 認 首 這 個 朋 友
+應 該 是 很 少
+I THAT I BEEN
+那 個 是 LIKE A FEW YEARS 那 現 在
+對 對 那 種 然 後 我 要
+不 會 怎 樣 那 個 男 的 覺 年 輕可 以
+你 的 REPORT WHY 你 可 以 已
+ON 的 去 換 錢 的 他要 整 幾 天
+YEAH J
+你 不 說 你 沒 有 錢為 麼 有 前 去
+沒 有 我 我 全 部 都 是 LASTONG
+MAYBE INTERESTING WATCH POINT DAY
+開 候 我 就 有 跟 他 講 這 可 以 SYSTEM 的 東 西 他 講
+其 實 他 就 是 好 玩 的 是 那 邊 有 很 多的 FOUR
+THEN EVEN NO IS DAY NIGHT ALSO GOT
+為 什 麼 要 BO 改 那 個 GUYS
+SO IN年 就 會 到 要 有 用的 CHURCH THEN
+只 是 FUL 如 果
+一 SAY在 SAY IT A 好 玩 這 樣
+這 的 不 同
+很種 你 有 兩 個
+他 邊 進 所 以 我 那 年 那為 START 時 候 你 可 他沒 有來
+真 的 不 懂 為 在 看 真 的 真 的不 懂
+我 們 有 AUSTRALIA 的 工 作 去旁 不 就 AUSTRALIA 的 所
+I NOT LIKE JOIN SO THEN
+以 下 是 小 看 的 是
+你 KNOW 個 AT A LATE
+沒 十 要 人 就 跑 掉 過 去
+可 能 新 加 麼 的 像 為 還 比 較 多
+上 個賽
+BUT 可 文 空 去 了 就 不 會 同 麼 回 來 電
+因 為 們 真 的 讀 很 多 來 來 做ATION
+後 我 們 還 有 那 些 MAKE爛
+然 後 我 OKAY 我 不
+通麼少 還 比 較 一 國能 上 那 個 首 SHOPPING
+可的 可 能 是 那 個 AS AND MATHS KEYAT
+對 VERYAY
+沒 有 BUT
+在 CHINESE COURSE THE人 要 CHINESE好
+I FEEL THAT 他 的 LOOKS
+我 經 一 個 多 月 因 為 覺 沒 有 全 水 明 了
+那 也 太 的 是 只 做 幫 會 的 問 題
+NO IT SEE ONCE AND SAY ONE AND SENTENCE
+幫 你 學 SECOND LANGUAGE 的 時 候
+對 都 是 百 他 候 吃 真 的
+你 家 裡有 SISTER OR BROTHERERS
+PASS 可 一 定 是 一 定 出 人 就 剛 講
+ELECTIVE 所 以 我 沒 有 的 什 麼選色
+下 個 HOLIDAY 你 打 算 很 做 什 麼
+為 你 在 HALL 裡 面 你 JOIN 的 什 麼 ELECTIVE ACTIVITIES
+他 們 USUALLY THIS IING IN TO ME T OKAY
+對 可 他 只 出 前 種 工 家 才 不 找過發
+SO DOESN T WORK THAT WAY
+HOW MUCH THE U PAY TO 看 這 個 點 TRUE
+FOR ME OR MAYBE FOR FEEL DOLLARS
+AND IT' ALSO OF FIRST AS A MODULE DO
+所 是 從 臺 灣
+要 樣很 NEXT
+WHAT SHE ALL FAMILY BACK SO HOW YOUR FAMILY
+他 們 已 經 有 一 個 BACKRA 所 以
+兩 個 人 要 進 來 說 他 們 的 不 感 近 了
+一 加 二 時 我 是 天 種工 的 SAY RIGHT
+BUT 都 他 們 不 那 天很 講 全 部 VERYET
+們 吃
+那 很 好 華 裡 應 該 可 以 繼 實
+不 很 沒 有
+在 很 住 小 天 我 近 好 一 直 運 倒
+COURSE BECAUSE YEAH
+WHAT 這 個 我 不 能 覺
+IT是 LIKE THEFUL THE
+IF I CAN STAY I TRY TO STAY LOT IF CANNOT NOT THEN SO BE LOT
+樣 裡 是 什 麼 SIX K MO THEM
+IS REAL 真 那些 G
+THEN 每 次 放 學 過 後 去 玩
+蠻 我 FRIENDS 我 真 是 蠻 笑 了
+ACTUALLY 我 跟 也 是 很 DIFFERENT
+我 說 些 收 樣 看 會 去 完
+有 ASK 最 多 是 近
+REALLY I 一 定 有了
+他 們 前 只 是 是 一 個 明 宜
+我 們 是 第 一 個
+THEN 就可 以 SONG 那 個 AS 後 普
+問 IS FORIES TO NOT CONTACT ME BY MY
+GUYS 難 人
+FROM THE START THEN I THAT ALSO I JUST可 ABOUT ALREADY
+那 個VER 的 誰 不 較讓 他 演 歲
+我 們 有 工明 WE HAVE DIFFERENT
+YEAH I THINK IS NOT 跟 禮哪樣
+I DON' T KNOW I DON' T KNOW
+這 樣蠻 AS IN IT' LIKE TRIP SEM IN WAY
+GO THEN不超 IS LIKE
+對 對 對 而 且 我 是 大 PUBLIC TRANS SPORTS
+MAYBEARE FOR SHORT IS S NOT BAD I IDEA
+CONTINUE TO不 要 管 那 些 很 進 的
+如 果 較 大 像 可 能 小 學
+就 分出 來 就 看 很 多 年 之 樣 沒 有 國 家
+有 一 個 人 的 話 I THINK 是恐 怖 是
+SECONDARY SCHOOL AND J C
+他 們 說 改 了 很 DRAMA 就 是 很
+所 以 他 們 就 會 多 在 是 音 裡 面
+NO什分
+THAT TALK ABOUT 現 在 的 小 孩 子
+然 後 我 就 會 LIKE ON ALL THE LIKE然 後
+QUITE LIKEICS
+THEN NEXT SIDE ONLY LIKE WHAT TOO STOP REALLY ONE TWO STOP REALLY
+我 去 那 邊 做 他 的 SCIENCE 的 時 候 在 裡 不 較 弄 通 司
+SAY較 多 東 西
+YEAH THOSE SUPPORT CAUSE IS ALSO IT SO CO OVERSEAS
+我 媽 媽 最 近 一 直 道 去 吃 MAKE 的 FIRST
+那 是 FOR WORK TEN 的 說 才 做
+就 半 你 們 買 票 而 可 以不來 的 多 不 懂
+我 不 知 道 老 吃 因 為 我 沒 有 去 CHECK 過
+那 個 五 就 比 不 可 能 好 看 那 跟 年 了 人 比 也 不 可 好 看
+所 ACTUALLY 我 是 VERY EXCED STAY HALL 了
+還 是 POLY 一 TYPEIC 禮 空 學 院
+THEN 你 不 可 以 TAKE你 學IVE 去 講
+哪 一 個 大 I第二 是 小 的
+SEM都 就 是
+華 都 開 了 所 以 在 那 邊 我 很 漂 樣
+也 是 OKAY 的 因 為 WE FACE IT THE VERY NICE WAY
+BUT YESESTER DAY BE TRY TO AIM FOR CHECK CLUB
+LOT 很 多 人 都
+從 接 是 是 好 像
+就 很班 在 我 們 做 位 都 有
+BUT WHY CANNOT TALK
+就 用 的 THEN 他 就 跟 我 講 他 的 名 的
+你 不 懂 那 候 不 是AM 回 去哪
+哪 裡 會 歲 我給 你 看 戲
+你 可 可 以 是 飯 LIKE MAYBE ONE PLACE
+他 在 那 個 有 忘 動 成 五 最 跟 年 要ONE 的
+就 是ITY 那 一 定 會 有 PERSON
+MY GOD
+我 穿 的 有 點 說 有 一 點 什 而 月
+所如 果買 ROOM 們 較 可 他 們 會 有 GUYS
+幾 覺 得 要 做 很 多 東 西
+BUT THEN THEY CAN REALLY SHE DOWN REALLY
+被 我 那 個比較 的 話 是
+需 用 們 他 走 走
+也 的 你 們 這 邊 什 麼 都 東 西 都 是 五 路 看
+
+差 不 多 如 會 他 講 她 六點都
+你 們 兩 個 去 CLUB 個 人 一 定 會 要 CLUB 的
+但 是 他 是 我 們 HALL SIX 的 一 個 人 的慢
+像 不 幾 的 的 不 是 很 多
+BUT JUST 他 就 是 我 也 可 以 進 去 加 的
+就 都 會 唱 歌 妹 每 是 講 INTEL 唱 難 聽
+如 果 你 是 個 好 的 對 你 不一 定 是 個好 的 COACH
+跑 好 爬 到 上 面
+一 個 人 的 三 你 在 那 邊 多 年
+BUT 有 時 如 果 可 是 那 個 GAME 就 是你 要
+IT THE SAME EVERY
+他 就 是 帶 生 團 起 去
+THE NEXTISTIC 的對心 FOR
+所 所 還 要 I C 那 種 所
+LIKE SOMETHING THAT IS CLOSE TO THEM 好 像
+跟 朋 友 兩 個 人 寫 了 有 WEBSITE
+YES THEN AFTER GET USE TO
+好 像去 HOURS 覺 這 樣
+然 你 有 跟 我 講 你 的 NAME THEN 要 自 是 就 講 了
+說 對 他 們 來 講 可 能 會 有 一 點 問 題
+SIX 以 SOME 的
+BANK WE DIDN THE BANK也 ITSELF 朋 我 用一 樣ATION
+通 常 方 戲 一 是 小 去 西嗎
+做URE NICE 哪 好
+那 個 那 個 男 的 ENOUGH FROM FOR興開
+不 懂的 我 靠 選 面 的 名 字
+所 教 的 不 過 時 間 還 HOLIDAY
+THAT ABOUT THE AUSTRALIA 很 還 他 他 他 媽 看 的
+ALLY 有 時 候 不 用買 我 都 概 過 他 是
+I VERYRY 會 沒 講 HOW VERY
+你 去 問 ASK
+SEE AT LEAST BIRTHDAY
+心有
+A PROF IT MY
+不 可 以 來 要 進 球
+THEN ACTUALLY 沒 有什 麼ITY一 跟 EVENT 的
+BUSINESS
+現 他 們 在 BI 不 到 也 有 PROJECT 是
+有 一 前
+JUST CHRISTMAS 你 怎 麼 清 住
+THEN 一 個 SEMESTER 是三 百
+YEAH 好 他 都 出有 SEE LIKE YOUR SLEEP SHOPPING AND 是
+然 後 你 不 用 你 不 第 個 進 去
+很 抽 度 來
+MY TEST MANAGEMENT ONLY AT THAT
+不 過 上 是 臺了 就 去 太 背
+好 像 在ABLE
+OKAY應該 FAMILYOOD的
+HALL 等 個 MATHS
+THEN SOME 麼 你 去 都 你 去 BREAK 個 東 西 我 很 像
+DURING來 因 為 就 來 有 O SEE
+三 我那些 FAIL
+M 那 些 就 會 講 來 那邊
+像 我 的 就 較 哪 一 點
+跟 不 想 他 出 國 沒 要 工 們 樣
+比 較 需 要 出 很 多 粒 年 你 們 就 會 很 LIKE
+好講 他 就 問 為 什 麼 要 穿 兩 跳 底 哭
+小 WHY就 LIKE
+因 為 去 OUT LIKE TWO BLOCK WAY FROM ME ONLY
+對 因 他 們 講 FIRST 下 是
+什 麼 東 西 都 是 網 UP
+我 是這 樣這 樣 們 才 會 賺 錢
+因 為 我 只 之 接 那 裡
+所 以 你 不 講 話 是 你 要 TEST
+這 樣 這 樣 出 我 的 那 個 裡 那 些
+就 這 樣 做 一 個 老 半 這 樣 子
+來 樣 就 INTEL 加 會 有 生
+SET HIM ON FIVEING THE GUESS SO
+之 前 嗎 之 前 的 P FAIR
+為 我 他 們如 果 ONLINE學 的 話
+比 較 文
+後 你 看 那 些 收 得 全 部 那 邊 講 話 講 來 半 就 專 站
+做 的 子 THENVICE上些 CIA
+他 他 我 我 我 會 一 到
+YEAH 我 常 次 剛 久 我 覺 到 很 短
+GOOD MY MOTHER GOOD
+你 剛 看 才 不 是 CHECK 那 個 BUS 的 西
+THEN AFTER THAT YEAH THEN 那 時 就 考 是 是我 ROOMIE
+SECOND MUCH SO LIKE蠻 DAY
+SO THAT' S WHY 他 們 被 前
+之 今 年 就 是 我 們 拿 過 去 的 時 候
+你 玩 沒 有 LECTURE
+但 最 一 是 講 的 AND ONE ENGINEERING
+我 們 有 要 情
+因 為 晚 上 住 在 很 方 了 天 很 媽 好 玩 的
+FROM THING TO ANYTHING
+然 現 在 比 較 轉 兩 一 點 點
+是開 IS ALL THE SOMETHING
+還 有 一 個 他 的 CAP
+過 好 那 是 給 遠 過 好 那 些 負 重
+每 個 要
+CENT TWO 我 經拜 FOR SEM
+THEN YOU MEANS NOT POSSIBLE BECAUSE
+這 個 這 樣可 以 I DON' T MINE TAKING IS THEN
+ALSO ENGINEERING REALLYATED STUFF
+FIFTEEN MINUTES
+LIKE IT' SOMETHING IATION BUT DON' T很 種 ALSO
+NOT THAT FIND STILL OKAY
+對 以 很 像 個
+MEANS AT ALL TO TOGETHER TO 七 個 小 時
+前 就 想 以 後 還 要 幹
+現 在 最 己 學
+的 時 候 我 會 一 個 人 在 SCHOOL
+你 不 是 有 那 是 要 去 了 他 在ATE 是
+TAKE COURSE LAND 都 是 OF 你 風 FAIL
+不 是 為 不 是 為 那 個
+PHYSICS CAMPSHIP在 我 沒 有 用 到
+每 次的 POLY 去 那 裡 打 出
+我 不 得 他 歡 有 個 什 本 人 國 戲 那 個 候
+BUT那 那 個 PLAN 好 像 有 兩 個
+因 要 的 從 司 那 A ALREADY
+都 還 還好 C
+我 們 沒 有 什 麼 去本 OKAY 我 們 去 J P
+IT LOOK AT ME ABOUT ME TO CUSTOMERED TO YOU
+為 這 些 CALCULATION 是 已 經 是 被 成 的 的
+電 是 我 從 他 不 看 點 子
+我 們 的 SPECIALATION 是 在 YEAR 讀 的
+上 什 麼 課 這 個
+他 有 抽 從 那 個 心 抽 樣
+CAUSE THIS BAND IS ALL FOR
+HALL
+BUT 他 們 的 FOCUS 應 該 還 是 在 SPORTS 的
+THEN AFTER THAT 他 就 會 去 IMPORTANT 種 CLUB
+THEN 我 這 想 我 在 那 個 U EUROPE TRIP
+做 那 些 跳 五 唱 的 我 覺 得
+DEPENDS 好 像 是 DEPENDS的 不 同 的 很
+如 果賣 做 差 國 五 家 一 加 五 十
+沒 有 他 的 過 我 讀 不一 樣 COURSE
+還有 他 的 最 做 還 他 是 有 你 買 西 家 錢
+就 在 HALL 沒 有 東 西 做
+他 們 不 接 他
+MUCH LAW 還 有
+看 吃 來 好 像 不 過 LOT
+就 就 你 名 字 道 他 們 不 可 能 在 去
+BIT EVERYTHING I ALWAYS COME
+LAST SEM ACTUALLY
+也 是 可 以 玩 的 到貴ATE 這 樣玩
+二 是 是 九 是 那 個 大 也 之 樣
+可 是 我 真 的 很 不 IN
+每 次 們 在 就 會 變 包 好 像
+WELL 是 分 色 的
+慘
+就 是 H PHONE 好 像 樣 PHONE
+你 們 要 去 TRY OUT THEICS RIGHT
+YOU個IN THEN YOU STILL ASK ALL GOING BUY THE BOOK
+IMAGINE 因 為 我 我 的 去 校 的ULAR你 THAT
+他 一 直 我 重 發 全 為 什 麼考IN 帥
+THE NORMAL本 PERSON 會 拿 SIGN 到 講 說 OKAY 我 下 進 去
+QUITE VERY TO SEE SOME YOU SO MUCH DRIVE
+你 不 需 要 有 一 個 DEGREE
+我 最 喜 歡 COMPUTER GRAICS
+沒有 我 下 不 去 有 時 候
+他 是 飯 BASICALLY 講 這 樣 亂
+那 個 男 的 RIGHT 是 我 們 快 的
+那 個 真 正 玩 的 候 開 因 因 為 太 比 有 多
+也 你 N 真 的把 的 很 後 的
+而 且 我 是 怕 我 怕 也 後 會 喜 還 語 了
+對 FOOD TIME
+BUT GOT 去 看 就 看 看 到苦 I TRY KNOW
+也 說 YEAH 我 吃 很 多 發 以 我 長 長
+如 果 AS 如 個 APPLY AS不 APPLY校
+會 會 要 在 蠻 多AGE 對
+BUT C 如 果 沒 有 做 是 我 們 自 己 找 的 RIGHT
+如 果 如 我 是 我 喜 歡 的 THEN 就
+THEN 有 想 過 要 MYATE TO OVERSEAS
+如 果 兩 個 人 都 不 要 講 歡 TEST' WOR
+不 可 以 有 人 的ISTIC這 樣 子
+THINK MUCH ACTUALLY THEY PRETTY MUCH FOR WITH YOU
+因 他 們 會 一 直 做 哪 裡說
+所 以 去 THEN
+那 水 六 很 機
+AFTER 還 有 講 那一 個便 是
+做 的 BUDGET 他 不 拿 在 個
+LIKE 沒 名 就 知 道 是 一 個 PLAY坡 講
+THEN
+們 的 FRIEND 那 是 去 哪 你 再 學 校 的
+MY GOT CHINESE IS MY UP
+一IAN 是
+我 我 像 你 定 書 我 真
+BUT 我 可 能 會 LIKE TRY TO GET CLOSEER
+THEN你 JUST生 TO 的就 是 TO 的塊
+像 子 二 十 九 YEAH
+換 想 靠 數 是 換 想
+後 過 他 長 菜 也 是 一 樣 有
+THEN IS IT LIKE ONE HOUR 一 個 A U
+他 那 們 他 的樣 很 好 吃
+就 SEM
+其 實 我 覺
+我 像我 MY BLOCK DANCE的
+所 I JUST TAKE THE ONE FRIEND 他 的
+MAYBE WORK SOME OFFICE
+SPENDERS CLOSE TO YOU
+玩 是 真 的 是 蠻 好 玩 的
+HALL 的 有 我 需 要
+因 為 知 當 因 為 樣 是 的 朋 友
+有 還 是 比 較 去 天 面 那 種 地 方 買
+全 部 出 來 都 是 A 他 只 有 EXAM
+那 個 不 是 跑 友 那 個 是 哪 PRINOS
+那 種 日 本的ING
+我 不 是 ENGINEERING 是 SCIENCE
+ACTUALLY 我 是 有 想 貴 要 去
+他 們 沒 有 上 沒 有 去 TAKE N ANY MODULE DO
+BI HEARD 他ATE的
+BUT去兵
+我 在 邊 說 兩 個 月 樣 子
+BUT 這 樣 的 話 你 們 去 要 邊 放 他 們 做麼
+我 不 會 去 看 NEXT 去 看 DAY
+THEN 我 們 來 講 話 語
+可 能 放 買 些 他 們 你 目 來 成 用
+SOMETIMES在說 THEN I THINK
+我 FOR 我 們 我 們 是
+I BUT 有 也 是 叫 出 的 RIGHT
+那 個 ANDIA 長 會 長 的
+SO BEFORE THAT 還有 TRY TO給 AMENT
+那 個 是 我 們 N U 一 個 電 臺
+THEN IN都 WE CONED ABOUT爸百 十 塊
+SO 他 參 了 就 變 成 VERY TYPE
+他 九 近 PASS 三 的 都 二 是
+I BEEN THE MY LIFE
+從 可 是 叫 什 以 TRY 過 一 次
+JUST說 CONTRACT
+LAST TIME 我 是 天 輕的
+最 前又有 TRAINING
+SEM TO ASK IT SOFT COMMITTEE
+通 常 會 比 較 貴
+THAT YOU HAVE TWO THEM ALSO
+我 會 點 華 人
+ONE OVER的 我 跟 那 講 我 要 走 了
+BUT NO WITHIN A LOT PEOPLE T KNOW
+THEY考 他 們考慮
+THEN 後來 他 就 其 出 他 看 講 很 HOST STAR
+你 經 講 什 麼 SERVICE 的
+ING 所 以 全 部 人能 有 MAKE UP
+THEN 最 近 THEN 後 又 學
+你 看 能 看 我
+真 的 LIKE GO多 G
+THEN 後 工 九 就
+因 為 還 在 想 為 什 麼 會 出 然 開 PART
+BUT HE T GO FOR N LESS OR WHAT RIGHT
+YEAH ALL THES
+因 為 都 沒 有 看 到 他 們 的 FACE
+NO THIS IS A NEW
+上 明 種 然 說 重 一 點目
+吃 SOL FOOD 的時 候 的 STUFF 就可 以 REST
+你 去 CHECK 你 的 那 個 DEGREE ALL
+FIRST SEE 那 個 個 人 的 很 我 在 BREAK
+OR ALSO IF YOU LIKE WE MOST OUT THE TEACHER
+THEN 就 每 是 給 顧 過 他 們 講
+MAYBE 本 FAR
+ARE OKAY IT NO CHANGE
+TAKEATION
+YOU I FOR EXAMPLE
+THEN I THIS I
+對 就 為 上 個 小 時 為 LIKE 一 個 P E
+自 己 OFFER 幫 那 個 BANK
+他 以 前 在 O LEVEL 他 拿 A 讀
+我 就 STUN 掉
+而 下 以 保 後 怡 保下 太 品
+IN 很 多 人 一 下 就 不 要
+在 N T U就 沒 我 在 T U
+是 S A P
+回 也 是睡 掉 看 電 是
+I T BUSINESS
+WHICH WHAT 只 OR MEAN HAPPEN TO HIM
+整 天 在 HALL 裡 面 睡 教
+他 RIGHT SHE A DAY
+不 很 死 後 WHAT THEN
+所 如 果 你 經 國 出 整 個 是 PROCESS
+應 該 有 把 沒 有 去
+COMORTABLE IN ENOUGH WITH FEEL
+ACTUALLY THEY QUITE BE ALSO
+OKAY I REALLY
+IS一樣 的 THEN IS THEN' LIKE
+很 蠻 的 我 主 不 很
+TAKE TO一 個 THEN就 THEN 就 這 樣
+因 為 人 人 不 過 認 候 不 組
+而 且 你 看 我 們 是 過百 的 NUMBER SPORTS
+我 就 根 本 都 不 想 講 SO 開
+因 為 我 們 只 是國FUL
+YEAH BUT THEN 我 我 就 TWO FIFTEEN A USE
+SO AS IN WHAT THE ONE KNOW
+因 為 我 是 沒 有 ROOM 們 跳 那 個
+THEN 還 有的 SO 我 做那 個
+CUTE LOT
+就 我 是 八 幾 跟 八 八 年 的
+YEAH QUITE OKAY BUT
+就 EXERCISE 十 時候
+所 我 沒 要 ABOUT 他 們
+你 JUST 會 的 你 又 懂 NICE OR NOT NICE
+點 YOU RIGHT YOU ME
+THEN SECONDARY SCHOOL 是
+我 中 不 完 講 IT VERY
+我 人 你 講 我 先 我 要 講 東 西
+STAT TRUE SO THECTION RI
+如 後 我 們 就 很 的 他 後 我 們 問 他
+但 候 我 去 的 要 是 來
+就 是 你 要 給 它 吃 為 他 吃
+SO 你 給我 I JUST TO ASK THERE ASK SHE BAD
+聽 過 到 問 起 在爛
+ACCEPT HER 只 是 接 說
+THEN I REALIZE DAY RIGHT
+去 IT IS NOT THE個 A VERY GOOD CAN EXPERIENCE
+沒 有 你 什 麼 種會 ONE TENNIS THEN
+有爸 怎 麼 可能 全 部 人 跑 去 懂
+MY天 I THOUGHT WE T HAVE ENOUGH MONEY
+WHICH IS QUITE他 BUT
+對 對 對 跟 外 面 的 人 課
+YEAH 他 就 叫 叫 我 FIRST INTERESTING不 要 JOIN 先
+所 一 定要 住 好
+ME SPORTS
+你 就 讓 他 幾 去 這 樣 子 第 去 去
+他 們 的 NUMBERBERS
+STILL HAVE二十分 中 TOURN
+我 們 應 該 CHANGE TOPIC 了
+THE REASON IS NOT BECAUSE WE WANT TO CUT COURSE
+不 後
+FOOD RELAX
+ING CASE NO
+有 有 外 一 個 玩 那 個 CAP飛 WORLD
+可 DAY 我 們 全 部 DOWN AND
+DAY 他 們 他 們 有 SALES 的 時 候
+IF BECAUSE THEN就 死 沒 有 人
+REALLY NEVER KIND THEM
+NO BUT NOW THEY CHANGE WHAT WEEK
+只 是 我 每 次 叫 們 去 買 睡
+多 ONE 是 八 便 的 已
+你 可 以 飛 一 辦 他 就 會 樣 你
+在 沒 有 時 間 給 他 們 想 要 做 什 麼
+他 不 會 很 說 的 這 樣 很 可 是
+就 是 在 SOUTH一 邊
+我 的 都 西 感 話 就 在 最 做了
+他 們 是 是 接 的便
+他 是 UNDER 那 個 DIFFERENCE 的
+CHOOSE FOUR 比 較 多 是 二 十 五 到 三 是
+是好 FOR 的
+沒 沒 有 我 沒 有 做 爸 去 生 少 錢
+RIGHT NOW I JUST STILL STUDENT
+他 們 沒 有 想 每 姐 這 樣
+OKAY 可 能 是 我 在 覺 的
+你 IDE 的 只 候 我 就 得 說
+你 怎 樣 多 果 那 個 幾 年
+THEIR REALLY UP THERE NO CAN
+
+還 講 好 忘 去 三 面 昨 天
+十 月 是 好
+SECOND SEM WAS LIKE THAT THEN FIVEED
+練 他 們 都 是
+然 身 是 DEGREE BUSINESS AND THING
+會 們 記 做 一點 OFFICICAL BUT
+我 每 是 沒 有 管 我 JUST 放 住
+I THINK 你 去 拿 IF 你 怕 拿 不 道
+I GOOD AND MATHS AND 我 很 喜 歡
+你 果 你 要 有 話 我 是可 以話 的
+我 知 道 在 講 RIES
+FIRST YEAR 的時 候 是 SCHOOL OKAY
+講 我 們 就 會
+為 半 天 以 是 學 生 你 可 以
+ME WHAT WHY QUITE WHAT
+玩你 笑 我要 WHAT想 ONE
+真 YOU LOOK GOT AROUND IT ALL HAND
+到 八 點 給 給我 們 睡 都 幾 個 小 是
+TO LIKE不 OUT BIT ALL THESHIP
+你 YEAR PROFESSOR樣也
+N DECEMBER SO 不 那時 候 都 了
+NOT VERY CLOSE 就 是 那 種
+因 為 是 飛 照 水
+喜好 HOW GO FROM THERE MAYBE THEASTE GOOD
+之 紅 AND OTHER WHYSIDE THAT THE LINE UP
+所 他 自 己 換 想 的 心 很 多 是 他 水 六 去 到 的
+I DON' T KNOW WHETHER HAVEITY
+我 們 才 開 們 給 他 媽 媽 進
+這 個 東 西應 該 大 道 沒 有 人 多
+還 是 做 老 是 做老 師
+我 只 記 的 最 要 是IN
+OKAY PROBABLY WERE
+PHYSICS CAMP MATHS ECONS
+就 STEP 每 次 算 那 種 去
+因 為 我 是 這 是 SCHOOL AND PROCESS
+N ENGINEERING 用 很 多 ACC RIGHT
+
+是
+去 CASE
+I IN GENER WHAT BUT
+很 FIVE的
+HAVEN T REALLY ONE THAT THE MOVE
+LIKE 樣 少 片 很VIOUS
+CANLING
+THEN 可 能 去 要 做 的 東 西 比 較 少
+是 好 FOR 覺 得 我 下 的
+他 對
+有 重 和 的 了 後 分 三 個 星 期 打 的
+OKAY SO
+有 就 是 吃
+還 是 你 可 以 去
+那 講 MAN U WHAT OF THE
+他第 以 上 那 掉 常 去
+有 是 起 多 久
+我 覺 會 時 I去 ABOUT FIVE
+沒 有 因 為 我 們 老 是 個 他 就看 的 REPORT
+現 學 是很 我 給
+IT WEEKS FIVE A有 就 跟 我 的
+YEAH我 很 過TEEN
+吃 不 能戲
+整 個 西 在 THINK 進 十
+然 後 三 自 有 些 還 會 你 游 一 錢
+ONE MONTH OR SOMETHING ONE OF TO MUCH THEN
+好 不 要 選 我 覺 得 拍 會 坡 看
+他 也 不 是 普 人 那 是男 男 去 成 長
+對 重 近 個 在 AT COM可 以
+可 以 的 CON的
+RUN UP THE SEE
+要 早 麼 色 候 他 們 講
+THEN WE JUST THEY OVER ALWAYS
+SP你 不 會 LIKE
+出 國
+HOW CAN GET THERE LAST HOUR
+十 其 歲 的 上 年 零 水
+可 是應該沒有 多 少 幾 千
+話 還 是 這 樣他的
+然 後 我 就 覺 太 近 的 就 變 成
+我 還 聽 三 說 故 那 個 THINK
+因 為 你 說 因 為 還 不 是 你 一 個 人 罷
+TEST 時 候 MY PERSON 沒 有 前 去 考
+一 樣 講 的 很 樣 那 公 作 人 他 們 就 較 想
+小 學 我 是 在去 PRIMARY SCHOOL
+AND ONE TO SEE THE SAME THINGS
+ONE DAY ALSO WHAT
+因 一 個 沒 有 來是 不 會 會 講 三 你 朋友
+就 一 個 比 較 多 的 然 後 另 個 個 不比 較分
+HE JUST 一 去 THEN I ANSWER BAD ANOTHER OTHER
+其 實 坡 沒 有 買 樣 的 這 樣 的 情
+SO不 懂 WHAT HAPPEN TO THEM
+誇 張 是 你 是 麼 看 去嗎
+ACTUALLY 沒 有 是 麼 一 想 可 能
+你 ATION 的 CULTURE 還ITY
+BUT 不 是 沒 有 很 他 好 吃 的 那 種
+有 MOVE 有 可 以 看 到
+REALLY VERY FUN FRIENDS
+有ZY DAY AND有 SLACK DAY
+本 們 能
+你 很 少 為 看 到 我 在 加 的三
+沒 GET A THEN就 FOUR PERCENT A
+他 會 講 麼 N 整 GOING就 國 了
+BUT 就 是 LIKE 一 個 地 方 給 他 們
+後 CAUSE PARTATION 是巴
+REALLY THAT' S
+PLUS打 O TWO
+如 果 是 就 點 幫 我 就 會 三 來 會
+I DIDN問 ASK YOU THAT QUESTION
+IT
+YEAH走 C 慣 了
+對 對
+感 現
+還 有
+你 說 有 丟 不 是 真 是 十 生 活
+WE WITHIN BAD MY BATCH THIS 我 們
+我 一 家 SAD
+真 的 O喜 歡
+一 直 在RESS 在 學 不 要 給 面 子 THEN
+是
+SOME ONE HOUSE
+我 們 要 讀ICS
+不 是 近 N S 就 會 講 HOKKIEN
+C也 不 去 THEN
+THEN 我 就 會 叫 看 裡沒 有
+不 然 我 也 是 過 過不 了 關
+就 會 SWITCH SCIENCE 去 去
+HE ALWAYS在
+我 很 多 東 西 找 片 什 麼好
+看 的 什 麼 小 吃 長 車 就 買
+AS A OFION
+你 沒 是 拜 是 有 EXAM
+AFTER ME YEAH
+不 問 講 NOT THEN 我 在 皮 錢
+如 說 我 覺 得 就 他 們 一 關 的 需
+我 一 看 好 想
+我 到 數 是 下 看
+SO WHAT THE HELP IS A
+INSIDE THAT TO 放 期一 個 COM MODULE YOU
+可 是 好 像 近 年 有 是 年
+只 是 叫 ON在 SERVICE 第 個
+沒 有 在 所 很 多 東 西
+沒 有 來 要 JOIN LIKE 因 為 很 不 了
+BASED 幫 丟
+I DON' T KNOW ONE SOMETHING THAT
+可 是 我 樣 們 電 他 有 比 有 們 這 裡 好
+下 個 打 三 做 什 麼
+ECONS 一 看 NUMBER MIX
+THEY問 TAKE YOU
+英 文 的 那 種 DRAMA
+BUT HE IS REALLY HALL
+這 想 可 樣 的 什 麼
+KIND IF 玩 就
+對 我 去 很
+但 時 我 記 得 MY FIRST I T G
+AS IN AS IN THEY WILL BE THIS
+THEN DRINK SOME沒有
+人 老 了 不 是 很 帥
+你 是 去 幾 月 的
+STUN RIGHT YEAH
+你 喜 歡 什麼 SONG OR心
+IT' A AROUND SIX SIXTY心了
+BUT 我 沒 有 一 是 去 他 們 的 MEETING
+YOU DID ECONS SO HOW YOU DO FOR THAT
+LIKE
+覺 好 看
+THEN 去 SINGAPORE POLY
+CORE HER JACK 可IN
+T M T R SHORT FORM
+I DON' T THE 不點 IN INTOIN
+不 認 的 會 C
+以 前 我 以 有 看 這 些 動 BUT
+就 是 MAC過 COREICS
+不 是 一 個 很全 就 是
+關 方 買來 明 就 我 樣
+THEN ONE GOT THEN
+OKAY AND THEN IS LIKE
+LY 叫 你 這 樣 講 有 點 奇 怪 RIGHT
+CAUSE IF WE CAN ITSELF SOURCE 是 果我 們可 以
+LIKE MAKE QUITE
+一 個 沒 妹 在 做的
+NEVER VERY EXPECT THAT THE FOOD OF VERY NICE IT
+這 個 TIME JUST FAST以 FORM TO GIRL
+不 道 你 要 講 去
+你 好 爸 他 說 成 重 點
+放 住 先 THAN SEE
+THEN ALSO WHEN個 ENJOY
+OKAY 好
+THEN 就 什 們 就 講 那 個跟 NOTES 沒 有 用
+他 STAY 他 們 有 ASK SOME GOT THE ANOTHER 的
+UP LEVEL PLUS我不 OKAY
+你 要 把 是 是 讀 機 為 人 想
+THEIR PACK TEACHING IS BETTER
+SO 他 就 做
+然 後 我 就 INTERVIEW 那 個 BUS家
+我 的 DREAM JOB 是 要 做 LIKE
+天在 EXAM 名 直 幾 實
+還 沒 有 覺 定
+對 會 看 到 一 些
+因 為 我 覺 得 有 看 國一 個 YEAR
+YEAH THAT' S ABOUT IT
+可 以 怎 麼 候 是 個 地 選天年
+I ACTUALLY NOT BAD 個 N一 的
+QUITE 已 經 有 不 的會 到
+THEN 最 近 因 為 GOOD FRIDAY JUST PASS
+H A RESEARCH THEN
+我 每 前 什 麼 多
+就 很 用 你 看 能 出 來
+BUT OKAY GOT算 G P LIKE
+YEAH LAZY
+不 能 不 能 BUILD 東 西
+你 會 去 OVERSEAS EXCHANGE
+BUT SEE ME IS GO我覺 得
+不 會 我 同 要 拿 A MINOR
+FRIENDS OF ME JUST GO NOT
+ONG LIKE THINK 後寫 說
+THEN NOT MEETING IS二 IN
+I DON' T KNOW THE WHY THE VERY FIRSTITY ONE
+THAT' S WHY SAY I SOMETHING BEFORE
+或 得 他 們 慘 那 種 P
+LIKE VERY FOR CHRISTMAS BUSINESS
+FORIN 回 來了
+說 那 個
+真 罷 很 不 十 的 我 知 道
+還 是 在 這 接 AREA AREA 會 比 較 好
+所 以你 要 他 國
+對 你 當 檳 心 你 是 做 什 麼ATION
+後沒 有少 很 多
+THE IMPORTANT THING IS REALLY PEOPLE
+有 幾 個 地 凶 間
+過 後 SECOND YEAR THIRD 樣 那 個 TEAM
+沒 有 你 朋 友問 他
+我 不 會 BACK TO
+然 他 們 還 有 GOOD 大
+TRUE 還有幾 個月
+我 FIRST 我 在 想
+THEY SPEAK ENGLISH OR ENGLISH
+
+BAD THING E
+我 得 不 是 很 過 他 有 其 首 個 很
+明 天 我 LAST 小 地 近在 去 看 你
+為 開 很 十 便 HARD WISE
+現 在 只 是 那 個 CAMP 一 只 有 題
+如 果 你 年 去 有 壞 的 沒 有 不 不 追
+THEN THAT THE
+THE INTERESTING THE SAME玩 TO TRIP
+很 能 加 兩 個學 生 ONE TIME
+又 他 們 就 什 麼
+兩 可 以 成 五 是 個 小 時
+很 奇怪
+OKAY
+AS IN MUM PARENTS THEM ALSO
+我 懂 他 是
+IT IS JUST TOO STRONG BUT IT
+就 是
+以 近 F FOR 他 是飛 的 又 是
+做 我 樣分
+YEAH CORRECT
+就 是 有 機 會我 GO BACK THEM
+FIRST CLASS我 一百塊 來
+家還 是目 老 師 叫 我 們
+THEN 聽 就 成 說 的 時 候 差 參 拍 的 故 子
+YEAH
+我 對 讀 書 如 以
+SUPPORT 好 我 們 會 JOIN他 COM FOR HIM
+等 也 較 一 個 教 就 出 需 了
+然後 而
+可 樣 Q P
+對 BUT 這 個 是 FOR我 們 的
+現 在 在 全過 的老
+YEAH
+OKAY PART SECONDARYARY
+多 少 有 多 少一 INTEREST 的
+他 講 有 什 麼 罷
+是 沒 有 BUT
+怎 麼
+OKAY START WITH MY 去
+因 為 他 們少 TRAVEL
+是 OKAY
+應 該 真 對
+後 還 有 學 STATISTICS 是 類 的
+就 不 要 港 麼 東 西有拜 法
+就 沒 有 說 了 沒 有 辦法
+中 叫 心 兩 中 東 西
+真 的 是 要 FREE EASY較 INTERESTING
+去 是 什 麼 還 什 麼
+SO YOU HAVEN T TOLD你 WHAT
+讀 常 有可 以 和 聽
+MISS 你 不 來 就 是蠻 的
+然 種 你 在 問 他 就 開 是 講 廢話
+因為 文 成 都 沒 有 什 麼 好 老 是 會
+OKAY 賺 一 個 小 十 二 十 塊
+THEN 然 後 他 自 己 看 不 出 自 己 我 什 麼 問 題
+關MENT了 LAST OUT THING YEAH
+對 有 去 有 參 樣 C CAMP
+你 可 以 去 年 就 會 下 的 方 面吧
+就 子 有 分
+因 為 去 跟 度 的 那 個
+我 跟 K 分 喜 他 半 家 家 幾
+YES WHY
+YEAH MAYBE COULD B SHE RIGHT
+AFTER THAT 應 該 會
+然 但 是 他 有 也 是
+對 STUDY 不 好
+IT' MONEY TAKE WAS DAY
+就 有辦
+讀 很 厲 害
+應 該 是 這 裡 的 就 是
+AND I YA ALSO BAD
+WHO TO
+SO每天 就 是 文 樣 的 東 西
+HE' LIKE A LOT
+不 朋易
+我 們 也 不 想
+兩 成 一 個 很 好 的 喜 怪 因 為
+FOR 的 公 作 人 遠
+我 我 不 知 道 因 為 你 看
+說 還 蠻 開 心 的 個 他
+他 覺 得 是 不 喜 長
+WHAT I TELL HIM I WILL DIE THEN I SAY
+AFTER HAVEING FOR ALSO
+在頭 RATION
+OKAY
+所 以 BENEFIT UP 有 很 多 就 種
+我 看 就 覺 得 很 STUPID
+YOU OKAY 不 是 在 有 果 裡 面
+WHY CAUSE PLAY ONE
+THEN FIFTEEN SO
+HIGH
+THEN DO LIKE LOOKING AND面 SAY
+NORMAL帶也 還 是 NOT CARE
+一 個 對 帶
+對 然 後 他 以
+JAPANESE SOMETHING PROGRAM 然 後
+I THINK HE JUST LIKE THAT FOR EVERYTHING THE
+就 JOIN DIS GROUP 因 為 他 的 是 很 聽
+十這 樣 的 LIKE YOU WILL TIME HERE
+BUT 那 個 REQUIREMENT 就 是 說
+WHICH THE I PHONE ALSO
+喝
+小 時 去 過 來 一 個 COUNTRY
+看 去 會比 較 貴
+YEAH CAUSE IEND RANDOM
+IT S 還 可 以 TRY
+聽 找 以 清 小 是 苦 的
+CULTURE是 LIKE
+MY CALLED HOW OKAYATE
+看 在 哪 裡
+I DON' T THINK YOU LIKE
+國很 T不
+他 是 年 就 月 的
+還 們 YEAH有
+就 是他不 他 FIRST
+YEAH
+YOU ALWAYS THING IS A JOB ELECTIVE
+我 還 是 會 進 去
+我 叫於 五 點 半 到 那 邊
+不 是 不 是
+YEAH LIKE我蠻 的 不 在 種 老
+就 是 跟 英 文 差 不 多
+不 是 那 個 HALF 會 他 是 FOR大 人 的
+是 是部
+明應 該 追
+YOU華 我應 該 會 玩 多
+THEER 那 個 同 面 的 不 是 什 麼
+我 覺 好 我 WORK 面 對 的 問 題 是
+LAW IT LIKE THAT IT
+因 為 你 聽 習 慣
+很 多 HALL 的 朋 友 RIGHT 在 FOOD
+OKAY THEY BE THE ONE
+到 了 SECONDARY SCHOOL
+THEN MY ME我 A UN T
+可 是他的 DAY 還 有 FOR TRAINING
+LAND TRAINING 字 一 次 G
+我 在 做 BIT TWO TUTORIAL
+旁 一 是 很 大 的
+THINK 一 個 比 較 遠 就 等 你
+是 好
+HOPE AND EVERYTHING
+然 我 的 DIRECT 都 會 罷 SO
+很 很 有 近 年 的 那 種
+THEN 為 你 們 在 他 片 點 那 組
+THEN FOR MY TEN THE CLASS IT WAS
+是 沒 過 哪 個 方
+多 他 們 已 經 姐 的 很 少
+玩
+是 九 塊 多
+還 很 多 問 記了
+AND WAS THAT TYPE OF
+IS IMPORTANT TO HAVE SOME ME
+一 個 很 好 笑
+沒 沒 有 你 以 定 我 講 些
+FUN拿
+因 為 有 就 F BUT P 回 教 嗎
+可 是 他 幫 你 JOBIN
+就 WHO STAY WAY FROM THE PLACE
+中 國
+YEAH ALWAYS 種
+有要 看
+I GUESS HE HAS REALLY BEST ME AND
+他 們 整 天 都 有 GRAD
+THAT 很 蠻 我 只 是 可 以 跑 不而
+除 朋 有 認 是 人 才 講 做
+我 才 找 上 MEMBER
+也 他 好 END 我 也 是 PASS SO
+也 是 有去的 說
+樣
+EXAMPLE
+THINK LIKE 二 十
+是 東 西 THEN GO
+我 最 半 就 到 THEN 沒 有 人
+I PRESS
+THEN THEY TELL YOU WHO歡了 SINGAPORE
+PLAY 因 為 還要 玩 VERYVING
+THE WAY THING 不 樣
+對 他 就 是 像 晚 參這 樣
+LIKE 他 一 是 講 話 同
+對 就 是 不 要 選 去 那 們 多
+SIDE PEOPLE
+你 之 前 是 多 少
+有 KIND TEN ME ONE
+YEAH 一 定 也 很 怕 SHE TELL ME LIKE
+THEN 在 沒 有 SLEEP MARKET
+所 所他 中 點 他 去 三 命
+IS SOME WE說
+這 個 新 加 們 是 到 WAY
+我 知 道 MAKE UP 參 大 可 是 你 是
+我 我 的ION玩
+ELECTIVE FOR MORE I DON' T KNOW
+會 有 你 以 有 一 些
+THEN GO IS STUFF
+然 後 在
+THEN 就 可 能 能 開 始 參 參 餐
+我 每 抽 的 多 少
+SO SLEEP WITHIN THERE TO SAY ANYTHING
+而 且 我 們 比 較 找 去
+他 講 我 跟 你 講 一 個 的 笑 話
+不 要 弄 壞 人 家 的 STUFF
+QUITEAME QUITE是 BUT
+YEAH I TWO知 LIKE I A BREAK
+DOESN' T LIKE THE SMALL TALK THERE
+AND THEN 我 講 我 前
+DURING AS IN DURING EXCHANGE
+YEAH AND I MAN
+可 是 我 ROOM 邊 就 那 種 ONE
+我 只 會 最 多 樣而 的
+真 的 很 了那 種 INDIAN 的 LESSON
+WHAT WHO TRUE
+我 來 有 怪 P
+OTHER PROGRAM THEY HAVE
+對 我 車 不 能 開 走做
+走 那 邊 方 們 上 沒 有 去
+有 臺問
+I IT EVERYBODY THOSE GOING ON
+YEAH ON TIME RIGHT STILL
+我 就 開 是 找 分 有 JOB
+THE分 叫 明 天
+AFTER 那 個 T
+你 懂 我 們 的 就 有 先
+要 六 一 個 HOUR
+P IT
+YEAH
+YES 真 的 是
+GOT ALSO BAD
+IS BETTER TO LEARN MAN
+他 們 有 感 說 在 那 個 地 成
+有 DO就是 STAY 兩
+THEY AS
+他 去 哪 年 進 他 現 在
+十 真 的
+好 像 會 點恐 怖
+做 個 LIKE
+BUT 他 的 太 想 了
+球 FROM THE SAME
+小 小 生 你好 大 是
+我 看 可 能 樣 到 只
+你 出 那 邊 也 不 放 便
+做 工 的 做 了 一 樣 點
+才 是 我 分 而
+ALL THE WAY 樣 那 個 STOP 想面的
+BUT 那 的
+THEN 你 去 想 一 個來
+我 媽 以 前 小 時 候 有 錢
+男 的 去 是 MORE 的
+BUT 要 想 人 人 是
+I 個 UNI 他 沒 有 走玩 BUT
+CAN DO THAT IN SU是
+真 的 JUST 從的
+THAT I DON' T HAVE A C
+MAR
+因 為電 些 很少 人
+YEAH MARK YEAH
+你包 老 幫 該 是 蠻 有 錢 的
+一 直 講 話 是 想 話 講 話
+P 同 司
+HE THE YOU USE的
+I THINK還 I
+他 DRI 什 麼 題
+住 HALL 一 個 月百 六
+因 為 有 沒 有 因 有 我 種 BUT
+THAT 什 麼 OKAY我 們 現 瞭 自 近
+我 的 SAMEING 沒 有 掉 這 樣 多
+很 正 長 ME
+我 不 小 戲 是 不 什 什 什 麼 的
+這 給 他 一 加 不 來 的
+DON' T KNOW LIKE NEVER
+沒 有五 了 那 現 在
+IF WOULD UP THIS GO PEOPLE
+YEAH去
+THEN
+THEN MAKE CAN COMPUTER THEN
+你 前 你 參 加 WHAT C 去
+會
+IN THE
+年 認 是 會 真
+會 有 點 SENSE OF
+NO IS
+我 們 的 全 部 都 是 FOR USE
+因 為 我 的發 有 他 的 個
+可 以 臺 他 不 知 道
+I THINK SO SHOULD BE
+YEAH
+NEVERAYS就我
+每 就 CUSTOMER
+在 我 最 己 叫 我
+JUST TAKE A NICE TEACHER OF ME
+HOW COME MY TIME
+什麼 ITY
+就 他 們 講 的 很 有 到 裡 而 些
+因 為 我 那 時 要 去
+弄 罷 好 們 他 煩
+他 講 看 一 個 小 時 說 回來
+前外 來 國
+MEAN 看 戲
+UNLESS THAT' A LOT THINGS TO DO
+然 我 講 C 給 聽
+PARENTS SCHOOL 他 賺 笑
+我 不 懂 他華的 FUNNY
+什 麼 那 些 BUT IS MORE THAN THAT
+MOST FOR I WILL TO MORE OUR TELL THEM
+然 後 BUS 該 是 很 重 樣 要 長 情
+沒 有 辦 法 要 去 生
+寫 就 很 開 心 一 想
+WHY NOT
+THINK 是 U BUT 不你 哪 裡
+他 去 他 要 看 M
+
+OKAY 忘 緊
+就 是 直
+I THOUGHT 是 看 好 下 轉 來 的
+THEN 那 個 很什 麼
+SO MUST N ENJOY LIFE
+我為 是 很去 懂 他 中 A TWO
+是 說 SURVEY 那 個
+THERE' S NO FOR IT AND
+雖 的 進 起 VERY GOOD
+THEN 你 會 邊 十
+JUST BECAUSE IS FOR TWO LOOKING WHAT
+怎 中 國 AND ALL 的
+東 西 也 時 間 在 JUST 上
+以 前 不 是 現 在 是
+他 不 感 你 KNOW 有
+在 做 上 我 二 姐
+過 後
+ASK A LOT OF QUESTION LIKE
+TE COMPANY JUNIOR COLLEGE
+他 也 是 樣麼
+OR OKAY FIVE THE WAS FIVE DAY
+ENGLISH DAY OKAY QUESTION
+對 最 少 又 個 月
+不 懂
+I THINK 你 不 能 關 掉 到 的 聲
+他 在 住 話 了
+就 是
+我 沒 有 我 沒 有 我 不 剛
+然昨 SAID
+你 的 來 也 什 麼 小 學
+LIKE VAL REALLY ENOUGH TEN PEOPLE
+WHEN DAY 的 時 候 我 會 問 字 開
+主 人 還 是 什 麼的
+看 在 為
+十 有 一 個
+CARING CARING 你 做 什 麼
+
+ASK FOR的 BAND
+可 個 我 們 有 的 十 間
+I THINK IS說END 的
+中 是 很 好
+THEN 你 次 他 們 兩 個 的 候 不 講 話 的
+THEN 然 他 就 講 MAYBE 想說
+POLY H
+他 那 個 掉
+我 沒 有 是 幾 班
+COME YEAH SO
+就 了 很 像 EXCHANGE PROGRAM 這 樣
+前 會 你 前 的 那 個 STUFF
+JUST CUTORDING TO
+近 的 這 那 在 學
+以 很 可
+CHECK TRAVEL 是
+THEN SHE CAN REC OUT THE NAME IN
+GOING他 比 較 比 較 BUT
+你 們 就 會 UP
+很 常 比 較 多
+沒 有 去 過 PROGRAM說 還 好
+BUT FIVE VERY INTERESTING
+YOU FROM臺 ONE
+SHE NOT BAD
+十 過 的 回 去 的時 候
+有
+都 到 不 同 的 東 東 西
+他 們 有 什 麼 關 戲 這 樣
+沒 有 像 正 去 出 力
+TO FOUR YOU
+會 因 為 你習 慣
+就 寫 就有 去 到
+LIKE
+DREAM 你 有 什 麼
+TEST INTERESTING A 三
+TO 我 JOB 較容 一 點
+LIKE I WAS THINKING
+MOSTLYLY 都 是 華
+那 邊 的 TRA FIT 二
+NO IS IN ENGINEERING ALREADY
+現 加 坡 有 一 個 方 有來 有
+我 知 道 是 誰
+好 只 一 校 住較
+LIKE ALL THE SENIORS IN HALL SIX
+同 覺 得 JOIN 沒 有 什 麼 好 玩
+HAS THAT VERY LATE THEN
+我 教 有 兩 個
+THEN 你 去 不 是 很 想
+我 PHOTO可 以 賺 多 少
+OKAY BUT
+THEN 個 他 們
+因 講 ONE TO GO OKAY 來 就 得 他
+GIRL OKAY個
+THEN
+他 看 上 SENIOR 真 的
+他 們 全 部 都 FIRST
+近 你 不 要 N害
+IT T THERE我 MAKE IS MAN
+
+我 會 比 較 會TEEN
+因 為 他 的 CONTRACT TERMS 是
+YOUR VERY MUST ALWAYS ON THAT
+你 要 問 我 些 問 題
+MY SISTER COMPANY
+NOT THAT YOU CANNOT FIVE WILL JOB BUT
+不
+對
+THEN 樣 LAST來
+然 過 我 們 就 講 華語
+I THINK IS JUST的 THING
+那 那 個 高 錢
+YOU DON' T KNOW WHAT YOU WANT JOIN ABOUT
+有 很 道 差 別
+SHE 是
+看 多
+THE QUITEITY 有 問 的
+我 就 都 有 在 看
+問 PERCENT 這 麼 多
+樣 不 要 很 多 年
+還 是 要
+THEN 你 可 以
+一 直 做 到 你 得 裡 蠻 一 為 一 子
+可 是ATION
+每 是 喝 的 家 裡
+JOIN
+去 看 還
+OR ALTHOUGH VERY FUN BUT THEN
+OKAY
+我 覺 要 去 到 J T
+AND THEN
+我 是 跟 我 的 SCHOOL 的
+LIKE TO 不
+就不 拿 不一 樣
+其 實 個 分 們 講
+UNDER WHAT
+SIDE THEM LONG
+我 在 一 在 那 邊
+他 也 是 有CTION I HEARD
+我 來 樣 多 要 做
+不 有 那 個MENT
+YEAH
+THEN BIT OF很 QUITE
+我 NEXT都 我 的 TIME
+OKAY 以
+我 不 道
+一 個 人
+過
+我 幾 我 很 像 好 間 話 講
+CAN 對
+出 果 我 會 想 記
+SO I ALSO LIKE OR
+後 為 什 是 老 時 要 球 的
+去 好
+MEAN哪裡 WHICH
+這 個 是 SUB
+I T THEY FRIEND BUT THEN
+不 是 很 蠻 SCORE
+他 LIKE COME SCHOOL
+然後
+他 叫 吃 去 學 校
+我不 想 聽 的 A
+如果 如 果
+SO THEY WERE PEOPLE
+樣 都 沒 沒 東 西 做了
+MY HELLO
+我 的 ORIGIN THEM
+要 都 就 的 讀
+AS IN START AS IN
+很 多
+WHEN IS MEETING
+THEN 很 多 很 三 氣
+但 是第 的 不 可 以
+NIGHT SEE TWO
+對 LIKE 要 跟 CHRISTMAS 睡 樣
+YEAH I DO LIKE MONEY
+THEN 拍 球 是 什 麼
+你 孩 子 整 孩 子 去
+有 超 看
+一 叫 又 想 字 FISH 的
+LIKE THE LIKE THOSE
+考 是
+FOR HER PERSON T
+不 想 去 CAMP B 次
+CAN MORE
+我 不 找 CLASS 可 以 做 什 麼
+BUT SINGAPORE BETTER
+就
+SO SEE 很 難 THIS怪
+I WILL GO THERE DAY
+因 PAY JUST A LOT
+他 是 跑 的 你 放 球 然 後
+那 種不 STRESS 的 那 種
+那 個 候 個 我 們 講
+沒 有
+就 PEOPLE
+五 間 好 那 個 難 住 加
+是 H C UN TRAIN
+前都法 的 CULTURE
+打 人 這 爽 來 樣 換
+BUT THEN果 SONG WHAT
+他 YOU DON' T KNOW
+然 你 什 在 會 很 個
+SO以 YOU HAVE TO DO THAT
+THAT IT IS PROBLEM I SEE
+很 像 找 到 比 我 會 來 男 生
+太 在 邊 做
+就 剛 做 T
+YOU CERTAIN AND SENTENCE
+CONTROL EXPENSIVES
+STUDYING COURSE
+為 CAUSE 以 POINT 沒 有 那 個
+OKAY BUT I THINK THE
+較
+THAT'想 CHINESE A CLOSE RIGHT
+你 那 個 是ATE
+我 們 會 講 別 的 英 文 的
+THEN 就 I上 的
+就 少 廣 去 也 的 候路
+WAS TIME的 ONE
+YEAH NOT REALLY WHAT
+好 他 拿 奇個已
+就 很 STRESS 對
+樣 可 以 以 錢
+T 就賣
+哪 個 我 像 去 不 是 樣
+我 有 看 到 好 什 要 回 來
+QUITE CLUB I DON' T THINK BIT
+跟 也 是 幾 讀 教
+在 在 那罷你
+會 每 不 能 去
+比 CAUSE 你 有 沒有 S U
+比 較
+BUT 你們 去 去 那 邊 住 什 麼
+你 我 們 就 START
+我 要 想 在 來 過
+DESIGN FOR
+TO WHAT LEVEL PASS OF SHO
+AT LEAST TALK SOMETHING
+會要 LOT
+SO 沒 有
+你 經 過 我 上 個
+那 走 的
+因 為 LAST FIVE
+是 在 UNI 的 候 做 I MEAN
+不 不我 得 HALL OFFICE 很 能 種
+很 加 DRAMA 十 去
+你 不 懂 三 十 多 小 是
+你 中 學 IS WHAT
+我 我 的 我 繼 先 重
+然 後 所 以
+我 蠻 喜 歡
+是
+這 樣 不 錯
+我 不 家 FINAL 個 班
+IT' S A T CHECK
+不 是 在 人 他 們 沒 有 有
+BUT PERSON THAT YOU WANT TO
+HARD I DON' T KNOW WHAT A DIFFERENCE
+就 是 STUDY EIGHT
+YES BOTH
+THEN 就 兩 個 有的
+真 他 做
+TO MORE STUFF
+LAST FIVE三
+YOUR VERY
+我 自 己 在 是 有
+OKAY 這 樣 會 罷
+大 較
+因 為 看 起來
+我 不 爸 就 FOR的
+不 道 沒 有 錢
+就 會 真 的 是 會RET
+NORMAL ONE
+對 其 些 人 要 久
+要 十 一 在 房 間 的 在
+LIKE THINK 來 AMERIC 個 就 THING美
+
+有ING NIGHT
+因 為 我 APPLY
+個
+SO NOT GO RIGHT
+為 說學 這 不 好 看
+你 可 以 在 要 睡 個 禮 百
+BUT 不 會 很 沒
+樣 NOT GOOD
+現 講 什 麼
+CON THING FOR THE FIRST SAY
+麻煩
+REALLY WHAT THAT LIKE
+我 是 們 很去 EXAM 的 BUT
+有 什 麼 都 有 的
+CANTEEN
+我 真 真 的 SLACK
+比較 喜歡 就 樣 不嗎
+忘 這 不 懂
+I AING 一 個百塊
+你 今 要 是
+我 如 果 我 覺 得
+THEN 有 靠 可 寫 沒 有
+ALWAYS GOT LOT PEOPLE
+I P PLAY 年 T U
+而 ACTUALLY 沒 有 東 西 講 也是 不 好
+IT A BIT HARD RIGHT
+一 定 他 下 去 下
+OKAY
+他 有
+YEAH AND SAME CHARGE QUITE
+每 每 經 不 道 成 三
+NOT CO 去面外個
+怎 樣 的 是一 個ING
+對
+YEAH T YEAH
+SEE
+那 個 我 不 知 道
+FORCE TO JOIN
+THERE HAVE
+YEAH我 ONE 的 一 個
+如 果 你 NIZE
+SO THEM MORE MINUTES
+這 剛 很 發 蠻 苦 的
+很 那 時 東 西
+TWELVE
+差 不 多這 樣
+心
+你 怎 樣 可 以 FOUR戲
+THINK 我 是 一 個 我 是ATE
+STARTING 就 會 感 到 的 MUST
+每 個 要 做 一 生
+傳 多 我
+ALY
+還 是 我 從 了 對 久
+I THINK OTHER PEOPLEERS MORE
+OKAY
+對 是 OKAY
+TUTORIAL開 是 我 己 選
+對 對
+他 看 是 怎 麼 寫 法
+CAUSE LIKE I PAY
+KID下 的
+這 個 在 這 有 很 去
+ALL CAN YOU
+NO IN
+我 會 把 一 拿 分 的
+THEN SHE THAT THEN 他 講 說
+在 去 下 FIVE CLASS
+他 不 會 聽 的
+我 們 拿 多 少 多 最 好
+想 ROOM SOME
+I P
+個 好
+BUT THEN
+弄 媽 別 很 錯 樣
+這 名 是 熟
+你 就 有 在 看 電
+IT' VERY BROTHER SHE
+的 那 個 是 兩 比 較 大
+我 什 麼 FOOD 都 吃
+EVEN PEOPLE EIGHT
+THEN 也 是 住 CLASS
+YEAH AFTER THAT 我 一 走 緊
+USUALLY I TAKE MY ITSELF
+FAM IS
+要 的 方 麼 走
+不 好 看 們 去 很 短
+THEN 不 懂 還 有 誰我
+OKAY 在 部 嗎
+THEN BECAUSE CLUB THEY
+
+THEN YOU JUST ENGLISH
+ALL THEIRING TWENTYITY
+個 DESIGN
+AND HOW GIRLS
+以 記 有 講 一 什 她
+有
+不 會 都 是 一 樣 的 家 錢
+我 是 選 THEN
+FOR蠻 這 樣
+ICAL 看 的 較 名
+那 BUILDING VERY SO
+要 被 得 講 麼 是習 P
+因 為 HOSTITY
+我 不 覺 子 帥
+給 也 是 一 樣
+THEN SHE TOLD YOU
+我 有 華 不 那 錢
+WHAT THE ABOUT WHEN ARE T
+他 有 沒 有 MORE
+很 感 到
+GET A LOT OF SALES給 他 們
+會 REALLY
+SAY BETTER THEY JUST COME
+THEN 我 們 就
+I YES
+爛
+就 是 TO 多 PERSONATION
+哪 裡 因 為 說 沒 有
+他 FRIEND 影 生
+I GUESS
+要 一 前 你 生 在 起 是
+YEAH SO IN THEN 就
+YOU都會 SLACK
+我 我 一 下 子
+MY T
+有 問 什 麼 SPORTS
+STILL NOT ONLY WHAT
+以 他 個 沒 有
+JUST YA KNOW
+我 英 為 的 TIME
+不 是ED 我 的 你 講
+我
+我 THE CO GAME有
+比 較
+他 怎樣 HE CAN 不 IN
+就 有 個 CON少 CERTAIN這 樣
+BUT OKAY
+為 他 是 那 種 很
+YEAH 他 這 樣 找 THEN
+又 沒 有 電 是 看
+那 邊 該 每 十 的
+我 們 就
+就 是
+我 沒 有 頭
+現 在 一 個 在 PRIN PERSON
+YA
+然 後 還 一 個 人 在
+
+在 大 些 什 麼 清 菜
+他 我 不 講 話 FOR 的 後
+之 類 的 THEN 後 來
+我 像 講 太 快的
+你 就 不 重 錢 的
+有 去 是 去
+BUT
+你 一 過 了 有問 你 一
+不 是 CIP
+除 是 在 TRY 的
+就會 SIDE 對
+CON 司 的 東 西
+他 多 到 很 氣
+LIKE YOU
+THAT WHY我 會 讀 BUSINESS
+
+對 拜
+JUST NOT WRITE FOR YOU
+YOUR LIFE IS DR
+你 些 FOUR
+AFTER 這 個 SEM
+很 THEN那 我 不 說
+那 種 跑
+你 會比較
+THAN ASK YOU TO
+COURSE IS是
+WE EVERY SIGN O T
+半 就 是 有 時 其 其 麼
+對 我 十 覺 得
+班 家 你
+他 個 FRIEND 我 人 識 的
+然 後 後 來 接 說 不 對
+GOT HERE BE BEFORE
+GO朋跟
+我 很
+跑 我 就 是 VAL
+不 是 我 的代
+
+JUST A SEE
+THEN 那時 候 個好
+I FOR ME 我 得 我 不需 要 了
+然 有 JUST 候 我 就 是
+YEAH 很 SAD 因 為
+就 是 一 直 寫 這 些
+不 說
+什 麼跑
+MADE HIM TO TOGETHER
+INTEREST INTERESTING
+STUDY
+AFTER 我 的 A LEVEL HOURS
+是 剛
+TURN BOTH VERY HIGH
+不上
+去 忘 就 沒 有
+成 字
+幫
+HAVE YOU HAVE THEIP
+BUT 誰 的 好
+TO STUDY
+OKAY
+我 們 下 一 起 那 天 THEN 我 就
+他 沒 有 EXPERIENCE
+YOU用 MAKE COMPLAIN YEAH
+他 是 讀 三 子
+你 沒 看日 半 的
+DIFFERENCE BUT
+I THAT
+I T
+就 要 小 心
+MY
+原 了 忘 想
+他 的 NIGHT
+AREA TO GOING PLAY
+AND THEN ALSO DANCE
+BUT 在 你 是 有 去 的
+我 那 說 也 有 去
+還 有 書 包
+YOU I ALSO SAID WHAT
+CLASS WHAT 的
+I FIVE THAT
+FOR ALL THE IT STUFF
+IT' LIKE
+這 個 才 算 成 工
+就 他 們 好 課 的
+沒 有
+I DON' T KNOW
+我 什 麼 所 去
+OKAY YOU OKAY NOT
+SO DO STAY
+FOR過 ALREADY
+MATHS FINISH ONE
+不 懂 不 懂
+有 得 花
+掉 誰
+THEJECT TOGETHER
+是我
+FAIL 我 就 找 照比
+對 對
+THEN 我 吃 什 麼
+THEN TO MORE COME
+做 廣 高
+A LOT MORE THEN
+
+戲 去 五 到
+現 在 去 多 少
+因 我 華 文
+以 前 我 參 加
+I跟我 跟聽在邊
+THAT TIME WE WERE LIKE
+NO還 H
+YEAH GOT FIVE POINTS WHAT
+只 是 有 紅就
+IT STUPID
+
+我 不 得 好 笑
+PHYSICS 較 HALL
+OKAY SO IS THE
+YOU GOT WHAT THE ALSO WITH FUN
+有
+YES
+REALLY
+SAME
+怪 怪 的
+還 可 以 的
+LIKE 你 對 LIKE
+第 天 不 能 了
+就 LAST YEAR
+SO
+有 有 三 起
+也 不便宜
+會
+SAMEERS
+累
+他 不 應 該 就 說
+不 很 少 LIKE買
+我 不 來 講 你 們 次
+BUT YOU CAN SPEAK
+所 JUST GAME PASS PERSON THEN
+身 很 多
+對
+I MUST很
+我 走 一 看
+GO FOR THE LIICS
+MY怪 T
+還 要 找
+他 們 近 的 打 進 不 了
+LOOK BAD的 ALSO
+應 該 是 還 OKAY
+看 關
+而 且
+SUDDENLYING有間LAND
+
+我 們 BLOCK人
+原 華一 點 BUT
+什 CHINESE SCIENCE IT
+真 的不 懂 讀 的 玩
+CUT CHICKEN
+他 打 半 成 男 的
+不 會 HIM BUT LIKE
+THEN 很 多 LIKE
+過 INTER
+就 年 我
+這 樣 子
+對
+SOME
+YEAH
+
+以 近 我 你 會 住 HALL
+SIX TIME
+因 為 你 講 吃 飯
+以說
+YOU KIND WHY
+可 且 是
+是 條 對
+G
+那 個 很 大喜
+ING
+
+我 們 不 同 那 個
+
+SO
+SO IT THE
+LIKE
+POSS AS IN
+SO THAT A DIFFERENCE
+大的個
+
+他 你 要 回 較
+OKAY
+THEN
+SO東西 的 ON
+IS' QUITE
+做 聲 一 三 年
+以
+老
+TWO YES
+ER FRIEND
+有 LIKE 到幾 點
+就 講 他 就 是
+THEN 我 看 報 時
+SOMETHING I TIME
+MORE
+IT FIFTEEN
+很 貴
+你 講 他 們 五 跟 的
+OKAY
+小覺
+隨 個 明 會
+我 們 要 賺
+WHICH 什 麼
+ABOUT H
+什麼 想
+OKAY STUDY
+我 不 上 出 來
+IN IMPROVE FOR
+沒
+THE WHY
+是 不 是 NOT
+什 麼 一 些 罷 錢
+因 KNOW 我覺 覺得
+SURE
+OKAY
+THEN 你 CANNOT 賺
+不 懂 可 是 他
+
+YEAH TRUE
+旁 邊 子 麼
+就
+WHAT
+REALLY
+GOT CAN SO
+哪的 老 們
+YEAH THEN 都 會 清 歡
+去 PEOPLE AND LIKE
+AATE的 COURSE
+HALL 的 東 西
+三 是
+
+然 後
+I DON' T KNOW AS
+對
+要喜 歡
+要 次 國
+THEN 知 道
+不 FAMILY
+二且 十 塊
+SHE TO STAY IN
+然 我 覺 很 本
+WE NOT IS THERE
+不 是 不 是
+哪 你 的 的西
+MY GOT
+不 同
+IS THE COM
+TO
+CAUSE 我 怕 高
+
+之 接
+為 是八
+
+是 同辦
+REALLY
+蠻 OKAY
+SO FAST
+就 很 子
+OKAY
+跑 出 去
+懂
+你 要
+去 看 點 了 他 就
+他 是麼ABLE
+HALL
+GOT INTERESTING
+多 少現 的 ABOUT CULTURE
+家 人
+
+YEAH
+EVERY JUST BUS
+真 A MODULE
+YEAH NO
+就 到 下 五 四 點
+TEST WHY
+因 為 買 是 這
+樣 做 麼
+真 的
+很為 什 麼
+
+I DON' T KNOW
+最 是 PRACTICE
+IT
+講 他 掉 的
+TO FIFTEEN RIGHT
+的 罷 多
+REALLY
+LIKE
+看 吃
+然 後 就 去 在想
+好 笑
+的 去 哪 那 個 GUY
+然 後 就 說
+WHAT A SAME SCHOOL
+HE
+不 是 人
+有 WHAT
+BUDGET ROAD 那 邊
+YOU紅
+OKAY
+三 個 RESEARCH 就
+那 個 不 重 了
+THEN 的 NEXT SAY
+
+HE THEM GOOD
+COMPUTER
+有 候 錢 的
+百戲
+YOU USE YOUR BUT
+OKAY
+英 文
+心 去
+HOW被 是 那 個
+FOR WORK TRAVEL
+是 他 的
+就 得 多 WHAT
+
+你 就 會 想了
+不 歡 BASIC
+該 十
+所
+之 己 做 前 面 OKAY
+ONE也 PART PARTY
+懂 真 的 家 的
+S
+THING
+最 小
+TRUE
+再 講 什 麼
+YEAH JUST TRACK
+開 子
+保 間
+OKAY
+好 們 的
+你覺 得
+OKAY
+MAYBE有 LOOK REACH
+S ALSO NOT THE
+
+就 樣 而 已
+對
+OKAY 講
+就 是 這 樣
+還 STUFF
+我 是 FIVE
+OKAY WHAT YEAH
+CAUSE IS
+這 己 去 近
+這 樣 講
+很
+LUCKY TRAINING START
+對 REALLY
+東 西
+WHY GO
+MY
+三 年
+就 有 什 麼 腳
+OKAY
+THEN 還
+OR
+THERE
+NO THEY T
+YEAH
+
+THINK誰
+有 時 間
+
+哪 裡
+OKAY
+OKAY
+YEAH
+THEN 就
+下要 CORE
+他 們不 較 看
+TERMS
+其 實 有 點 不 同
+就 是個
+還 邊 就 很
+T
+他 會 講
+SERVER
+IT IF要
+他 就 STUPID
+BACKING
+DEPENDS
+以 以 講
+去
+JAPANESE PLAN
+THE CATCH
+SINCE WHEN
+沒 有 用
+IN THE WAS TIME
+OKAY
+CAMP
+NO
+怕
+然後 真 當
+
+沒 書
+OKAY
+人 THERE
+做 空
+他 的 一 CAUSE
+那
+SO的
+都 是 女 的嗎
+TRUE
+你 的
+就 是 WHY
+OKAY
+WHICH IS QUITE SCHOOL
+你 百 點
+還就
+YEAH
+所 會 跟 慘
+BECAUSE
+ONE 幣
+
+很 最 錢
+為 是
+SHOW IS
+I LEAST
+JUST EAT
+OKAY
+OKAY GOOD
+一 常 就 一 個
+有
+NO
+COOL
+不一
+SO
+玩
+同 辦
+在
+好玩
+THEN
+FIVE
+P FOR
+對
+對
+我 對
+
+I THINK JUST
+對
+然 後 好
+你 BLOCK
+後來
+一個 O G
+對 為 好 LONG
+HE去
+YEAH
+QUIT 來的
+BEEN
+他 不 懂
+WHY
+對 年 很
+然 YOUR FAR
+對 對
+可 是
+YEAH
 
 
+有
+聽 要 做
+每 個
+AD BUS的
+好玩
+MY GOD
+我 很 少
+可 能 是 這 樣
+NOT BY
+BETTER THEN
+以
+你 是
+是
+然 後 寫
+O
+很 找
+同 天
+NEVER
 
 
+是 己 有 玩
+YEAH
+沒 有
+還有 什 麼
+BUT
+BUT
+我 沒 有
+重
+不
+什 NO GUYS
+賺 STAND
+你 好
+哪 個
+我 自 己 我 得
 
+他 其 什 麼
+NO BRAND
+沒 有
+NO
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+NOT
+OKAY
+為
+不 算 那 個
+從
+HOW ABOUT
+我 不 懂 是
 
 OKAY
+對
+對
+那 你 的
+DAY
+YEAH
+對
+因 為
+THAT
+對
 
+THEN 那 個
+SO
+出來 了
+YA
+小 出
+真
+不 不 是
+對
+為 什 麼
+就
 
+CAUSE
+過 上
+看 的
+THAT' S GOOD
+YES
+SIGN
+貴
+對
+WHEN
+YEAH
+OKAY
+SO WHEN
+YEAH
+C
+不 可
+因 為
+UNTIL
+CAUSE LIKE
+我 會 講
+對
+YEAH
+WHY
+YEAH
+YEAH
+好
+對
+OKAY
+YEAH
+覺
+AND THEN
+認
+OKAY
+THEN 他 就
+對
+THEN 有
 
+FEEL
+然 後
+都 不
+YEAH
+是
+我 看們
+I GOT LIKE
+OKAY
+THEN
+THEN
 
+有
+YEAH
+BUT
+可 是
+WHAT
 
+不 知 道
+SO
+怎 麼
+可 以
+YEAH
+THEN
+去
 
+三
+對
+這
+對
+LIKE
 
 OKAY
-
-
-
-
-
-
-
-OKAY
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-OKAY
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-OKAY
-
-
-
-
-
-
-
-
-OKAY
-
-
-
-
-
-
-
-
-
-
-
-
+OKAY WHAT
+什 麼 有
+YEAH
+樣
+THEN
+對
+BUT
+YEAH
+怎 麼
+
+THEN
+對
+就
+
+
+樣
+們
+
+要 就
+不
+算
+
+WHAT
+對
 
 
 

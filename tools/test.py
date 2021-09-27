@@ -7,7 +7,6 @@ import pandas as pd
 from tqdm import tqdm
 import torch.nn as nn
 import yaml
-from ..models.model import Downstream, Featurizer
 import torchaudio
 
 # from textgrid import TextGrid
@@ -71,19 +70,22 @@ import torchaudio
 # outs = outs.view(-1).sum() ** 2
 # outs.backward()
 # print(outs)
-config_path = './configs/w2v2_base/w2v2_base_014.yml'
-with open(config_path, 'r') as yml_f:
-    config = yaml.safe_load(yml_f)
+# config_path = './configs/w2v2_base/w2v2_base_014.yml'
+# with open(config_path, 'r') as yml_f:
+#     config = yaml.safe_load(yml_f)
 
-config_asr = config.get('ASR')
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-ckpt_path = '/home/b07502072/cs_ssl/cs_asr_ssl/results/wav2vec2_base_960/014/ASR/dev-best.ckpt'
+# config_asr = config.get('ASR')
+# device = 'cuda' if torch.cuda.is_available() else 'cpu'
+# ckpt_path = '/home/b07502072/cs_ssl/cs_asr_ssl/results/wav2vec2_base_960/014/ASR/dev-best.ckpt'
+# ckpt = torch.load(ckpt_path)
+# upstream_asr = torch.hub.load('s3prl/s3prl', self.config_asr['UPSTREAM']['name']).to(self.device)
+# featurizer_asr = Featurizer(upstream_asr, device, **config_asr['FEATURIZER']).to(device)
+# downstream_asr = Downstream(featurizer_asr.upstream_dim, **config_asr['DOWNSTREAM']).to(device)
+# trainable_params = list(featurizer_asr.parameters()) + list(downstream_asr.parameters())
+# print(len(trainable_params))
+ckpt_path = '/home/b07502072/cs_ssl/iven/hubert_asr/result/downstream/pseudo_base/dev-clean-best.ckpt'
 ckpt = torch.load(ckpt_path)
-upstream_asr = torch.hub.load('s3prl/s3prl', self.config_asr['UPSTREAM']['name']).to(self.device)
-featurizer_asr = Featurizer(upstream_asr, device, **config_asr['FEATURIZER']).to(device)
-downstream_asr = Downstream(featurizer_asr.upstream_dim, **config_asr['DOWNSTREAM']).to(device)
-trainable_params = list(featurizer_asr.parameters()) + list(downstream_asr.parameters())
-print(len(trainable_params))
+print(ckpt.keys())
 
 # print(ckpt['Downstream'].keys())
 # print(ckpt['CTC_Featurizer'].keys())

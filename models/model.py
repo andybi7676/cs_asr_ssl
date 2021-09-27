@@ -2,6 +2,8 @@ from numpy import log
 import numpy as np
 from datasets.LID import SAMPLE_RATE
 import torch.nn as nn
+from typing import Callable, List, Dict, Tuple, Union
+from torch import Tensor
 import torch
 from torch.nn.utils.rnn import pack_padded_sequence, pad_packed_sequence, pad_sequence
 
@@ -349,3 +351,212 @@ class Classifier(nn.Module):
         else:
             logits = self.net1(X)
             return logits
+
+class Iven_RNNs(nn.Module):
+    def __init__(self,
+        input_size,
+        output_size,
+        lid_output_size,
+        module,
+        bidirection,
+        dim,
+        dropout,
+        layer_norm,
+        proj,
+    ):
+        super().__init__()
+        latest_size = input_size
+
+        self.rnns = nn.ModuleList()
+        for i in range(len(dim)):
+            rnn_layer = RNNLayer(
+                latest_size,
+                module,
+                bidirection,
+                dim[i],
+                dropout[i],
+                layer_norm[i],
+                proj[i],
+            )
+            self.rnns.append(rnn_layer)
+            latest_size = rnn_layer.out_dim
+        
+        self.linear = nn.Linear(latest_size, output_size)
+        
+        self.lid_rnn = RNNLayer(input_size, module, bidirection, 1024, 0.2, False, False)
+        self.lid_linear = nn.Linear(latest_size, lid_output_size)
+
+        
+    
+    def forward(self, x, l, x_len, l_len):
+        r"""
+        Args:
+            x (torch.Tensor): Tensor of dimension (batch_size, input_length, num_features).
+            x_len (torch.IntTensor): Tensor of dimension (batch_size).
+        Returns:
+            Tensor: Predictor tensor of dimension (batch_size, input_length, number_of_classes).
+        """
+        # Perform Downsampling
+        for rnn in self.rnns:
+            x, x_len = rnn(x, x_len)
+        logits = self.linear(x)
+        
+        l, l_len = self.lid_rnn(l, l_len)
+        lid_logits = self.lid_linear(l)
+
+        return logits, x_len, lid_logits, l_len        
+
+class Iven_Featurizer(nn.Module):
+    def __init__(
+        self,
+        upstream,
+        device,
+        feature_selection: str = "hidden_states",
+        **kwargs,
+    ):
+        super().__init__()
+        self.feature_selection = "hidden_states"
+
+        # This line is necessary as some models behave differently between train/eval
+        # eg. The LayerDrop technique used in wav2vec2
+        upstream.eval()
+
+        paired_wavs = [torch.randn(SAMPLE_RATE).to(device)]
+        paired_features = upstream(paired_wavs)
+
+        feature = self._select_feature(paired_features)
+        self.layer_num = len(feature)
+        if isinstance(feature, (list, tuple)):
+            self.layer_num = len(feature)
+            print(
+                f"[ Featurizer ] - Take a list of {self.layer_num} features and weighted sum them."
+            )
+            self.weights = nn.Parameter(torch.zeros(self.layer_num))
+            feature, weights = self._weighted_sum([f.cpu() for f in feature], False)
+        else:
+            feature = feature.cpu()
+
+        self.output_dim = feature.size(-1)
+        self.upstream_dim = feature.size(-1)
+        ratio = round(max(len(wav) for wav in paired_wavs) / feature.size(1))
+        possible_rate = torch.LongTensor([160, 320])
+        self.downsample_rate = int(
+            possible_rate[(possible_rate - ratio).abs().argmin(dim=-1)]
+        )
+
+    def _select_feature(self, features):
+        feature = features.get(self.feature_selection)
+
+        if isinstance(feature, dict):
+            feature = list(feature.values())
+
+        if isinstance(feature, (list, tuple)) and len(feature) == 1:
+            feature = feature[0]
+
+        if feature is None:
+            available_options = [key for key in features.keys() if key[0] != "_"]
+            print(
+                f"[{self.name}] - feature_selection = {self.feature_selection} is not supported for this upstream.",
+                file=sys.stderr,
+            )
+            print(
+                f"[{self.name}] - Supported options: {available_options}",
+                file=sys.stderr,
+            )
+            raise ValueError
+        return feature
+
+    def _weighted_sum(self, feature, layer_norm):
+        assert self.layer_num == len(feature), f"{self.layer_num} != {len(feature)}"
+        stacked_feature = torch.stack(feature, dim=0)
+
+        _, *origin_shape = stacked_feature.shape
+        stacked_feature = stacked_feature.view(self.layer_num, -1)
+        
+        norm_weights = F.softmax(self.weights, dim=-1)
+        if not layer_norm:
+            norm_feature = torch.sqrt(torch.sum(stacked_feature ** 2, -1))
+        weighted_feature = (norm_weights.unsqueeze(-1) * stacked_feature).sum(dim=0)
+        weighted_feature = weighted_feature.view(*origin_shape)
+        if layer_norm:
+            equiv_weights = norm_weights
+        else:
+            equiv_weights = (norm_weights * norm_feature) / torch.sum(norm_feature)
+
+        return weighted_feature, equiv_weights
+
+    def forward(
+        self,
+        # paired_wavs: List[Tensor],
+        paired_features: Dict[str, Union[Tensor, List[Tensor], Dict[str, Tensor]]],
+        layer_norm=False
+    ):
+        feature = self._select_feature(paired_features)
+        weights = None
+        if layer_norm:
+            f_ = []
+            for f in feature:
+                f = nn.functional.layer_norm(f, f.size())
+                f_.append(f)
+            feature = tuple(f_)
+        if isinstance(feature, (list, tuple)):
+            feature, weights = self._weighted_sum(feature, layer_norm)
+
+        return feature, weights
+
+class Iven_Downstream(nn.Module):
+    """
+    Used to handle downstream-specific operations
+    eg. downstream forward, metric computation, contents to log
+    """
+
+    def __init__(self, feature_dim, model_type='iven_RNNs', **downstream_config):
+
+        super().__init__()
+        self.upstream_dim = feature_dim
+
+        self.projector = nn.Linear(feature_dim, downstream_config['proj_dim'])
+        self.lid_projector = nn.Linear(feature_dim, downstream_config['proj_dim'])
+        model_cls = eval(model_type)
+        model_conf = downstream_config[model_type]
+        self.model = model_cls(
+            downstream_config['proj_dim'],
+            **model_conf,
+        )
+
+    # Interface:
+    def forward(self, features, lid_features, labels, **kwargs):
+        
+        device = features[0].device
+        # labels = [torch.IntTensor(l) for l in labels]
+        features_len = torch.IntTensor([len(feat) for feat in features]).to('cpu')
+        labels_len = torch.IntTensor([len(label) for label in labels]).to('cpu')
+        features = pad_sequence(features, batch_first=True).to(device=device)
+
+        lid_features_len = torch.IntTensor([len(feat) for feat in lid_features])
+        lid_features = pad_sequence(lid_features, batch_first=True).to(device=device)
+
+        labels = pad_sequence(
+            labels,
+            batch_first=True,
+            padding_value=0,
+        ).to(device=device)
+
+        lid_features = self.lid_projector(lid_features)
+        features = self.projector(features)
+        logits, log_probs_len, lid_logits, lid_log_probs_len = self.model(features, lid_features, features_len, lid_features_len)
+        lid_log_probs = nn.functional.log_softmax(lid_logits, dim=-1)
+
+        _, lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(lid_logits, [1, 1, 1, 1], -1)
+        sil_logits, eng_logits_1, _logits, eng_logits_2, chi_logits = torch.split(logits, [3, 2248, 1, 30, 2718], -1)
+
+        sil_logits = sil_logits + lid_sil_logits
+        chi_logits = chi_logits + lid_chi_logits
+        eng_logits_1 = eng_logits_1 + lid_eng_logits
+        eng_logits_2 = eng_logits_2 + lid_eng_logits
+
+        adj_logits = torch.cat((sil_logits, eng_logits_1, _logits, eng_logits_2, chi_logits), dim=-1)
+
+        return adj_logits, lid_logits, labels, features_len, labels_len
+
+    # interface
