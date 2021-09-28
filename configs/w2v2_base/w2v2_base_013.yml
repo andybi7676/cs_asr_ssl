@@ -1,6 +1,6 @@
 id: '013'
 mission: ASR #{LID, ASR, ALL}
-task: train  #{train, evaluate, null(if no need to specified)}
+task: evaluate  #{train, evaluate, null(if no need to specified)}
 
 LID: 
   load_ckpt: last
@@ -99,7 +99,7 @@ ASR:
     dict_mode: 'subword'
     train: ['train']
     dev: ['dev']
-    test: ['dev-sge', 'dev-man']
+    test: ['dev-sge']
     zero_infinity: true
 
   UPSTREAM: 

@@ -1,6 +1,6 @@
 id: '003'
 mission: LID #{LID, ASR, ALL}
-task: draw_featurizer  #{train, evaluate, null(if no need to specified)}
+task: evaluate  #{train, evaluate, null(if no need to specified)}
 
 LID: 
   load_ckpt: last
@@ -24,7 +24,7 @@ LID:
     data_path: ''
     load_valid: './data/valid_names/SEAME'
     train: ['train']
-    test: ['dev-man', 'dev-sge']
+    test: ['dev-sge']
 
   UPSTREAM: 
     name: wav2vec2_base_960

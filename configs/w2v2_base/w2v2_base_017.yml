@@ -1,7 +1,6 @@
 id: '017'
 mission: ASR #{LID, ASR, ALL}
 task: train  #{train, evaluate, null(if no need to specified)}
-device_idx: 1
 
 LID: 
   load_ckpt: last

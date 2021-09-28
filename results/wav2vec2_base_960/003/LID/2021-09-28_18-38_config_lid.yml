@@ -1,0 +1,62 @@
+DATASET:
+  bucket_path: /home/b07502072/cs_ssl/iven/hubert_asr/len_for_bucket/SEAME
+  data_path: ''
+  load_valid: ./data/valid_names/SEAME
+  test:
+  - dev-man
+  train:
+  - train
+DOWNSTREAM:
+  CNN:
+    width: 3
+  Linear:
+    act:
+    - ReLU
+    - ReLU
+    - ReLU
+    batch_norm:
+    - true
+    - true
+    - true
+    dim:
+    - 256
+    - 128
+    - 32
+    output_size: 3
+  RNNs:
+    bidirection: true
+    dim:
+    - 512
+    - 128
+    dropout:
+    - 0.2
+    - 0.1
+    layer_norm:
+    - false
+    - false
+    module: LSTM
+    output_size: 3
+    proj:
+    - false
+    - false
+  ckpt: true
+  model_type: Linear
+  proj_dim: 512
+FEATURIZER:
+  type: weighted-sum
+UPSTREAM:
+  name: wav2vec2_base_960
+load_ckpt: last
+optimizer:
+  lr: 6.0e-05
+  name: TorchOptim
+  torch_optim_name: Adam
+runner:
+  eval_dataloader: test
+  eval_step: 50
+  gradient_accumulate_steps: 128
+  gradient_clipping: 1
+  log_step: 5
+  max_keep: 1
+  save_step: 20
+  total_steps: 10000

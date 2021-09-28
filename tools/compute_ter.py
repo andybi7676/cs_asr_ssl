@@ -53,22 +53,23 @@ def normalize(txt_pth, ignore_noise=False, trans_adverbial=False, rm_minor_token
 
 if __name__ == '__main__':
     upstream_name = 'wav2vec2_base_960'
-    exp_id = '015'
-    dev_set = 'dev-sge'
-    hyp_pth = f'./results/{upstream_name}/{exp_id}/ASR/{dev_set}/{dev_set}-hyp.ark'
-    ref_pth = f'./results/{upstream_name}/{exp_id}/ASR/{dev_set}/{dev_set}-ref.ark'
-    hyp_out = f'./results/{upstream_name}/{exp_id}/ASR/{dev_set}/{dev_set}-hyp-norm.ark'
-    ref_out = f'./results/{upstream_name}/{exp_id}/ASR/{dev_set}/{dev_set}-ref-norm.ark'
-    # normalized_hyp = normalize(hyp_pth)
-    # normalized_ref = normalize(ref_pth)
+    exp_id = '020'
+    exp_mission = 'ASR_LIDB'
+    dev_set = 'dev-man'
+    hyp_pth = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-hyp.ark'
+    ref_pth = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-ref.ark'
+    hyp_out = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-hyp-norm.ark'
+    ref_out = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-ref-norm.ark'
+    normalized_hyp = normalize(hyp_pth)
+    normalized_ref = normalize(ref_pth)
 
-    # with open(hyp_out, 'w') as fw:
-    #     for line in normalized_hyp:
-    #         fw.write(line + '\n')
-    # with open(ref_out, 'w') as fw:
-    #     for line in normalized_ref:
-    #         fw.write(line + '\n')
-    ComputeTER(ref_out, hyp_out, 'eng', False)
+    with open(hyp_out, 'w') as fw:
+        for line in normalized_hyp:
+            fw.write(line + '\n')
+    with open(ref_out, 'w') as fw:
+        for line in normalized_ref:
+            fw.write(line + '\n')
+    ComputeTER(ref_out, hyp_out, 'all', False)
     print('=' * 20)
 
 

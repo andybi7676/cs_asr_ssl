@@ -25,7 +25,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
 
-config_path = './configs/w2v2_base/w2v2_base_022.yml'
+config_path = './configs/w2v2_base/w2v2_base_020.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -83,11 +83,11 @@ class Runner():
                     print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.outdir}\'')
                 else:
                     last_ckpt_pth = ckpt_pths[-1]
-                    self.load_ckpt = torch.load(last_ckpt_pth)
+                    self.load_ckpt = torch.load(last_ckpt_pth, map_location=self.device)
             if self.config_lid['load_ckpt'] == 'best':
                 best_ckpt_pths = glob.glob(f'{self.outdir}/best*.ckpt')
                 assert len(ckpt_pths) == 1
-                self.load_ckpt = torch.load(best_ckpt_pths[0])
+                self.load_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
                 
         if self.mission == 'ASR_LIDB':
             self.exp_name = '/'.join([self.config_asr['UPSTREAM']['name'], self.id, self.mission])
@@ -126,11 +126,11 @@ class Runner():
                     print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.outdir}\'')
                 else:
                     last_ckpt_pth = ckpt_pths[-1]
-                    self.load_ckpt = torch.load(last_ckpt_pth)
+                    self.load_ckpt = torch.load(last_ckpt_pth, map_location=self.device)
             if self.config_asr['load_ckpt'] == 'best':
                 best_ckpt_pths = glob.glob(f'{self.outdir}/*best.ckpt')
                 assert len(best_ckpt_pths) == 1
-                self.load_ckpt = torch.load(best_ckpt_pths[0])
+                self.load_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
 
         if self.mission == 'ASR' and not 'double' in self.task :
             self.exp_name = '/'.join([self.config_asr['UPSTREAM']['name'], self.id, self.mission])
@@ -167,11 +167,11 @@ class Runner():
                     print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.outdir}\'')
                 else:
                     last_ckpt_pth = ckpt_pths[-1]
-                    self.load_ckpt = torch.load(last_ckpt_pth)
+                    self.load_ckpt = torch.load(last_ckpt_pth, map_location=self.device)
             if self.config_asr['load_ckpt'] == 'best':
                 best_ckpt_pths = glob.glob(f'{self.outdir}/*best.ckpt')
                 assert len(best_ckpt_pths) == 1
-                self.load_ckpt = torch.load(best_ckpt_pths[0])
+                self.load_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
         
         self.config_all = self.config.get('ALL')
         
@@ -206,21 +206,21 @@ class Runner():
                     print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.load_lid}\'')
                 else:
                     last_ckpt_pth = ckpt_pths[-1]
-                    self.lid_ckpt = torch.load(last_ckpt_pth)
+                    self.lid_ckpt = torch.load(last_ckpt_pth, map_location=self.device)
                 ckpt_pths = glob.glob(f'{self.load_asr}/states-*.ckpt')
                 ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
                 if len(ckpt_pths) == 0:
                     print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.load_asr}\'')
                 else:
                     last_ckpt_pth = ckpt_pths[-1]
-                    self.asr_ckpt = torch.load(last_ckpt_pth)
+                    self.asr_ckpt = torch.load(last_ckpt_pth, map_location=self.device)
             if self.config_lid['load_ckpt'] == 'best':
                 best_ckpt_pths = glob.glob(f'{self.load_lid}/best*.ckpt')
                 assert len(ckpt_pths) == 1
-                self.lid_ckpt = torch.load(best_ckpt_pths[0])
+                self.lid_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
                 best_ckpt_pths = glob.glob(f'{self.load_asr}/best*.ckpt')
                 assert len(ckpt_pths) == 1
-                self.asr_ckpt = torch.load(best_ckpt_pths[0])
+                self.asr_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
 
         if self.mission == 'ASR' and 'double' in self.task:
             self.exp_name = '/'.join([self.config_asr['UPSTREAM']['name'], self.id, self.mission])
@@ -263,11 +263,11 @@ class Runner():
                     print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.outdir}\'')
                 else:
                     last_ckpt_pth = ckpt_pths[-1]
-                    self.load_ckpt = torch.load(last_ckpt_pth)
+                    self.load_ckpt = torch.load(last_ckpt_pth, map_location=self.device)
             if self.config_asr['load_ckpt'] == 'best':
                 best_ckpt_pths = glob.glob(f'{self.outdir}/*best.ckpt')
                 assert len(best_ckpt_pths) == 1
-                self.load_ckpt = torch.load(best_ckpt_pths[0])
+                self.load_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
         
         if self.mission == 'IVEN':
             self.exp_name = '/'.join([self.config_asr['UPSTREAM']['name'], self.id, self.mission])
@@ -299,7 +299,7 @@ class Runner():
             self.decoder = None
 
             ckpt_path = self.config_asr['load_ckpt']
-            self.load_ckpt = torch.load(ckpt_path)
+            self.load_ckpt = torch.load(ckpt_path, map_location=self.device)
         
         self.config_all = self.config.get('ALL')
         self.first_round = True
