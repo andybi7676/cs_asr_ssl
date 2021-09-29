@@ -25,7 +25,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
 
-config_path = './configs/w2v2_base/w2v2_base_020.yml'
+config_path = './configs/w2v2_base/w2v2_base_017.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -39,6 +39,7 @@ def parse_l2_norm_data(l2_norm_path):
 
 class Runner():
     def __init__(self, config, args=None):
+        print(f'[ CONFIG ] - {config_path}')
         self.id = config['id']
         self.mission = config['mission']
         self.task = config['task']
@@ -99,11 +100,20 @@ class Runner():
             self.writer = SummaryWriter(log_dir=self.outdir)
             self.dictionary = load_text_encoder(self.config_asr['DATASET']['dict_mode'], self.config_asr['DATASET']['dict_path'])
             self.config_asr['DOWNSTREAM1']['RNNs']['output_size'] = self.dictionary.vocab_size
-            self.config_asr['DOWNSTREAM2']['RNNs']['output_size'] = 3
+            if not self.config_asr['DOWNSTREAM1']['RNNs'].get('output_size', False): 
+                self.config_asr['DOWNSTREAM2']['RNNs']['output_size'] = 3
             self.upstream_asr = torch.hub.load('s3prl/s3prl', self.config_asr['UPSTREAM']['name']).to(self.device)
-            self.featurizer_asr = Featurizer(self.upstream_asr, self.device, **self.config_asr['FEATURIZER']).to(self.device)
-            self.downstream_ctc = Downstream(self.featurizer_asr.upstream_dim, **self.config_asr['DOWNSTREAM1']).to(self.device)
-            self.downstream_lid = Downstream(self.featurizer_asr.upstream_dim, **self.config_asr['DOWNSTREAM2']).to(self.device)
+            if self.config_asr['FEATURIZER'].get('split', False):
+                self.featurizer_num = 2
+                self.featurizer_ctc = Featurizer(self.upstream_asr, self.device, **self.config_asr['FEATURIZER']).to(self.device)
+                self.featurizer_lid = Featurizer(self.upstream_asr, self.device, **self.config_asr['FEATURIZER']).to(self.device)
+                self.upstream_dim = self.featurizer_ctc.upstream_dim
+            else:
+                self.featurizer_num = 1
+                self.featurizer_asr = Featurizer(self.upstream_asr, self.device, **self.config_asr['FEATURIZER']).to(self.device)
+                self.upstream_dim = self.featurizer_asr.upstream_dim
+            self.downstream_ctc = Downstream(self.upstream_dim, **self.config_asr['DOWNSTREAM1']).to(self.device)
+            self.downstream_lid = Downstream(self.upstream_dim, **self.config_asr['DOWNSTREAM2']).to(self.device)
             self.specaug_asr = None
             if self.config_asr.get('SPECAUG'):
                 from tools.specaug import SpecAug
@@ -1523,15 +1533,23 @@ class Runner():
         pbar = tqdm(total=self.config_asr['runner']['total_steps'], dynamic_ncols=True, desc='ASR overall')
         if self.load_ckpt:
             # assert self.config_asr['UPSTREAM']['name'] == self.load_ckpt['Upstream_name']
-            self.featurizer_asr.load_state_dict(self.load_ckpt['Featurizer_asr'])
-            tqdm.write(f'[ LOAD ] - loaded featurizer')
+            if self.featurizer_num > 1:
+                self.featurizer_ctc.load_state_dict(self.load_ckpt['Featurizer_ctc'])
+                self.featurizer_lid.load_state_dict(self.load_ckpt['Featurizer_lid'])
+                tqdm.write(f'[ LOAD ] - loaded featurizer ctc & lid')
+            else:
+                self.featurizer_asr.load_state_dict(self.load_ckpt['Featurizer_asr'])
+                tqdm.write(f'[ LOAD ] - loaded featurizer')
             self.downstream_ctc.load_state_dict(self.load_ckpt['Downstream_ctc'], strict=False)
             self.downstream_lid.load_state_dict(self.load_ckpt['Downstream_lid'], strict=False)
             tqdm.write(f'[ LOAD ] - loaded downstream ctc & lid')
         
-
-        trainable_models = [self.featurizer_asr, self.downstream_ctc, self.downstream_lid]
-        trainable_params = list(self.featurizer_asr.parameters()) + list(self.downstream_ctc.parameters()) + list(self.downstream_lid.parameters())
+        if self.featurizer_num > 1:
+            trainable_models = [self.featurizer_ctc, self.featurizer_lid, self.downstream_ctc, self.downstream_lid]
+            trainable_params = list(self.featurizer_ctc.parameters()) + list(self.featurizer_lid.parameters()) + list(self.downstream_ctc.parameters()) + list(self.downstream_lid.parameters())
+        else:
+            trainable_models = [self.featurizer_asr, self.downstream_ctc, self.downstream_lid]
+            trainable_params = list(self.featurizer_asr.parameters()) + list(self.downstream_ctc.parameters()) + list(self.downstream_lid.parameters())
 
         optimizer = self._get_optimizer(trainable_models, mission='asr')
         if self.load_ckpt:
@@ -1553,7 +1571,11 @@ class Runner():
         self.train_dataset_asr = ASR_Dataset('train', self.dictionary, **dataset_config)
         self.train_dataloader_asr = DataLoader(self.train_dataset_asr, batch_size=1, collate_fn=self.train_dataset_asr.collate_fn, shuffle=True)
         self.upstream_asr.eval()
-        self.featurizer_asr.train()
+        if self.featurizer_num > 1:
+            self.featurizer_ctc.train()
+            self.featurizer_lid.train()
+        else:
+            self.featurizer_asr.train()
         self.downstream_ctc.train()
         self.downstream_lid.train()
         epoch = 0
@@ -1577,17 +1599,36 @@ class Runner():
                         features = self.upstream_asr(wavs)
                         features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
 
-                    features = self.featurizer_asr(features) # feaes => tensor(N,T,C)
-                    if self.specaug_asr :
-                        features, _ = self.specaug_asr(features)  # features => list(tensor_1(T,C), ...tensor_n(T, C))
+                    if self.featurizer_num > 1:
+                        features_ctc = self.featurizer_ctc(features)
+                        features_lid = self.featurizer_lid(features)
                     else:
-                        features = list(features)
-                    assert len(features) == len(labels), 'length of features and labels not consistent'
+                        features = self.featurizer_asr(features) # feaes => tensor(N,T,C)
+                    if self.specaug_asr :
+                        if self.featurizer_num > 1:
+                            features_ctc, _ = self.specaug_asr(features_ctc)
+                            features_lid, _ = self.specaug_asr(features_lid)
+                        else:
+                            features, _ = self.specaug_asr(features)  # features => list(tensor_1(T,C), ...tensor_n(T, C))
+                    else:
+                        if self.featurzier_num > 1:
+                            features_ctc = list(features_ctc)
+                            features_lid = list(features_lid)
+                        else:
+                            features = list(features)
+                    # assert len(features) == len(labels), 'length of features and labels not consistent'
                     
-                    logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features, labels)
-                    logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features, labels)
+                    if self.featurizer_num > 1:
+                        logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features_ctc, labels)
+                        logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features_lid, labels)
+                    else:
+                        logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features, labels)
+                        logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features, labels)
                     
-                    lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1], -1)
+                    if self.config_asr['DOWNSTREAM2']['RNNs']['output_size'] == 3:
+                        lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1], -1)
+                    elif self.config_asr['DOWNSTREAM2']['RNNs']['output_size'] == 4:
+                        _, lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1, 1], -1)
                     sil_logits, eng_logits_1, _logits, eng_logits_2, chi_logits = torch.split(logits_ctc, [3, 2248, 1, 30, 2718], -1)
 
                     sil_logits = sil_logits + lid_sil_logits
@@ -1692,22 +1733,41 @@ class Runner():
                     # self.writer.add_scalar(f'loss/test', test_loss, global_step)
 
                 for save_name in save_names:
-                    ckpt = {
-                        'Upstream_name': self.config_asr['UPSTREAM']['name'],
-                        'Downstream_ctc': self.downstream_ctc.state_dict(),
-                        'Downstream_lid': self.downstream_lid.state_dict(),
-                        'Featurizer_asr': self.featurizer_asr.state_dict(),
-                        'Optimizer': optimizer.state_dict(),
-                        'Step': global_step,
-                        'Epoch': epoch,
-                        'Config': self.config_asr
-                    }
-                    if scheduler:
-                        ckpt['Scheduler'] = scheduler.state_dict()
-                    ckpt_name = save_name
-                    out_path = os.path.join(self.outdir, ckpt_name)
-                    torch.save(ckpt, out_path)
-                    tqdm.write(f'[ SAVE ] - ckpt \'{ckpt_name}\' saved at \'{self.outdir}\'')
+                    if self.featurizer_num > 1:
+                        ckpt = {
+                            'Upstream_name': self.config_asr['UPSTREAM']['name'],
+                            'Downstream_ctc': self.downstream_ctc.state_dict(),
+                            'Downstream_lid': self.downstream_lid.state_dict(),
+                            'Featurizer_ctc': self.featurizer_ctc.state_dict(),
+                            'Featurizer_lid': self.featurizer_lid.state_dict(),
+                            'Optimizer': optimizer.state_dict(),
+                            'Step': global_step,
+                            'Epoch': epoch,
+                            'Config': self.config_asr
+                        }
+                        if scheduler:
+                            ckpt['Scheduler'] = scheduler.state_dict()
+                        ckpt_name = save_name
+                        out_path = os.path.join(self.outdir, ckpt_name)
+                        torch.save(ckpt, out_path)
+                        tqdm.write(f'[ SAVE ] - ckpt \'{ckpt_name}\' saved at \'{self.outdir}\'')
+                    else:
+                        ckpt = {
+                            'Upstream_name': self.config_asr['UPSTREAM']['name'],
+                            'Downstream_ctc': self.downstream_ctc.state_dict(),
+                            'Downstream_lid': self.downstream_lid.state_dict(),
+                            'Featurizer_asr': self.featurizer_asr.state_dict(),
+                            'Optimizer': optimizer.state_dict(),
+                            'Step': global_step,
+                            'Epoch': epoch,
+                            'Config': self.config_asr
+                        }
+                        if scheduler:
+                            ckpt['Scheduler'] = scheduler.state_dict()
+                        ckpt_name = save_name
+                        out_path = os.path.join(self.outdir, ckpt_name)
+                        torch.save(ckpt, out_path)
+                        tqdm.write(f'[ SAVE ] - ckpt \'{ckpt_name}\' saved at \'{self.outdir}\'')
 
                 pbar.update(1)
             epoch += 1
@@ -1715,8 +1775,13 @@ class Runner():
     def evaluate_lidb_ASR(self, load=False, mission='dev'):
         if load:
             assert self.load_ckpt, 'No ckpt to be loaded'
-            self.featurizer_asr.load_state_dict(self.load_ckpt['Featurizer_asr'])
-            tqdm.write(f'[ LOAD ] - loaded featurizer')
+            if self.featurizer_num > 1:
+                self.featurizer_ctc.load_state_dict(self.load_ckpt['Featurizer_ctc'])
+                self.featurizer_lid.load_state_dict(self.load_ckpt['Featurizer_lid'])
+                tqdm.write(f'[ LOAD ] - loaded featurizer ctc & lid')
+            else:
+                self.featurizer_asr.load_state_dict(self.load_ckpt['Featurizer_asr'])
+                tqdm.write(f'[ LOAD ] - loaded featurizer')
             self.downstream_ctc.load_state_dict(self.load_ckpt['Downstream_ctc'], strict=False)
             self.downstream_lid.load_state_dict(self.load_ckpt['Downstream_lid'], strict=False)
             tqdm.write(f'[ LOAD ] - loaded downstream ctc & lid')
@@ -1731,7 +1796,11 @@ class Runner():
         
         local_dataloader = getattr(self, f'{mission}_dataloader_asr')
         self.upstream_asr.eval()
-        self.featurizer_asr.eval()
+        if self.featurizer_num > 1:
+            self.featurizer_ctc.eval()
+            self.featurizer_lid.eval()
+        else:
+            self.featurizer_asr.eval()
         self.downstream_ctc.eval()
         self.downstream_lid.eval()
         for batch_id, (wavs, labels) in enumerate(tqdm(local_dataloader, dynamic_ncols=True, total=len(local_dataloader), desc=f'{mission} progress...')):
@@ -1742,14 +1811,29 @@ class Runner():
                     features = self.upstream_asr(wavs)
                     features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
 
-                    features = self.featurizer_asr(features) # feaes => tensor(N,T,C)
-                    features = list(features)
-                    assert len(features) == len(labels), 'length of features and labels not consistent'
-                
-                    logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features, labels)
-                    logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features, labels)
+                    if self.featurizer_num > 1:
+                        features_ctc = self.featurizer_ctc(features) # feaes => tensor(N,T,C)
+                        features_lid = self.featurizer_lid(features) # feaes => tensor(N,T,C)
+                    else:
+                        features = self.featurizer_asr(features) # feaes => tensor(N,T,C)
+                    
+                    if self.featurizer_num > 1:
+                        features_ctc = list(features_ctc)
+                        features_lid = list(features_lid)
+                    else:
+                        features = list(features)
+                    # assert len(features) == len(labels), 'length of features and labels not consistent'
+                    if self.featurizer_num > 1:
+                        logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features_ctc, labels)
+                        logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features_lid, labels)
+                    else:
+                        logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features, labels)
+                        logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features, labels)
 
-                    lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1], -1)
+                    if self.config_asr['DOWNSTREAM2']['RNNs']['output_size'] == 3:
+                        lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1], -1)
+                    elif self.config_asr['DOWNSTREAM2']['RNNs']['output_size'] == 4:
+                        _, lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1, 1], -1)
                     sil_logits, eng_logits_1, _logits, eng_logits_2, chi_logits = torch.split(logits_ctc, [3, 2248, 1, 30, 2718], -1)
 
                     sil_logits = sil_logits + lid_sil_logits
@@ -1803,7 +1887,11 @@ class Runner():
         if mission == 'test':
             self.log_records('test', 1)
         
-        self.featurizer_asr.train()
+        if self.featurizer_num > 1:
+            self.featurizer_ctc.train()
+            self.featurizer_lid.train()
+        else:
+            self.featurizer_asr.train()
         self.downstream_ctc.train()
         self.downstream_lid.train()
 
@@ -2069,13 +2157,13 @@ class Runner():
         self.writer.add_scalar(f'asr/{split}-loss', loss, global_step=global_step)
         self.writer.add_scalar(f'asr/{split}-uer', uer, global_step=global_step)
         self.writer.add_scalar(f'asr/{split}-wer', wer, global_step=global_step)
-        if not 'double' in self.task:
+        if not 'double' in self.task and self.mission != 'ASR_LIDB':
             if self.featurizer_asr != None and hasattr(self.featurizer_asr, 'weights'):
                 fig, ax = plt.subplots()
                 f_weights = F.softmax(self.featurizer_asr.weights, dim=-1)
                 ax.plot(f_weights.detach().cpu().numpy())
                 self.writer.add_figure('Featurizer-weights', fig, global_step=global_step)
-        else:
+        elif self.mission != 'ASR_LIDB': 
             if self.featurizer_asr1 != None and hasattr(self.featurizer_asr1, 'weights'):
                 fig, ax = plt.subplots()
                 f_weights1 = F.softmax(self.featurizer_asr1.weights, dim=-1)
@@ -2086,6 +2174,17 @@ class Runner():
                 f_weights2 = F.softmax(self.featurizer_asr2.weights, dim=-1)
                 ax.plot(f_weights2.detach().cpu().numpy())
                 self.writer.add_figure('Featurizer2-weights', fig, global_step=global_step)
+        else:
+            if self.featurizer_ctc != None and hasattr(self.featurizer_ctc, 'weights'):
+                fig, ax = plt.subplots()
+                f_weights1 = F.softmax(self.featurizer_ctc.weights, dim=-1)
+                ax.plot(f_weights1.detach().cpu().numpy())
+                self.writer.add_figure('Featurizer_ctc-weights', fig, global_step=global_step)
+            if self.featurizer_lid != None and hasattr(self.featurizer_lid, 'weights'):
+                fig, ax = plt.subplots()
+                f_weights2 = F.softmax(self.featurizer_lid.weights, dim=-1)
+                ax.plot(f_weights2.detach().cpu().numpy())
+                self.writer.add_figure('Featurizer_lid-weights', fig, global_step=global_step)
         tqdm.write(f'[ {split.upper()} ] - UER: {uer:8f}, WER: {wer:8f}')
         # print(f'[ {split.upper()} ] ')
 
