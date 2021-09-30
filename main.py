@@ -25,7 +25,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
 
-config_path = './configs/w2v2_base/w2v2_base_025.yml'
+config_path = './configs/w2v2_base/w2v2_base_102.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -72,10 +72,14 @@ class Runner():
                 self.specaug_lid.to(self.device)
             if self.config_lid.get('Loss'):
                 self.lid_loss = nn.CrossEntropyLoss(
-                    weight=torch.FloatTensor(self.config_lid['Loss']['weights']).to(self.device)
+                    # weight=torch.FloatTensor(0., self.config_lid['Loss']['weights']).to(self.device),
+                    ignore_index=0
                 )
             else:
-                self.lid_loss = nn.CrossEntropyLoss()
+                self.lid_loss = nn.CrossEntropyLoss(
+                    ignore_index=0
+                )
+            self.best_acc = 0.
             self.load_ckpt = False
             if self.config_lid['load_ckpt'] == 'last':
                 ckpt_pths = glob.glob(f'{self.outdir}/states-*.ckpt')
@@ -366,8 +370,8 @@ class Runner():
 
 
         dataset_config = self.config_lid['DATASET']
-        splits = dataset_config['train']
-        self.train_dataset_lid = LID_Dataset(splits, **dataset_config)
+        # splits = dataset_config['train']
+        self.train_dataset_lid = LID_Dataset('train', **dataset_config)
         self.train_dataloader_lid = DataLoader(self.train_dataset_lid, batch_size=1, collate_fn=self.train_dataset_lid.collate_fn, shuffle=True)
         
         self.upstream_lid.eval()
@@ -401,36 +405,44 @@ class Runner():
                         features = list(features)
                     # revise label length
                     assert len(features) == len(labels), 'length of features and labels not consistent'
-                    for idx, lb in enumerate(labels):
-                        diff = lb.size()[0] - features[idx].size()[0]
-                        assert diff >= 0, 'Unexpected event happened, ' 
-                        q, r = diff // 2, diff % 2
-                        if q > 0 :
-                            labels[idx] = lb[q+r: -q]
-                        else:
-                            labels[idx] = lb[r:]
+                    # for idx, lb in enumerate(labels):
+                    #     diff = lb.size()[0] - features[idx].size()[0]
+                    #     assert diff >= 0, 'Unexpected event happened, ' 
+                    #     q, r = diff // 2, diff % 2
+                    #     if q > 0 :
+                    #         labels[idx] = lb[q+r: -q]
+                    #     else:
+                    #         labels[idx] = lb[r:]
                     
                     # acc, loss, frames, pred = self.downstream_lid(features, labels)
-                    logits, padded_labels, _, _ = self.downstream_lid(features, labels)
+                    logits, padded_labels, _, labels_len = self.downstream_lid(features, labels)
 
                     loss = self.lid_loss(
                         logits.transpose(-1, 1), # tensor(N, C, T)
                         padded_labels,
                     )
                     # loss = loss / logits.size()[1]
-                    pred = logits.transpose(-1, 1).argmax(dim=1) # tensor(N, T)
-                    # assert len(pred.squeeze().tolist()) == len(labels[0].tolist())
-                    self.records['pred'] += pred.squeeze().tolist()
-                    self.records['labels'] += labels[0].tolist()
-
-                    acc = (pred == padded_labels).type(torch.float).sum().item()
+                    preds = logits.argmax(dim=-1) # tensor(N, T, 1)
+                    acc = 0.
+                    for i, pred in enumerate(preds):
+                        pred = pred[0:labels_len[i]]
+                        acc += (pred == labels[i]).type(torch.float).sum().item()
+                        # tqdm.write(f'{acc}')
+                        self.records['preds'] += pred.tolist()
+                        self.records['labels'] += labels[i].tolist()
+                    assert len(self.records['preds']) == len(self.records['labels'])
+                    l = len(self.records['preds'])
+                    # tqdm.write(f'{l}')
+                    # tqdm.write(f'{acc}')
                     
                     loss = loss / gradient_accumulate_steps
                     loss.backward()
 
                     avg_acc += acc
                     avg_loss += loss.item()
-                    total_frames += logits.size()[1]
+                    total_frames += labels_len.sum().item()
+                    # tqdm.write(f'{total_frames}')
+                    # assert 1== 2
 
                 except RuntimeError as e:
                     if 'CUDA out of memory' in str(e):
@@ -466,6 +478,7 @@ class Runner():
                 if scheduler:
                     scheduler.step()
                 
+                save_names = []
                 if global_step % self.config_lid['runner']['save_step'] == 0:
                     def check_ckpt_num(directory):
                         max_keep = self.config_lid['runner']['max_keep']
@@ -476,26 +489,16 @@ class Runner():
                                 tqdm.write(f'[ SAVE ] - remove ckpt \'{ckpt_pth}\'')
                                 os.remove(ckpt_pth)
                     check_ckpt_num(self.outdir)
-                    ckpt = {
-                        'Upstream_name': self.config_lid['UPSTREAM']['name'],
-                        'Downstream_lid': self.downstream_lid.state_dict(),
-                        'Featurizer_lid': self.featurizer_lid.state_dict(),
-                        'Optimizer': optimizer.state_dict(),
-                        'Step': global_step,
-                        'Epoch': epoch,
-                        'Config': self.config_lid
-                    }
+                    
                     ckpt_name = f'states-{global_step}.ckpt'
-                    out_path = os.path.join(self.outdir, ckpt_name)
-                    torch.save(ckpt, out_path)
-                    tqdm.write(f'[ SAVE ] - ckpt \'{ckpt_name}\' saved at \'{self.outdir}\'')
+                    save_names.append(ckpt_name)
 
                 if global_step % self.config_lid['runner']['log_step'] == 0:
                     log_acc = avg_acc / total_frames
                     log_loss = avg_loss / (self.config_lid['runner']['log_step'])
                     self.writer.add_scalar(f'acc/train', log_acc, global_step)
                     self.writer.add_scalar(f'loss/train', log_loss, global_step)
-                    f1scores = f1_score(self.records['labels'], self.records['pred'], labels=[0, 1, 2], zero_division=0, average=None)
+                    f1scores = f1_score(self.records['labels'], self.records['preds'], labels=[1, 2, 3], zero_division=0, average=None)
                     class_names = ['silence', 'chinese', 'english']
                     # if len(f1scores)
                     f1scores_str = f'<sil>: {f1scores[0]:.8f}, <chi>: {f1scores[1]:.8f}, <eng>: {f1scores[2]:.8f}'
@@ -509,6 +512,8 @@ class Runner():
                 
                 if global_step % self.config_lid['runner']['eval_step'] == 0:
                     test_acc, test_loss, f1scores = self.evaluate_LID()
+                    if test_acc > self.best_acc:
+                        save_names.append('dev-best.ckpt')
                     self.writer.add_scalar(f'acc/test', test_acc, global_step)
                     self.writer.add_scalar(f'loss/test', test_loss, global_step)
                     class_names = ['slience', 'chinese', 'english']
@@ -530,12 +535,28 @@ class Runner():
                     ax.set_title(downstream_name)
                     self.writer.add_figure('Featurizer-weights', fig, global_step=global_step)
 
-                    
+                if len(save_names) > 0:
+                    ckpt = {
+                        'Upstream_name': self.config_lid['UPSTREAM']['name'],
+                        'Downstream_lid': self.downstream_lid.state_dict(),
+                        'Featurizer_lid': self.featurizer_lid.state_dict(),
+                        'Optimizer': optimizer.state_dict(),
+                        'Step': global_step,
+                        'Epoch': epoch,
+                        'Config': self.config_lid
+                    }
+                    if scheduler:
+                        ckpt['Scheduler'] = scheduler.state_dict()
+                    for save_name in save_names:
+                        out_path = os.path.join(self.outdir, save_name)
+                        torch.save(ckpt, out_path)
+                        tqdm.write(f'[ SAVE ] - ckpt \'{save_name}\' saved at \'{self.outdir}\'')
+
 
                 pbar.update(1)
             epoch += 1
 
-    def evaluate_LID(self, split='test', load=False, output=False):
+    def evaluate_LID(self, split='dev', load=False, output=False):
         if load:
             assert self.load_ckpt
             assert self.config_lid['UPSTREAM']['name'] == self.load_ckpt['Upstream_name']
@@ -546,7 +567,9 @@ class Runner():
 
         if not hasattr(self, f'test_dataset_lid'):
             eval_name = self.config_lid['runner']['eval_dataloader']
-            self.test_dataset_lid = LID_Dataset(self.config_lid['DATASET'][eval_name], **self.config_lid['DATASET'])
+            data_config = copy.deepcopy(self.config_lid['DATASET'])
+            data_config['bucket_size'] = 1
+            self.test_dataset_lid = LID_Dataset(split, **data_config)
             self.test_dataloader_lid = DataLoader(self.test_dataset_lid, batch_size=1, collate_fn=self.test_dataset_lid.collate_fn, shuffle=False)
         
         self.featurizer_lid.eval()
@@ -567,37 +590,42 @@ class Runner():
                 #     features, _ = self.specaug(features)  # features => list(tensor_1(T,C), ...tensor_n(T, C))
                 # revise label length
                 assert len(features) == len(labels), 'length of features and labels not consistent'
-                for idx, lb in enumerate(labels):
-                    diff = lb.size()[0] - features[idx].size()[0]
-                    assert diff >= 0, 'Unexpected event happened, ' 
-                    q, r = diff // 2, diff % 2
-                    if q > 0 :
-                        labels[idx] = lb[q+r: -q]
-                    else:
-                        labels[idx] = lb[r:]
+                # for idx, lb in enumerate(labels):
+                #     diff = lb.size()[0] - features[idx].size()[0]
+                #     assert diff >= 0, 'Unexpected event happened, ' 
+                #     q, r = diff // 2, diff % 2
+                #     if q > 0 :
+                #         labels[idx] = lb[q+r: -q]
+                #     else:
+                #         labels[idx] = lb[r:]
                 
-                logits, padded_labels, _, _ = self.downstream_lid(features, labels)
+                logits, padded_labels, _, labels_len = self.downstream_lid(features, labels)
                 
                 loss = self.lid_loss(
                         logits.transpose(-1, 1), # tensor(N, C, T)
                         padded_labels,
                     )
-                # loss = loss / logits.size()[1]
-                pred = logits.transpose(-1, 1).argmax(dim=1) # tensor(N, T)
-
-                records['pred'] += pred.squeeze().tolist()
-                records['labels'] += labels[0].tolist()
-
-                acc = (pred == padded_labels).type(torch.float).sum().item()
-                pred = pred.tolist()
+                
+                preds = logits.argmax(dim=-1) # tensor(N, T, 1)
+                acc = 0.
+                for i, pred in enumerate(preds):
+                    pred = pred[0:labels_len[i]]
+                    acc += (pred == labels[i]).type(torch.float).sum().item()
+                    # tqdm.write(f'{acc}')
+                    records['preds'] += pred.tolist()
+                    records['labels'] += labels[i].tolist()
+                assert len(self.records['preds']) == len(self.records['labels'])
+                l = len(self.records['preds'])
+                # tqdm.write(f'{l}')
+                # tqdm.write(f'{acc}')
 
                 total_acc += acc
                 total_loss += loss.item()
-                total_frames += logits.size()[1]
+                total_frames += labels_len.sum().item()
 
         avg_acc = total_acc / total_frames
         avg_loss = total_loss / len(self.test_dataloader_lid)
-        f1scores = f1_score(records['labels'], records['pred'], labels=[0, 1, 2], zero_division=0, average=None)
+        f1scores = f1_score(records['labels'], records['preds'], labels=[1, 2, 3], zero_division=0, average=None)
 
         self.downstream_lid.train()
         self.featurizer_lid.train()
@@ -669,7 +697,6 @@ class Runner():
             tqdm.write(f'[ LOAD ] - loaded featurizer')
             self.downstream_asr.load_state_dict(self.load_ckpt['Downstream_asr'], strict=False)
             tqdm.write(f'[ LOAD ] - loaded downstream')
-        
         
 
         trainable_models = [self.featurizer_asr, self.downstream_asr]

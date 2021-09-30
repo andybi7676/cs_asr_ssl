@@ -1,6 +1,5 @@
 from numpy import log
 import numpy as np
-from datasets.LID import SAMPLE_RATE
 import torch.nn as nn
 from typing import Callable, List, Dict, Tuple, Union
 from torch import Tensor
@@ -276,9 +275,11 @@ class Linear(nn.Module):
             if batch_norm[i]:
                 self.net.append(nn.BatchNorm1d(prev_dim))
             self.net.append(nn.Linear(prev_dim, dim[i]))
-            self.net.append(eval(f'nn.{act[i]}()'))
+            if act[i]:
+                self.net.append(eval(f'nn.{act[i]}()'))
             prev_dim = dim[i]
-        self.net.append(nn.Linear(prev_dim, output_size))
+        if prev_dim != output_size:
+            self.net.append(nn.Linear(prev_dim, output_size))
         self.out_dim = output_size
 
     def forward(self, X, X_len):
