@@ -1,15 +1,15 @@
 id: '102'
 mission: LID
-task: evaluate
+task: train
 
 LID:
-  load_ckpt: best
+  load_ckpt: last
   runner:
-    total_steps: 100000
+    total_steps: 20000
     gradient_clipping: 1
     gradient_accumulate_steps: 1
     log_step: 100
-    eval_step: 2000
+    eval_step: 1000
     save_step: 200
     max_keep: 1
     eval_dataloader: dev
@@ -17,12 +17,12 @@ LID:
   optimizer: 
     name: TorchOptim
     torch_optim_name: Adam
-    lr: 6.0e-5
+    lr: 8.0e-5
 
   scheduler:
     name: costum_scheduler
-    num_warmup_steps: 10000
-    num_decay_steps: 50000
+    num_warmup_steps: 2000
+    num_decay_steps: 10000
 
   DATASET:
     bucket_size: 32
@@ -33,7 +33,7 @@ LID:
     dict_mode: 'subword'
     train: ['train']
     dev: ['dev']
-    test: ['dev-sge']
+    test: ['dev-man']
     zero_infinity: true
 
   UPSTREAM: 
@@ -43,15 +43,15 @@ LID:
     type: weighted-sum
     layer-norm: true
 
-  SPECAUG:
-    apply_time_warp: true
-    apply_time_mask: false
-    apply_freq_mask: true
-    time_warp_window: 5
-    time_mask_width_range: [0, 40]
-    freq_mask_width_range: [0, 50]
-    num_freq_mask: 4
-    num_time_mask: 2
+  # SPECAUG:
+  #   apply_time_warp: true
+  #   apply_time_mask: false
+  #   apply_freq_mask: true
+  #   time_warp_window: 5
+  #   time_mask_width_range: [0, 40]
+  #   freq_mask_width_range: [0, 50]
+  #   num_freq_mask: 4
+  #   num_time_mask: 2
 
   DOWNSTREAM:
     model_type: CNN
@@ -73,3 +73,6 @@ LID:
       widths: [7]
       filter_nums: [4]
       output_size: 4
+
+  Loss:
+    weights: [0., 0.2, 0.35, 0.45]

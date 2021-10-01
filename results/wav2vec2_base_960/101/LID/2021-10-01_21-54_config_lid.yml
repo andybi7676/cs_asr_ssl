@@ -17,11 +17,14 @@ DOWNSTREAM:
     width: 3
   Linear:
     act:
-    - false
+    - ReLU
+    - ReLU
     batch_norm:
     - true
+    - true
     dim:
-    - 4
+    - 512
+    - 128
     output_size: 4
   RNNs:
     bidirection: true
@@ -44,36 +47,29 @@ DOWNSTREAM:
 FEATURIZER:
   layer-norm: true
   type: weighted-sum
-SPECAUG:
-  apply_freq_mask: true
-  apply_time_mask: false
-  apply_time_warp: true
-  freq_mask_width_range:
-  - 0
-  - 50
-  num_freq_mask: 4
-  num_time_mask: 2
-  time_mask_width_range:
-  - 0
-  - 40
-  time_warp_window: 5
+Loss:
+  weights:
+  - 0.0
+  - 0.2
+  - 0.35
+  - 0.45
 UPSTREAM:
   name: wav2vec2_base_960
-load_ckpt: best
+load_ckpt: last
 optimizer:
-  lr: 6.0e-05
+  lr: 8.0e-05
   name: TorchOptim
   torch_optim_name: Adam
 runner:
   eval_dataloader: dev
-  eval_step: 2000
+  eval_step: 1000
   gradient_accumulate_steps: 1
   gradient_clipping: 1
   log_step: 100
   max_keep: 1
   save_step: 200
-  total_steps: 100000
+  total_steps: 20000
 scheduler:
   name: costum_scheduler
-  num_decay_steps: 50000
-  num_warmup_steps: 10000
+  num_decay_steps: 10000
+  num_warmup_steps: 2000

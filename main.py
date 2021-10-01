@@ -25,7 +25,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
 
-config_path = './configs/w2v2_base/w2v2_base_102.yml'
+config_path = './configs/w2v2_base/w2v2_base_103.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -72,7 +72,7 @@ class Runner():
                 self.specaug_lid.to(self.device)
             if self.config_lid.get('Loss'):
                 self.lid_loss = nn.CrossEntropyLoss(
-                    # weight=torch.FloatTensor(0., self.config_lid['Loss']['weights']).to(self.device),
+                    weight=torch.FloatTensor(self.config_lid['Loss']['weights']).to(self.device),
                     ignore_index=0
                 )
             else:
@@ -2013,7 +2013,7 @@ class Runner():
                 else:
                     axs[0].plot(x, y, linestyle=line_style[kind][-1], linewidth=1.5, label=key)
             # axs[0].legend(bbox_to_anchor=(1, 1.2),  prop={'size': 6})
-            lid_classes = ['<sil>', '<chi>', '<eng>']
+            lid_classes = ['<pad>', '<sil>', '<chi>', '<eng>']
             for i, lid_class in enumerate(lid_classes):
                 y = [ prob[i].item() for prob in probs_lid[0] ]
                 axs[0].plot(x, y, linestyle='solid', linewidth=0.5, label=f'{lid_class}')

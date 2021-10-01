@@ -60,16 +60,16 @@ if __name__ == '__main__':
     ref_pth = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-ref.ark'
     hyp_out = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-hyp-norm.ark'
     ref_out = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-ref-norm.ark'
-    normalized_hyp = normalize(hyp_pth)
-    normalized_ref = normalize(ref_pth)
+    # normalized_hyp = normalize(hyp_pth)
+    # normalized_ref = normalize(ref_pth)
 
-    with open(hyp_out, 'w') as fw:
-        for line in normalized_hyp:
-            fw.write(line + '\n')
-    with open(ref_out, 'w') as fw:
-        for line in normalized_ref:
-            fw.write(line + '\n')
-    ComputeTER(ref_out, hyp_out, 'all', False)
+    # with open(hyp_out, 'w') as fw:
+    #     for line in normalized_hyp:
+    #         fw.write(line + '\n')
+    # with open(ref_out, 'w') as fw:
+    #     for line in normalized_ref:
+    #         fw.write(line + '\n')
+    ComputeTER(ref_out, hyp_out, 'eng', False)
     print('=' * 20)
 
 

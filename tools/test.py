@@ -9,25 +9,29 @@ import torch.nn as nn
 import yaml
 import torchaudio
 
-# from textgrid import TextGrid
-# bucket_path = '/home/b07502072/cs_ssl/cs_asr_ssl/data/len_for_bucket/splitted-seame'
-# data_path = ''
-# out_path = './data/valid_names/splitted-seame/'
-# load_valid = out_path
-# splits = [ 'train', 'dev', 'dev-man', 'dev-sge' ]
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+
+SAMPLE_RATE = 16000
+sample_rate = 16000
+
+def load_wav(wav_path):
+    wav, sr = torchaudio.load(wav_path)
+    assert sr == sample_rate, f'Sample rate mismatch: real {sr}, config {sample_rate}'
+    return wav.view(-1)
 
 # device = 'cuda' if torch.cuda.is_available() else 'cpu'
+device = 'cpu'
+upstream = torch.hub.load('s3prl/s3prl', 'fbank').to(device)
+upstream_2 = torch.hub.load('s3prl/s3prl', 'wav2vec2_base_960').to(device)
+with torch.no_grad():
+    paired_wavs = [torch.randn(SAMPLE_RATE).to(device)]
+    paired_features = upstream(paired_wavs)
+    paired_features2 = upstream_2(paired_wavs)
 
-# sample_rate = 16000
-
-# def load_wav(wav_path):
-#     wav, sr = torchaudio.load(wav_path)
-#     assert sr == sample_rate, f'Sample rate mismatch: real {sr}, config {sample_rate}'
-#     return wav.view(-1)
-
-# device = 'cuda' if torch.cuda.is_available() else 'cpu'
-# upstream = torch.hub.load('s3prl/s3prl', 'wav2vec2_large_960').to(device)
-# with torch.no_grad():
+    print(len(paired_features['hidden_states']))
+    print(paired_features['hidden_states'][0].size())
+    print(len(paired_features2['hidden_states']))
+    print(paired_features2['hidden_states'][0].size())
 #     for split in splits:
 #         split_valid_names = np.load(os.path.join(out_path, f'{split}.npy'))
 #         lid = []
@@ -83,9 +87,9 @@ import torchaudio
 # downstream_asr = Downstream(featurizer_asr.upstream_dim, **config_asr['DOWNSTREAM']).to(device)
 # trainable_params = list(featurizer_asr.parameters()) + list(downstream_asr.parameters())
 # print(len(trainable_params))
-ckpt_path = '/home/b07502072/cs_ssl/iven/hubert_asr/result/downstream/pseudo_base/dev-clean-best.ckpt'
-ckpt = torch.load(ckpt_path)
-print(ckpt.keys())
+# ckpt_path = '/home/b07502072/cs_ssl/iven/hubert_asr/result/downstream/pseudo_base/dev-clean-best.ckpt'
+# ckpt = torch.load(ckpt_path)
+# print(ckpt.keys())
 
 # print(ckpt['Downstream'].keys())
 # print(ckpt['CTC_Featurizer'].keys())

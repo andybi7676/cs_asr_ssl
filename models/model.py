@@ -25,26 +25,29 @@ class Featurizer(nn.Module):
         self.layer_norm = kwargs.get('layer-norm', False)
 
 
-        if isinstance(feature, (list, tuple)):
-            self.layer_num = len(feature)
-            print(f'[ Featurizer ] - layer-norm: {self.layer_norm}')
-            chosen_layers = kwargs.get('choose_layer', False)
-            if chosen_layers:
-                start_idx, end_idx = chosen_layers
-                assert start_idx > 0 and end_idx <= self.layer_num
-                self.start_idx, self.end_idx = start_idx, end_idx
-                print(
-                    f"[ Featurizer ] - Take a list from layer{self.start_idx} to layer{self.end_idx}(exclusive) of features and do {self.model_type} on them."
-                )
-                self.layer_num = self.end_idx - self.start_idx
-            else:
-                print(
-                    f"[ Featurizer ] - Take a list of {self.layer_num} features and do {self.model_type} on them."
-                )
-                self.start_idx = False
-        else:
-            raise ValueError('Invalid feature!')
         self.upstream_dim = feature[0].size(-1)
+        if self.upstream_dim == 240:
+            print(f'[ Featurizer ] - upstream is fbank, do nothing')
+        else:
+            if isinstance(feature, (list, tuple)):
+                self.layer_num = len(feature)
+                print(f'[ Featurizer ] - layer-norm: {self.layer_norm}')
+                chosen_layers = kwargs.get('choose_layer', False)
+                if chosen_layers:
+                    start_idx, end_idx = chosen_layers
+                    assert start_idx > 0 and end_idx <= self.layer_num
+                    self.start_idx, self.end_idx = start_idx, end_idx
+                    print(
+                        f"[ Featurizer ] - Take a list from layer{self.start_idx} to layer{self.end_idx}(exclusive) of features and do {self.model_type} on them."
+                    )
+                    self.layer_num = self.end_idx - self.start_idx
+                else:
+                    print(
+                        f"[ Featurizer ] - Take a list of {self.layer_num} features and do {self.model_type} on them."
+                    )
+                    self.start_idx = False
+            else:
+                raise ValueError('Invalid feature!')
 
 
         self.net_names = []
@@ -81,6 +84,8 @@ class Featurizer(nn.Module):
         return weighted_feature
     
     def forward(self, feature):
+        if self.upstream_dim == 240:
+            return feature[0]
         if self.start_idx:
             feature = feature[self.start_idx:self.end_idx]
         assert self.layer_num == len(feature), f"{self.layer_num} != {len(feature)}"
