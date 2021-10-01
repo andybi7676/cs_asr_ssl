@@ -90,8 +90,8 @@ class Runner():
                     last_ckpt_pth = ckpt_pths[-1]
                     self.load_ckpt = torch.load(last_ckpt_pth, map_location=self.device)
             if self.config_lid['load_ckpt'] == 'best':
-                best_ckpt_pths = glob.glob(f'{self.outdir}/best*.ckpt')
-                assert len(ckpt_pths) == 1
+                best_ckpt_pths = glob.glob(f'{self.outdir}/*best.ckpt')
+                assert len(best_ckpt_pths) == 1
                 self.load_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
                 
         if self.mission == 'ASR_LIDB':
@@ -514,6 +514,7 @@ class Runner():
                     test_acc, test_loss, f1scores = self.evaluate_LID()
                     if test_acc > self.best_acc:
                         save_names.append('dev-best.ckpt')
+                        self.best_acc = test_acc
                     self.writer.add_scalar(f'acc/test', test_acc, global_step)
                     self.writer.add_scalar(f'loss/test', test_loss, global_step)
                     class_names = ['slience', 'chinese', 'english']
@@ -2280,7 +2281,7 @@ def main():
     if config['mission'] == 'ASR' and config['task'] == 'evaluate_double':
         runner.evaluate_double_size_ASR(load=True, mission='test')
     if config['mission'] == 'LID' and config['task'] == 'evaluate':
-        runner.evaluate_LID(load=True, output=True)
+        runner.evaluate_LID(split='test', load=True, output=True)
     if config['mission'] == 'IVEN' and config['task'] == 'draw_iven_ctc':
         runner.draw_iven_ctc()
     if config['mission'] == 'ASR_LIDB':

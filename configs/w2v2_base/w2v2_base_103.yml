@@ -1,9 +1,9 @@
-id: '101'
+id: '103'
 mission: LID
-task: evaluate
+task: train
 
 LID:
-  load_ckpt: best
+  load_ckpt: last
   runner:
     total_steps: 100000
     gradient_clipping: 1
@@ -54,7 +54,7 @@ LID:
     num_time_mask: 2
 
   DOWNSTREAM:
-    model_type: Linear
+    model_type: CNN
     proj_dim: 1024
     RNNs:
       module: LSTM
@@ -70,4 +70,6 @@ LID:
       act: [False]
       output_size: 4
     CNN:
-      width: 3
+      widths: [7]
+      filter_nums: [4]
+      output_size: 4

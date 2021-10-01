@@ -1,9 +1,9 @@
 id: '102'
 mission: LID
-task: train
+task: evaluate
 
 LID:
-  load_ckpt: last
+  load_ckpt: best
   runner:
     total_steps: 100000
     gradient_clipping: 1
