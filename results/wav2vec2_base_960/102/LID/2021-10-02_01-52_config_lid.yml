@@ -16,9 +16,13 @@ DOWNSTREAM:
   CNN:
     filter_nums:
     - 4
+    - 4
+    - 4
     output_size: 4
     widths:
+    - 3
     - 7
+    - 11
   Linear:
     act:
     - false
@@ -30,16 +34,20 @@ DOWNSTREAM:
   RNNs:
     bidirection: true
     dim:
-    - 1024
+    - 512
+    - 128
     dropout:
     - 0.2
+    - 0.1
     layer_norm:
+    - false
     - false
     module: LSTM
     output_size: 4
     proj:
     - false
-  model_type: RNNs
+    - false
+  model_type: CNN
   proj_dim: 1024
 FEATURIZER:
   layer-norm: true
@@ -50,19 +58,6 @@ Loss:
   - 0.2
   - 0.35
   - 0.45
-SPECAUG:
-  apply_freq_mask: true
-  apply_time_mask: true
-  apply_time_warp: true
-  freq_mask_width_range:
-  - 0
-  - 50
-  num_freq_mask: 4
-  num_time_mask: 2
-  time_mask_width_range:
-  - 0
-  - 40
-  time_warp_window: 5
 UPSTREAM:
   name: wav2vec2_base_960
 load_ckpt: last
@@ -72,14 +67,14 @@ optimizer:
   torch_optim_name: Adam
 runner:
   eval_dataloader: dev
-  eval_step: 1000
+  eval_step: 2500
   gradient_accumulate_steps: 1
   gradient_clipping: 1
   log_step: 100
   max_keep: 1
   save_step: 200
-  total_steps: 20000
+  total_steps: 100000
 scheduler:
   name: costum_scheduler
-  num_decay_steps: 10000
-  num_warmup_steps: 2000
+  num_decay_steps: 50000
+  num_warmup_steps: 10000

@@ -27,7 +27,7 @@ class Featurizer(nn.Module):
 
         self.upstream_dim = feature[0].size(-1)
         if self.upstream_dim == 240:
-            print(f'[ Featurizer ] - upstream is fbank, do nothing')
+            print(f'[ Featurizer ] - upstream is fbank, unpack the features')
         else:
             if isinstance(feature, (list, tuple)):
                 self.layer_num = len(feature)

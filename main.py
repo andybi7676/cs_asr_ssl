@@ -25,7 +25,7 @@ from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
 
-config_path = './configs/w2v2_base/w2v2_base_103.yml'
+config_path = './configs/fbank/fbank_102.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -522,19 +522,20 @@ class Runner():
                         self.writer.add_scalar(f'f1score/test/{cls_name}', f1scores[i], global_step)
                     f1scores_str = f'<sil>: {f1scores[0]:.8f}, <chi>: {f1scores[1]:.8f}, <eng>: {f1scores[2]:.8f}'
                     tqdm.write(f'[ TEST ] - LOSS: {test_loss:8f}, ACC: {test_acc:8f}, f1_scores: [ {f1scores_str} ], STEP={global_step}')
-                    f_weights = np.array(F.softmax(self.featurizer_lid.weights, dim=-1).tolist())
-                    if self.config_lid['FEATURIZER'].get('layer-norm', False):
-                        real_weights = f_weights
-                    else:
-                        upstream_name = self.config_lid['UPSTREAM']['name']
-                        l2_norm_path = f'./data/l2_norm/{upstream_name}.txt'
-                        norms = np.array(parse_l2_norm_data(l2_norm_path))
-                        real_weights = norms * f_weights
-                    fig, ax = plt.subplots()
-                    ax.plot(real_weights)
-                    downstream_name = self.config_lid['DOWNSTREAM']['model_type']
-                    ax.set_title(downstream_name)
-                    self.writer.add_figure('Featurizer-weights', fig, global_step=global_step)
+                    if self.config_lid['FEATURIZER'].get('type') == 'weighted-sum':
+                        f_weights = np.array(F.softmax(self.featurizer_lid.weights, dim=-1).tolist())
+                        if self.config_lid['FEATURIZER'].get('layer-norm', False):
+                            real_weights = f_weights
+                        else:
+                            upstream_name = self.config_lid['UPSTREAM']['name']
+                            l2_norm_path = f'./data/l2_norm/{upstream_name}.txt'
+                            norms = np.array(parse_l2_norm_data(l2_norm_path))
+                            real_weights = norms * f_weights
+                        fig, ax = plt.subplots()
+                        ax.plot(real_weights)
+                        downstream_name = self.config_lid['DOWNSTREAM']['model_type']
+                        ax.set_title(downstream_name)
+                        self.writer.add_figure('Featurizer-weights', fig, global_step=global_step)
 
                 if len(save_names) > 0:
                     ckpt = {

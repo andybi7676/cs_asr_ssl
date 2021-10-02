@@ -23,6 +23,7 @@ class LID_Dataset(Dataset):
         self.sample_rate = SAMPLE_RATE
         self.data_path = data_path
         self.split_sets = kwargs[split]
+        self.lid_fname = kwargs.get('lid_fname', '_balanced_lid')
         valid_path = kwargs.get('load_valid', False)
         print(f'split_sets: {self.split_sets}')
 
@@ -61,7 +62,7 @@ class LID_Dataset(Dataset):
 
                 for f in tqdm(f_names, total=len(f_names), desc=f'Validating names for split: {split}'):
                     name = os.path.join(data_path, f.split('.')[0])
-                    if os.path.isfile(name + '_balanced_lid.pt') and os.path.isfile(name + '.wav'):
+                    if os.path.isfile(name + f'{self.lid_fname}.pt') and os.path.isfile(name + '.wav'):
                         lid_valid_names.append(name)
         
         tqdm.write(f'[ LID_dataset ] - dataset prepared')
@@ -126,7 +127,7 @@ class LID_Dataset(Dataset):
     def __getitem__(self, index):
         # Load acoustic feature and pad
         wav_batch = [self._load_wav(x_file).numpy() for x_file in self.X[index]]
-        lid_batch = [ torch.load(self.Z[self._parse_x_name(x_file)] + '_balanced_lid.pt') for x_file in self.X[index] ]
+        lid_batch = [ torch.load(self.Z[self._parse_x_name(x_file)] + f'{self.lid_fname}.pt') for x_file in self.X[index] ]
         return wav_batch, lid_batch # bucketing, return ((wavs, labels))
 
     def collate_fn(self, items):

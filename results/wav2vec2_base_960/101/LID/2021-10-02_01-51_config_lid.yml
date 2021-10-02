@@ -14,18 +14,17 @@ DATASET:
   zero_infinity: true
 DOWNSTREAM:
   CNN:
-    filter_nums:
-    - 4
-    output_size: 4
-    widths:
-    - 7
+    width: 3
   Linear:
     act:
-    - false
+    - ReLU
+    - ReLU
     batch_norm:
     - true
+    - true
     dim:
-    - 4
+    - 512
+    - 128
     output_size: 4
   RNNs:
     bidirection: true
@@ -43,7 +42,7 @@ DOWNSTREAM:
     proj:
     - false
     - false
-  model_type: CNN
+  model_type: Linear
   proj_dim: 1024
 FEATURIZER:
   layer-norm: true
@@ -63,14 +62,14 @@ optimizer:
   torch_optim_name: Adam
 runner:
   eval_dataloader: dev
-  eval_step: 1000
+  eval_step: 2500
   gradient_accumulate_steps: 1
   gradient_clipping: 1
   log_step: 100
   max_keep: 1
   save_step: 200
-  total_steps: 20000
+  total_steps: 100000
 scheduler:
   name: costum_scheduler
-  num_decay_steps: 10000
-  num_warmup_steps: 2000
+  num_decay_steps: 50000
+  num_warmup_steps: 10000

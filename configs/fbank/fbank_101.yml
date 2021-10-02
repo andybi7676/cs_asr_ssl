@@ -1,4 +1,4 @@
-id: '103'
+id: '101'
 mission: LID
 task: train
 
@@ -29,6 +29,7 @@ LID:
     bucket_path: '/home/b07502072/cs_ssl/cs_asr_ssl/data/len_for_bucket/splitted-seame'
     data_path: ''
     load_valid: './data/valid_names/splitted-seame'
+    lid_fname: '_expand_fbank_lid'
     dict_path: './dicts/dict_seame.model'
     dict_mode: 'subword'
     train: ['train']
@@ -37,42 +38,40 @@ LID:
     zero_infinity: true
 
   UPSTREAM: 
-    name: wav2vec2_base_960
+    name: fbank
 
   FEATURIZER:
-    type: weighted-sum
-    layer-norm: true
+    type: fbank
+    # layer-norm: true
 
-  SPECAUG:
-    apply_time_warp: true
-    apply_time_mask: true
-    apply_freq_mask: true
-    time_warp_window: 5
-    time_mask_width_range: [0, 40]
-    freq_mask_width_range: [0, 50]
-    num_freq_mask: 4
-    num_time_mask: 2
+  # SPECAUG:
+  #   apply_time_warp: false
+  #   apply_time_mask: false
+  #   apply_freq_mask: false
+  #   time_warp_window: 5
+  #   time_mask_width_range: [0, 40]
+  #   freq_mask_width_range: [0, 50]
+  #   num_freq_mask: 4
+  #   num_time_mask: 2
 
   DOWNSTREAM:
-    model_type: RNNs
+    model_type: Linear
     proj_dim: 1024
     RNNs:
       module: LSTM
       bidirection: true
-      dim: [1024]
-      dropout: [0.2]
-      layer_norm: [False]
-      proj: [False]
+      dim: [512, 128]
+      dropout: [0.2, 0.1]
+      layer_norm: [False, False]
+      proj: [False, False]
       output_size: 4
     Linear:
-      batch_norm: [True]
-      dim: [4]
-      act: [False]
+      batch_norm: [True, True]
+      dim: [512, 128]
+      act: ['ReLU', 'ReLU']
       output_size: 4
     CNN:
-      widths: [7]
-      filter_nums: [4]
-      output_size: 4
-
+      width: 3
+  
   Loss:
     weights: [0., 0.2, 0.35, 0.45]
