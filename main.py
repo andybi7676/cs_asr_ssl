@@ -24,8 +24,10 @@ from tools.schedulers import get_scheduler
 from collections import defaultdict
 import matplotlib.pyplot as plt
 from time import localtime, strftime
+import random
 
-config_path = './configs/fbank/fbank_102.yml'
+config_path = './configs/w2v2_base/w2v2_base_201.yml'
+# config_path = './configs/fbank/fbank_102.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -47,6 +49,7 @@ class Runner():
         self.config = config
         self.config_lid = config.get('LID')
         self.config_asr = config.get('ASR')
+        self.config_all = self.config.get('ALL')
         self.args = args
         self.device = 'cuda' if torch.cuda.is_available() else 'cpu'
         device_idx = self.config.get('device_idx', False)
@@ -187,7 +190,6 @@ class Runner():
                 assert len(best_ckpt_pths) == 1
                 self.load_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
         
-        self.config_all = self.config.get('ALL')
         
         if self.mission == 'ALL':
             self.exp_name = '/'.join([self.config_lid['UPSTREAM']['name'], self.id, self.mission])
@@ -228,12 +230,12 @@ class Runner():
                 else:
                     last_ckpt_pth = ckpt_pths[-1]
                     self.asr_ckpt = torch.load(last_ckpt_pth, map_location=self.device)
-            if self.config_lid['load_ckpt'] == 'best':
-                best_ckpt_pths = glob.glob(f'{self.load_lid}/best*.ckpt')
-                assert len(ckpt_pths) == 1
+            if self.config_all['load_ckpt'] == 'best':
+                best_ckpt_pths = glob.glob(f'{self.load_lid}/*best.ckpt')
+                assert len(best_ckpt_pths) == 1
                 self.lid_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
-                best_ckpt_pths = glob.glob(f'{self.load_asr}/best*.ckpt')
-                assert len(ckpt_pths) == 1
+                best_ckpt_pths = glob.glob(f'{self.load_asr}/*best.ckpt')
+                assert len(best_ckpt_pths) == 1
                 self.asr_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
 
         if self.mission == 'ASR' and 'double' in self.task:
@@ -1614,6 +1616,8 @@ class Runner():
         avg_acc, avg_loss, total_frames = 0., 0., 0
         logs = {'steps_acc': [], 'steps_frames':[], 'steps_loss': [] }
         self.load_ckpt = False
+        self.apply_sil = self.config_all.get('apply_sil', True) and self.config_asr.get('apply_sil', True)
+        tqdm.write(f'[ CONFIG ] - apply_sil: {self.apply_sil}')
         while pbar.n < pbar.total:
             for batch_id, (wavs, labels) in enumerate(tqdm(self.train_dataloader_asr, dynamic_ncols=True, total=len(self.train_dataloader_asr), desc=f'training')):
                 try:
@@ -1660,7 +1664,9 @@ class Runner():
                         _, lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1, 1], -1)
                     sil_logits, eng_logits_1, _logits, eng_logits_2, chi_logits = torch.split(logits_ctc, [3, 2248, 1, 30, 2718], -1)
 
-                    sil_logits = sil_logits + lid_sil_logits
+                    # sil_logits = sil_logits + lid_sil_logits
+                    if self.apply_sil:
+                        sil_logits = sil_logits + lid_sil_logits
                     chi_logits = chi_logits + lid_chi_logits
                     eng_logits_1 = eng_logits_1 + lid_eng_logits
                     eng_logits_2 = eng_logits_2 + lid_eng_logits
@@ -1801,6 +1807,42 @@ class Runner():
                 pbar.update(1)
             epoch += 1
 
+    def load_finetune(self):
+        self.load_asr = self.config['ALL']['asr_dir']
+        self.load_lid = self.config['ALL']['lid_dir']
+        self.asr_loss = nn.CTCLoss(
+            blank=self.blank,
+            zero_infinity = self.config_asr['DATASET']['zero_infinity']
+        )
+        if self.config_all['load_ckpt'] == 'last':
+            ckpt_pths = glob.glob(f'{self.load_lid}/states-*.ckpt')
+            ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
+            if len(ckpt_pths) == 0:
+                print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.load_lid}\'')
+            else:
+                last_ckpt_pth = ckpt_pths[-1]
+                self.lid_ckpt = torch.load(last_ckpt_pth, map_location=self.device)
+            ckpt_pths = glob.glob(f'{self.load_asr}/states-*.ckpt')
+            ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
+            if len(ckpt_pths) == 0:
+                print(f'No ckpt named as \'states-*.ckpt\' was found in \'{self.load_asr}\'')
+            else:
+                last_ckpt_pth = ckpt_pths[-1]
+                self.asr_ckpt = torch.load(last_ckpt_pth, map_location=self.device)
+        if self.config_all['load_ckpt'] == 'best':
+            best_ckpt_pths = glob.glob(f'{self.load_lid}/*best.ckpt')
+            assert len(best_ckpt_pths) == 1
+            self.lid_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
+            best_ckpt_pths = glob.glob(f'{self.load_asr}/*best.ckpt')
+            assert len(best_ckpt_pths) == 1
+            self.asr_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
+        self.featurizer_ctc.load_state_dict(self.asr_ckpt['Featurizer_asr'])
+        self.featurizer_lid.load_state_dict(self.lid_ckpt['Featurizer_lid'])
+        self.downstream_ctc.load_state_dict(self.asr_ckpt['Downstream_asr'])
+        self.downstream_lid.load_state_dict(self.lid_ckpt['Downstream_lid'])
+        tqdm.write('[ LOAD ] - loaded finetune ckpts')
+
+
     def evaluate_lidb_ASR(self, load=False, mission='dev'):
         if load:
             assert self.load_ckpt, 'No ckpt to be loaded'
@@ -1832,6 +1874,8 @@ class Runner():
             self.featurizer_asr.eval()
         self.downstream_ctc.eval()
         self.downstream_lid.eval()
+        self.apply_sil = self.config_all.get('apply_sil', True) and self.config_asr.get('apply_sil', True)
+        tqdm.write(f'[ CONFIG ] - apply_sil: {self.apply_sil}')
         for batch_id, (wavs, labels) in enumerate(tqdm(local_dataloader, dynamic_ncols=True, total=len(local_dataloader), desc=f'{mission} progress...')):
             wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ]
             # wavs => list(tensor(length))
@@ -1865,7 +1909,8 @@ class Runner():
                         _, lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1, 1], -1)
                     sil_logits, eng_logits_1, _logits, eng_logits_2, chi_logits = torch.split(logits_ctc, [3, 2248, 1, 30, 2718], -1)
 
-                    sil_logits = sil_logits + lid_sil_logits
+                    if self.apply_sil:
+                        sil_logits = sil_logits + lid_sil_logits
                     chi_logits = chi_logits + lid_chi_logits
                     eng_logits_1 = eng_logits_1 + lid_eng_logits
                     eng_logits_2 = eng_logits_2 + lid_eng_logits
@@ -1957,20 +2002,18 @@ class Runner():
             features = self.upstream_asr(wavs)
             features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
 
-            features = self.featurizer_asr(features) # feaes => tensor(N,T,C)
-            features = list(features)
-            assert len(features) == len(labels), 'length of features and labels not consistent'
+            features_asr = self.featurizer_asr(features) # feaes => tensor(N,T,C)
+            features_lid = self.featurizer_lid(features) # feaes => tensor(N,T,C)
+
+            features_asr = list(features_asr)
+            features_lid = list(features_lid)
+            assert len(features_asr) == len(labels), 'length of features and labels not consistent'
+            assert len(features_lid) == len(labels), 'length of features and labels not consistent'
         
-            logits, padded_labels, log_probs_len, labels_len = self.downstream_asr(features, labels)
-            logits_lid, _, _, _ = self.downstream_lid(features, labels)
+            logits, padded_labels, log_probs_len, labels_len = self.downstream_asr(features_asr, labels)
+            logits_lid, _, _, _ = self.downstream_lid(features_lid, labels)
 
             log_probs = nn.functional.log_softmax(logits, dim=-1)
-            loss = self.asr_loss(
-                log_probs.transpose(0, 1), # (N, T, C) -> (T, N, C)
-                padded_labels,
-                log_probs_len,
-                labels_len,
-            )
 
             target_tokens_batch = []
             target_words_batch = []
@@ -2120,7 +2163,7 @@ class Runner():
             lid_classes = ['<pad>', '<sil>', '<chi>', '<eng>']
             for i, lid_class in enumerate(lid_classes):
                 y = [ prob[i].item() for prob in probs_lid[0] ]
-                axs[0].plot(x, y, linestyle='solid', linewidth=0.5, label=f'{i}')
+                axs[0].plot(x, y, linestyle='solid', linewidth=0.5, label=f'{lid_class}')
             # for i, lid_class in enumerate(lid_classes):
             #     y = [ 1 if int(label) == i else 0 for label in lid_labels[0] ]
             #     axs[1].plot(x, y, label=f'{lid_class}')
@@ -2254,11 +2297,15 @@ class Runner():
             ax.set_title(downstream_name)
             fig.savefig(f'{self.outdir}/featurizer_weights.png')
             
-
+SEED = 1337
 def main():
     torchaudio.set_audio_backend('sox_io')
     with open(config_path, 'r') as yml_f:
         config = yaml.safe_load(yml_f)
+    random.seed(1337)
+    np.random.seed(1337)
+    torch.manual_seed(1337)
+    if torch.cuda.is_available(): torch.cuda.manual_seed_all(1337)
     
     
     runner = Runner(config)
@@ -2290,6 +2337,9 @@ def main():
             runner.train_lidb_ASR()
         elif config['task'] == 'evaluate':
             runner.evaluate_lidb_ASR(load=True, mission='test')
+        elif config['task'] == 'finetune':
+            runner.load_finetune()
+            runner.train_lidb_ASR()
 
 if __name__ == '__main__':
     main()

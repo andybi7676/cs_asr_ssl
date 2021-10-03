@@ -283,8 +283,8 @@ class Linear(nn.Module):
             if act[i]:
                 self.net.append(eval(f'nn.{act[i]}()'))
             prev_dim = dim[i]
-        if prev_dim != output_size:
-            self.net.append(nn.Linear(prev_dim, output_size))
+        # if prev_dim != output_size:
+        self.net.append(nn.Linear(prev_dim, output_size))
         self.out_dim = output_size
 
     def forward(self, X, X_len):
