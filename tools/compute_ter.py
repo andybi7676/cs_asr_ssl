@@ -55,7 +55,7 @@ if __name__ == '__main__':
     upstream_name = 'wav2vec2_base_960'
     exp_id = '201'
     exp_mission = 'ASR_LIDB'
-    dev_set = 'dev-man'
+    dev_set = 'dev-sge'
     hyp_pth = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-hyp.ark'
     ref_pth = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-ref.ark'
     hyp_out = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-hyp-norm.ark'

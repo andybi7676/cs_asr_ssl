@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 from time import localtime, strftime
 import random
 
-config_path = './configs/w2v2_base/w2v2_base_201.yml'
+config_path = './configs/w2v2_base/w2v2_base_204.yml'
 # config_path = './configs/fbank/fbank_102.yml'
 
 def parse_l2_norm_data(l2_norm_path):
@@ -121,6 +121,13 @@ class Runner():
                 self.upstream_dim = self.featurizer_asr.upstream_dim
             self.downstream_ctc = Downstream(self.upstream_dim, **self.config_asr['DOWNSTREAM1']).to(self.device)
             self.downstream_lid = Downstream(self.upstream_dim, **self.config_asr['DOWNSTREAM2']).to(self.device)
+            if self.config_asr.get('fix_lid', False):
+                self.projector = nn.Linear(4, 4)
+                self.projector.to(self.device)
+                self.fix_lid = True
+            else:
+                self.projector = None
+                self.fix_lid = False
             self.specaug_asr = None
             if self.config_asr.get('SPECAUG'):
                 from tools.specaug import SpecAug
@@ -1573,14 +1580,21 @@ class Runner():
                 tqdm.write(f'[ LOAD ] - loaded featurizer')
             self.downstream_ctc.load_state_dict(self.load_ckpt['Downstream_ctc'], strict=False)
             self.downstream_lid.load_state_dict(self.load_ckpt['Downstream_lid'], strict=False)
+            if self.fix_lid:
+                self.projector.load_state_dict(self.load_ckpt['Projector'], strict=False)
             tqdm.write(f'[ LOAD ] - loaded downstream ctc & lid')
         
         if self.featurizer_num > 1:
-            trainable_models = [self.featurizer_ctc, self.featurizer_lid, self.downstream_ctc, self.downstream_lid]
-            trainable_params = list(self.featurizer_ctc.parameters()) + list(self.featurizer_lid.parameters()) + list(self.downstream_ctc.parameters()) + list(self.downstream_lid.parameters())
+            if self.fix_lid:
+                trainable_models = [self.featurizer_ctc, self.downstream_ctc, self.projector]
+                trainable_params = list(self.featurizer_ctc.parameters()) + list(self.downstream_ctc.parameters()) + list(self.projector.parameters())
+            else:
+                trainable_models = [self.featurizer_ctc, self.featurizer_lid, self.downstream_ctc, self.downstream_lid]
+                trainable_params = list(self.featurizer_ctc.parameters()) + list(self.featurizer_lid.parameters()) + list(self.downstream_ctc.parameters()) + list(self.downstream_lid.parameters())
         else:
             trainable_models = [self.featurizer_asr, self.downstream_ctc, self.downstream_lid]
             trainable_params = list(self.featurizer_asr.parameters()) + list(self.downstream_ctc.parameters()) + list(self.downstream_lid.parameters())
+
 
         optimizer = self._get_optimizer(trainable_models, mission='asr')
         if self.load_ckpt:
@@ -1602,13 +1616,14 @@ class Runner():
         self.train_dataset_asr = ASR_Dataset('train', self.dictionary, **dataset_config)
         self.train_dataloader_asr = DataLoader(self.train_dataset_asr, batch_size=1, collate_fn=self.train_dataset_asr.collate_fn, shuffle=True)
         self.upstream_asr.eval()
-        if self.featurizer_num > 1:
-            self.featurizer_ctc.train()
-            self.featurizer_lid.train()
-        else:
-            self.featurizer_asr.train()
+        self.featurizer_ctc.train()
         self.downstream_ctc.train()
-        self.downstream_lid.train()
+        if self.fix_lid:
+            self.featurizer_lid.eval()
+            self.downstream_lid.eval()
+        else:
+            self.featurizer_lid.train()
+            self.downstream_lid.train()
         epoch = 0
         backward_steps = 0
         gradient_accumulate_steps = self.config_asr['runner']['gradient_accumulate_steps']
@@ -1632,11 +1647,12 @@ class Runner():
                         features = self.upstream_asr(wavs)
                         features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
 
-                    if self.featurizer_num > 1:
-                        features_ctc = self.featurizer_ctc(features)
-                        features_lid = self.featurizer_lid(features)
+                    features_ctc = self.featurizer_ctc(features)
+                    if self.fix_lid:
+                        with torch.no_grad():
+                            features_lid = self.featurizer_lid(features)
                     else:
-                        features = self.featurizer_asr(features) # feaes => tensor(N,T,C)
+                        features_lid = self.featurizer_lid(features)
                     if self.specaug_asr :
                         if self.featurizer_num > 1:
                             features_ctc, _ = self.specaug_asr(features_ctc)
@@ -1644,19 +1660,17 @@ class Runner():
                         else:
                             features, _ = self.specaug_asr(features)  # features => list(tensor_1(T,C), ...tensor_n(T, C))
                     else:
-                        if self.featurzier_num > 1:
-                            features_ctc = list(features_ctc)
-                            features_lid = list(features_lid)
-                        else:
-                            features = list(features)
+                        features_ctc = list(features_ctc)
+                        features_lid = list(features_lid)
                     # assert len(features) == len(labels), 'length of features and labels not consistent'
                     
-                    if self.featurizer_num > 1:
-                        logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features_ctc, labels)
-                        logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features_lid, labels)
+                    logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features_ctc, labels)
+                    if self.fix_lid:
+                        with torch.no_grad():
+                            logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features_lid, labels)
+                        logits_lid = self.projector(logits_lid)
                     else:
-                        logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features, labels)
-                        logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features, labels)
+                        logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features_lid, labels)
                     
                     if self.config_asr['DOWNSTREAM2']['RNNs']['output_size'] == 3:
                         lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1], -1)
@@ -1782,6 +1796,8 @@ class Runner():
                         }
                         if scheduler:
                             ckpt['Scheduler'] = scheduler.state_dict()
+                        if self.fix_lid:
+                            ckpt['Projector'] = self.projector.state_dict()
                         ckpt_name = save_name
                         out_path = os.path.join(self.outdir, ckpt_name)
                         torch.save(ckpt, out_path)
@@ -1799,6 +1815,8 @@ class Runner():
                         }
                         if scheduler:
                             ckpt['Scheduler'] = scheduler.state_dict()
+                        if self.fix_lid:
+                            ckpt['Projector'] = self.projector.state_dict()
                         ckpt_name = save_name
                         out_path = os.path.join(self.outdir, ckpt_name)
                         torch.save(ckpt, out_path)
@@ -1855,6 +1873,8 @@ class Runner():
                 tqdm.write(f'[ LOAD ] - loaded featurizer')
             self.downstream_ctc.load_state_dict(self.load_ckpt['Downstream_ctc'], strict=False)
             self.downstream_lid.load_state_dict(self.load_ckpt['Downstream_lid'], strict=False)
+            if self.fix_lid:
+                self.projector.load_state_dict(self.load_ckpt['Projector'], strict=False)
             tqdm.write(f'[ LOAD ] - loaded downstream ctc & lid')
         
         if not hasattr(self, f'{mission}_dataset_asr'):
@@ -1884,24 +1904,17 @@ class Runner():
                     features = self.upstream_asr(wavs)
                     features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
 
-                    if self.featurizer_num > 1:
-                        features_ctc = self.featurizer_ctc(features) # feaes => tensor(N,T,C)
-                        features_lid = self.featurizer_lid(features) # feaes => tensor(N,T,C)
-                    else:
-                        features = self.featurizer_asr(features) # feaes => tensor(N,T,C)
+                    features_ctc = self.featurizer_ctc(features) # feaes => tensor(N,T,C)
+                    features_lid = self.featurizer_lid(features) # feaes => tensor(N,T,C)
                     
-                    if self.featurizer_num > 1:
-                        features_ctc = list(features_ctc)
-                        features_lid = list(features_lid)
-                    else:
-                        features = list(features)
+                    features_ctc = list(features_ctc)
+                    features_lid = list(features_lid)
                     # assert len(features) == len(labels), 'length of features and labels not consistent'
-                    if self.featurizer_num > 1:
-                        logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features_ctc, labels)
-                        logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features_lid, labels)
-                    else:
-                        logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features, labels)
-                        logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features, labels)
+                    logits_ctc, padded_labels, log_probs_len1, labels_len = self.downstream_ctc(features_ctc, labels)
+                    logits_lid, padded_labels, log_probs_len2, labels_len = self.downstream_lid(features_lid, labels)
+                    
+                    if self.fix_lid:
+                        logits_lid = self.projector(logits_lid)
 
                     if self.config_asr['DOWNSTREAM2']['RNNs']['output_size'] == 3:
                         lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1], -1)
@@ -1968,6 +1981,9 @@ class Runner():
             self.featurizer_asr.train()
         self.downstream_ctc.train()
         self.downstream_lid.train()
+        if self.fix_lid:
+            self.featurizer_lid.eval()
+            self.downstream_lid.eval()
 
     def draw_ctc(self):
         if self.load_asr:

@@ -198,6 +198,7 @@ class RNNs(nn.Module):
     ):
         super(RNNs, self).__init__()
         latest_size = input_size
+        self.kwargs = kwargs
 
         self.rnns = nn.ModuleList()
         for i in range(len(dim)):
@@ -223,8 +224,13 @@ class RNNs(nn.Module):
         Returns:
             Tensor: Predictor tensor of dimension (batch_size, input_length, number_of_classes).
         """
-        for rnn in self.rnns:
-            x, x_len = rnn(x, x_len)
+        if self.kwargs.get('rnn_no_grad', False):
+            with torch.no_grad():
+                for rnn in self.rnns:
+                    x, x_len = rnn(x, x_len) 
+        else:
+            for rnn in self.rnns:
+                x, x_len = rnn(x, x_len)
 
         logits = self.linear(x)
         return logits, x_len 
