@@ -26,7 +26,7 @@ import matplotlib.pyplot as plt
 from time import localtime, strftime
 import random
 
-config_path = './configs/w2v2_base/w2v2_base_204.yml'
+config_path = './configs/w2v2_base/w2v2_base_210.yml'
 # config_path = './configs/fbank/fbank_102.yml'
 
 def parse_l2_norm_data(l2_norm_path):
@@ -121,13 +121,18 @@ class Runner():
                 self.upstream_dim = self.featurizer_asr.upstream_dim
             self.downstream_ctc = Downstream(self.upstream_dim, **self.config_asr['DOWNSTREAM1']).to(self.device)
             self.downstream_lid = Downstream(self.upstream_dim, **self.config_asr['DOWNSTREAM2']).to(self.device)
-            if self.config_asr.get('fix_lid', False):
+            if self.config_asr['FEATURIZER'].get('fix_lid', False):
                 self.projector = nn.Linear(4, 4)
                 self.projector.to(self.device)
                 self.fix_lid = True
             else:
                 self.projector = None
                 self.fix_lid = False
+            if self.config_asr['FEATURIZER'].get('fix_lid_f', False):
+                self.fix_lid_f = True
+                print('[ Featurizer ] - featurizer_lid untrainable')
+            else:
+                self.fix_lid_f = False
             self.specaug_asr = None
             if self.config_asr.get('SPECAUG'):
                 from tools.specaug import SpecAug
@@ -1498,37 +1503,39 @@ class Runner():
                     logits_lid, _, _, _ = self.downstream_lid(lid_features, labels)  # tensor(N, T, 3)
                     logits_asr, padded_labels, log_probs_len, labels_len = self.downstream_asr(asr_features, labels) # tensor(N, T, C)
                     # print(logits_asr.size())
-                    # pred_asr = logits_asr.argmax(dim=-1)
-                    # pred_lid = logits_lid.argmax(dim=-1)
-                    # pred_asr = pred_asr[0].tolist()
+                    pred_asr = logits_asr.argmax(dim=-1)
+                    pred_lid = logits_lid.argmax(dim=-1)
+                    pred_asr = pred_asr[0].tolist()
                     # print(pred_lid[0].tolist()[0:100])
                     # print(pred_asr[0:100])
-                    # logits = []
-                    # logits_asr = logits_asr[0]
-                    # logits_lid = logits_lid[0]
-                    # for i, pred in enumerate(pred_asr):
-                    #     logit_l = logits_asr[i].cpu().numpy()
-                    #     cls_l = logits_lid[i].tolist()
-                    #     if pred < 4 or pred == 5164:
-                    #         logits.append(logit_l)
-                    #     else:
-                    #         logit_l = [-float('inf')]*4 + (cls_l[2] + logit_l[4:5164]).tolist() + (cls_l[1]+logit_l[5164:]).tolist()
-                    #         logit_l[5164] = -float('inf')
-                    #         logits.append(logit_l)
+                    probs = []
+                    logits_asr = logits_asr[0]
+                    logits_lid = logits_lid[0]
+                    prob_asr = nn.functional.softmax(logits_asr, dim=-1)
+                    prob_lid = nn.functional.softmax(logits_lid, dim=-1)
+                    for i, pred in enumerate(pred_asr):
+                        prob_l = prob_asr[i].cpu().numpy()
+                        cls_l = prob_lid[i].tolist()
+                        if pred < 3 or pred == 2251:
+                            probs.append(prob_l)
+                        else:
+                            prob_l = [0.0]*3 + (cls_l[3]*prob_l[3:2282]).tolist() + (cls_l[2]*prob_l[2282:]).tolist()
+                            prob_l[2251] = 0.0
+                            probs.append(prob_l)
 
-                    # logits = [logits]
-                    # logits = torch.FloatTensor(logits).to(self.device)
+                    probs = [probs]
+                    probs = torch.FloatTensor(probs).to(self.device)
                     # print(logits.argmax(dim=-1)[0].tolist()[0:100])
                     # assert 1==2
-                    logits = logits_asr
+                    # logits = logits_asr
                     
-                    log_probs = nn.functional.log_softmax(logits, dim=-1)
-                    loss = self.asr_loss(
-                        log_probs.transpose(0, 1), # (N, T, C) -> (T, N, C)
-                        padded_labels,
-                        log_probs_len,
-                        labels_len,
-                    )
+                    # log_probs = nn.functional.log_softmax(logits, dim=-1)
+                    # loss = self.asr_loss(
+                    #     log_probs.transpose(0, 1), # (N, T, C) -> (T, N, C)
+                    #     padded_labels,
+                    #     log_probs_len,
+                    #     labels_len,
+                    # )
 
                     target_tokens_batch = []
                     target_words_batch = []
@@ -1543,9 +1550,9 @@ class Runner():
                         target_tokens_batch.append(target_tokens)
                         target_words_batch.append(target_words)
                     
-                    pred_tokens_batch, pred_words_batch = self._decode(log_probs.float().contiguous().cpu(), log_probs_len)
+                    pred_tokens_batch, pred_words_batch = self._decode(probs.float().contiguous().cpu(), log_probs_len)
                     
-                    self.records['loss'].append(loss.item())
+                    self.records['loss'].append(torch.zeros(1))
                     self.records['target_tokens'] += target_tokens_batch
                     self.records['target_words'] += target_words_batch
                     self.records['pred_tokens'] += pred_tokens_batch
@@ -1624,6 +1631,8 @@ class Runner():
         else:
             self.featurizer_lid.train()
             self.downstream_lid.train()
+        if self.fix_lid_f:
+            self.featurizer_lid.eval()
         epoch = 0
         backward_steps = 0
         gradient_accumulate_steps = self.config_asr['runner']['gradient_accumulate_steps']
@@ -1648,7 +1657,7 @@ class Runner():
                         features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
 
                     features_ctc = self.featurizer_ctc(features)
-                    if self.fix_lid:
+                    if self.fix_lid or self.fix_lid_f:
                         with torch.no_grad():
                             features_lid = self.featurizer_lid(features)
                     else:

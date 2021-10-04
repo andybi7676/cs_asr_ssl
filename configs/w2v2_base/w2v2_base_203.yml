@@ -1,6 +1,6 @@
 id: '203'
 mission: ASR_LIDB #{LID, ASR, ALL}
-task: finetune  #{train, evaluate, null(if no need to specified)}
+task: evaluate #finetune  #{train, evaluate, null(if no need to specified)}
 
 LID: 
   load_ckpt: last
@@ -70,7 +70,7 @@ LID:
 
 ASR:
   apply_sil: false
-  load_ckpt: last
+  load_ckpt: best
   runner:
     total_steps: 200000
     gradient_clipping: 1
