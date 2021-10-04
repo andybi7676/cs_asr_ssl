@@ -53,8 +53,8 @@ def normalize(txt_pth, ignore_noise=False, trans_adverbial=False, rm_minor_token
 
 if __name__ == '__main__':
     upstream_name = 'wav2vec2_base_960'
-    exp_id = '210'
-    exp_mission = 'ALL'
+    exp_id = '201'
+    exp_mission = 'ASR_LIDB'
     dev_set = 'dev-sge'
     hyp_pth = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-hyp.ark'
     ref_pth = f'./results/{upstream_name}/{exp_id}/{exp_mission}/{dev_set}/{dev_set}-ref.ark'

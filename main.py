@@ -26,7 +26,9 @@ import matplotlib.pyplot as plt
 from time import localtime, strftime
 import random
 
-config_path = './configs/w2v2_base/w2v2_base_210.yml'
+# config_path = './configs/w2v2_large/w2v2_large_ll60_103.yml'
+# config_path = './configs/w2v2_xlsr/w2v2_xlsr_103.yml'
+config_path = './configs/w2v2_base/w2v2_base_203.yml'
 # config_path = './configs/fbank/fbank_102.yml'
 
 def parse_l2_norm_data(l2_norm_path):
@@ -1511,16 +1513,27 @@ class Runner():
                     probs = []
                     logits_asr = logits_asr[0]
                     logits_lid = logits_lid[0]
-                    prob_asr = nn.functional.softmax(logits_asr, dim=-1)
-                    prob_lid = nn.functional.softmax(logits_lid, dim=-1)
+                    # prob_asr = nn.functional.softmax(logits_asr, dim=-1)
+                    # prob_lid = nn.functional.softmax(logits_lid, dim=-1)
+                    prob_asr = logits_asr
+                    prob_lid = logits_lid
+                    # for i, pred in enumerate(pred_asr):
+                    #     prob_l = prob_asr[i].cpu().numpy()
+                    #     cls_l = prob_lid[i].tolist()
+                    #     if pred < 3 or pred == 2251:
+                    #         probs.append(prob_l)
+                    #     else:
+                    #         prob_l = [0.0]*3 + (cls_l[3]*prob_l[3:2282]).tolist() + (cls_l[2]*prob_l[2282:]).tolist()
+                    #         prob_l[2251] = 0.0
+                    #         probs.append(prob_l)
                     for i, pred in enumerate(pred_asr):
                         prob_l = prob_asr[i].cpu().numpy()
                         cls_l = prob_lid[i].tolist()
                         if pred < 3 or pred == 2251:
                             probs.append(prob_l)
                         else:
-                            prob_l = [0.0]*3 + (cls_l[3]*prob_l[3:2282]).tolist() + (cls_l[2]*prob_l[2282:]).tolist()
-                            prob_l[2251] = 0.0
+                            prob_l = [0.0]*3 + (cls_l[3]+prob_l[3:2282]).tolist() + (cls_l[2]+prob_l[2282:]).tolist()
+                            prob_l[2251] = float('-inf')
                             probs.append(prob_l)
 
                     probs = [probs]
@@ -1994,6 +2007,127 @@ class Runner():
             self.featurizer_lid.eval()
             self.downstream_lid.eval()
 
+    def draw_asr_lidb(self):
+
+        if self.load_ckpt:
+            self.featurizer_ctc.load_state_dict(self.load_ckpt['Featurizer_ctc'])
+            tqdm.write(f'[ LOAD ] - loaded featurizer_ctc')
+            self.downstream_ctc.load_state_dict(self.load_ckpt['Downstream_ctc'], strict=False)
+            tqdm.write(f'[ LOAD ] - loaded downstream_ctc')
+            self.featurizer_lid.load_state_dict(self.load_ckpt['Featurizer_lid'])
+            tqdm.write(f'[ LOAD ] - loaded featurizer_lid')
+            self.downstream_lid.load_state_dict(self.load_ckpt['Downstream_lid'])
+            tqdm.write(f'[ LOAD ] - loaded downstream_lid')
+        else:
+            print('No ckpt to be loaded !')
+            return 
+        draw_idx = 4960
+        set_name = 'dev_man'
+        
+        if not hasattr(self, f'test_dataset_asr'):
+            dataset_config = copy.deepcopy(self.config_asr['DATASET'])
+            # splits = dataset_config[split]
+            dataset_config['bucket_size'] = 1
+            self.test_dataset_asr = ALL_Dataset('test', self.dictionary, **dataset_config)
+            # self.test_dataloader_asr = DataLoader(self.test_dataset_asr, batch_size=1, collate_fn=self.test_dataset_asr.collate_fn, shuffle=False)
+
+        self.apply_sil = self.config_all.get('apply_sil', True) and self.config_asr.get('apply_sil', True)
+        tqdm.write(f'[ CONFIG ] - apply_sil: {self.apply_sil}')
+        self.upstream_asr.eval()
+        self.featurizer_ctc.eval()
+        self.downstream_ctc.eval()
+        self.featurizer_lid.eval()
+        self.downstream_lid.eval()
+        wavs, labels, lid_labels = self.test_dataset_asr[draw_idx]
+        wavs, labels, lid_labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ], [ lid_lb.numpy() for lid_lb in lid_labels ]
+        # wavs => list(tensor(length))
+        with torch.no_grad():
+            features = self.upstream_asr(wavs)
+            features = features['hidden_states'] # features => tuple(tensor_layer1(N,T,C), ...tensor_layer_last(N,T,C))
+
+            features_asr = self.featurizer_ctc(features) # feaes => tensor(N,T,C)
+            features_lid = self.featurizer_lid(features) # feaes => tensor(N,T,C)
+
+            features_asr = list(features_asr)
+            features_lid = list(features_lid)
+            assert len(features_asr) == len(labels), 'length of features and labels not consistent'
+            assert len(features_lid) == len(labels), 'length of features and labels not consistent'
+        
+            logits_ctc, padded_labels, log_probs_len, labels_len = self.downstream_ctc(features_asr, labels)
+            logits_lid, _, _, _ = self.downstream_lid(features_lid, labels)
+
+            if self.config_asr['DOWNSTREAM2']['RNNs']['output_size'] == 3:
+                lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1], -1)
+            elif self.config_asr['DOWNSTREAM2']['RNNs']['output_size'] == 4:
+                _, lid_sil_logits, lid_chi_logits, lid_eng_logits = torch.split(logits_lid, [1, 1, 1, 1], -1)
+            sil_logits, eng_logits_1, _logits, eng_logits_2, chi_logits = torch.split(logits_ctc, [3, 2248, 1, 30, 2718], -1)
+
+            if self.apply_sil:
+                sil_logits = sil_logits + lid_sil_logits
+            chi_logits = chi_logits + lid_chi_logits
+            eng_logits_1 = eng_logits_1 + lid_eng_logits
+            eng_logits_2 = eng_logits_2 + lid_eng_logits
+
+            logits = torch.cat((sil_logits, eng_logits_1, _logits, eng_logits_2, chi_logits), dim=-1)
+            # log_probs_len = log_probs_len1
+
+            log_probs = nn.functional.log_softmax(logits, dim=-1)
+
+            target_tokens_batch = []
+            target_words_batch = []
+            for label in labels:
+                label_idx = (label != self.dictionary.pad_idx) & (
+                    label != self.dictionary.eos_idx
+                )
+                target_token_ids = label[label_idx].tolist()
+                target_tokens = self.dictionary.decode(target_token_ids)
+                target_words = target_tokens.split()
+
+                # target_tokens_batch.append(target_tokens)
+                # target_words_batch.append(target_words)
+            probs = nn.functional.softmax(logits, dim=-1)
+            probs_lid = nn.functional.softmax(logits_lid, dim=-1)
+            pred_tokens_batch, pred_words_batch = self._decode(log_probs.float().contiguous().cpu(), log_probs_len)
+            curve_metrix = self._get_curve(probs.float().contiguous().cpu(), log_probs_len, target_token_ids)
+            
+            x = np.array(range(log_probs_len[0]))
+            fig, axs = plt.subplots(2)
+            line_style = {
+                'space': ('densely dashdotted', (0, (3, 1, 1, 1))),
+                'en_tok': ('densely dashed',        (0, (3, 0.5))), 
+                'zh_tok': ('solid', 'solid'), 
+                'other': ('densely dotted',        (0, (1, 1)))
+            }
+            for key in curve_metrix.keys():
+                id = int(key)
+                kind = None
+                if id == 2251:
+                    kind = 'space'
+                elif id < 2282 and id > 2 : 
+                    kind = 'en_tok'
+                elif id >= 2282:
+                    kind = 'zh_tok'
+                else:
+                    kind = 'other'
+                y = curve_metrix[key]
+                if kind == 'other':
+                    axs[0].plot(x, y, linestyle=line_style[kind][-1], linewidth=1.5, alpha=0.5, label=key)
+                else:
+                    axs[0].plot(x, y, linestyle=line_style[kind][-1], linewidth=1.5, label=key)
+            # axs[0].legend(bbox_to_anchor=(1, 1.2),  prop={'size': 6})
+            lid_classes = ['<pad>', '<sil>', '<chi>', '<eng>']
+            for i, lid_class in enumerate(lid_classes):
+                y = [ prob[i].item() for prob in probs_lid[0] ]
+                axs[0].plot(x, y, linestyle='solid', linewidth=0.5, label=f'{lid_class}')
+            for i, lid_class in enumerate(lid_classes):
+                y = [ 1 if int(label) == i else 0 for label in lid_labels[0] ]
+                axs[1].plot(x, y, label=f'{lid_class}')
+            axs[0].legend(bbox_to_anchor=(1, 1.05),  prop={'size': 6})
+            axs[0].set_xlabel(' '.join([str(tok_id) for tok_id in target_token_ids]), fontsize=6)
+            fig.savefig(os.path.join(self.outdir, f'ctc_lid_cmp_{set_name}-{draw_idx}.png'), dpi=200)
+            print(target_words)
+            print(pred_words_batch[0])
+
     def draw_ctc(self):
         if self.load_asr:
             self.featurizer_asr.load_state_dict(self.asr_ckpt['Featurizer_asr'])
@@ -2365,6 +2499,8 @@ def main():
         elif config['task'] == 'finetune':
             runner.load_finetune()
             runner.train_lidb_ASR()
+        elif config['task'] == 'draw_ctc':
+            runner.draw_asr_lidb()
 
 if __name__ == '__main__':
     main()

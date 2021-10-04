@@ -100,7 +100,7 @@ ASR:
     dict_mode: 'subword'
     train: ['train']
     dev: ['dev']
-    test: ['dev-sge']
+    test: ['dev-man']
     zero_infinity: true
 
   UPSTREAM: 
@@ -110,7 +110,7 @@ ASR:
     type: weighted-sum
     layer-norm: true
     split: true
-    fix_lid: true
+    fix_lid_f: true
   
   SPECAUG:
     apply_time_warp: true
