@@ -26,9 +26,9 @@ import matplotlib.pyplot as plt
 from time import localtime, strftime
 import random
 
-# config_path = './configs/w2v2_large/w2v2_large_ll60_005.yml'
-config_path = './configs/w2v2_xlsr/w2v2_xlsr_005.yml'
-# config_path = './configs/w2v2_base/w2v2_base_203.yml'
+# config_path = './configs/w2v2_large/w2v2_large_ll60_202.yml'
+# config_path = './configs/w2v2_xlsr/w2v2_xlsr_202.yml'
+config_path = './configs/w2v2_base/w2v2_base_101.yml'
 # config_path = './configs/fbank/fbank_102.yml'
 
 def parse_l2_norm_data(l2_norm_path):
@@ -593,6 +593,7 @@ class Runner():
         self.featurizer_lid.eval()
         self.downstream_lid.eval()
         total_acc, total_loss, total_frames = 0., 0., 0
+        lang_acc, total_lang_frames = 0., 0.
         records = defaultdict(list)
         for batch, (wavs, labels) in enumerate(tqdm(self.test_dataloader_lid, total=len(self.test_dataloader_lid), desc='evaluating...')):
             wavs, labels = [torch.FloatTensor(wav).to(self.device) for wav in wavs], [ torch.LongTensor(label).to(self.device) for label in labels ]
@@ -629,6 +630,11 @@ class Runner():
                 for i, pred in enumerate(preds):
                     pred = pred[0:labels_len[i]]
                     acc += (pred == labels[i]).type(torch.float).sum().item()
+                    lang_mask = labels[i] >= 2
+                    lang_pred = pred[lang_mask]
+                    lang_label = labels[i][lang_mask]
+                    lang_acc += (lang_pred == lang_label).type(torch.float).sum().item()
+                    total_lang_frames += len(lang_label)
                     # tqdm.write(f'{acc}')
                     records['preds'] += pred.tolist()
                     records['labels'] += labels[i].tolist()
@@ -644,7 +650,9 @@ class Runner():
         avg_acc = total_acc / total_frames
         avg_loss = total_loss / len(self.test_dataloader_lid)
         f1scores = f1_score(records['labels'], records['preds'], labels=[1, 2, 3], zero_division=0, average=None)
-
+        avg_lang_acc = lang_acc / total_lang_frames
+        tqdm.write(f'Lang ACC: {avg_lang_acc}')
+        
         self.downstream_lid.train()
         self.featurizer_lid.train()
         if output:
@@ -1850,10 +1858,6 @@ class Runner():
     def load_finetune(self):
         self.load_asr = self.config['ALL']['asr_dir']
         self.load_lid = self.config['ALL']['lid_dir']
-        self.asr_loss = nn.CTCLoss(
-            blank=self.blank,
-            zero_infinity = self.config_asr['DATASET']['zero_infinity']
-        )
         if self.config_all['load_ckpt'] == 'last':
             ckpt_pths = glob.glob(f'{self.load_lid}/states-*.ckpt')
             ckpt_pths = sorted(ckpt_pths, key=lambda pth: int(pth.split('-')[-1].split('.')[0]))
@@ -1874,11 +1878,19 @@ class Runner():
             assert len(best_ckpt_pths) == 1
             self.lid_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
             best_ckpt_pths = glob.glob(f'{self.load_asr}/*best.ckpt')
-            assert len(best_ckpt_pths) == 1
-            self.asr_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
-        self.featurizer_ctc.load_state_dict(self.asr_ckpt['Featurizer_asr'])
+            if self.config_all.get('iven_ctc', False):
+                self.asr_ckpt = torch.load(self.load_asr, map_location=self.device)
+            else:
+                assert len(best_ckpt_pths) == 1
+                self.asr_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
+        if self.config_all.get('iven_ctc', False):
+            self.featurizer_ctc.load_state_dict(self.asr_ckpt['Featurizer'], strict=False)
+            self.downstream_ctc.load_state_dict(self.asr_ckpt['Downstream'], strict=False)
+        else:
+            self.featurizer_ctc.load_state_dict(self.asr_ckpt['Featurizer_asr'])
+            self.downstream_ctc.load_state_dict(self.asr_ckpt['Downstream_asr'])
+        
         self.featurizer_lid.load_state_dict(self.lid_ckpt['Featurizer_lid'])
-        self.downstream_ctc.load_state_dict(self.asr_ckpt['Downstream_asr'])
         self.downstream_lid.load_state_dict(self.lid_ckpt['Downstream_lid'])
         tqdm.write('[ LOAD ] - loaded finetune ckpts')
 

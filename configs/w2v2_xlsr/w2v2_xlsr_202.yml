@@ -1,0 +1,89 @@
+id: '202'
+mission: ASR_LIDB #{LID, ASR, ALL}
+task: finetune  #{train, evaluate, null(if no need to specified)}
+
+ASR:
+  apply_sil: true
+  load_ckpt: last
+  runner:
+    total_steps: 200000
+    gradient_clipping: 1
+    gradient_accumulate_steps: 1
+    log_step: 200
+    eval_step: 2500
+    save_step: 500
+    max_keep: 1
+    eval_dataloader: dev
+
+  optimizer: 
+    name: TorchOptim
+    torch_optim_name: Adam
+    lr: 6.0e-5
+
+  scheduler:
+    name: costum_scheduler
+    num_warmup_steps: 20000
+    num_decay_steps: 100000
+
+  DATASET:
+    bucket_size: 32
+    bucket_path: '/home/b07502072/cs_ssl/cs_asr_ssl/data/len_for_bucket/splitted-seame'
+    data_path: ''
+    load_valid: './data/valid_names/splitted-seame'
+    dict_path: './dicts/dict_seame.model'
+    dict_mode: 'subword'
+    train: ['train']
+    dev: ['dev']
+    test: ['dev-man']
+    zero_infinity: true
+
+  UPSTREAM: 
+    name: wav2vec2_xlsr
+
+  FEATURIZER:
+    type: weighted-sum
+    layer-norm: true
+    split: true
+    fix_lid_f: true
+  
+  SPECAUG:
+    apply_time_warp: true
+    apply_time_mask: true
+    apply_freq_mask: true
+    time_warp_window: 5
+    time_mask_width_range: [0, 40]
+    freq_mask_width_range: [0, 50]
+    num_freq_mask: 4
+    num_time_mask: 2
+
+  DOWNSTREAM1:
+    model_type: RNNs
+    proj_dim: 1024
+    RNNs:
+      module: LSTM
+      bidirection: true
+      dim: [1024, 1024]
+      dropout: [0.2, 0.2]
+      layer_norm: [False, False]
+      proj: [False, False]
+  
+  DOWNSTREAM2:
+    model_type: RNNs
+    proj_dim: 1024
+    RNNs:
+      module: LSTM
+      output_size: 4
+      bidirection: true
+      dim: [1024]
+      dropout: [0.2]
+      layer_norm: [False]
+      proj: [False]
+      rnn_no_grad: true
+
+
+ALL:
+  apply_sil: true
+  load_ckpt: best
+  iven_ctc: true
+  asr_dir: '/home/b07502072/cs_ssl/model/xlsr_seame.ckpt'
+  lid_dir: '/home/b07502072/cs_ssl/cs_asr_ssl/results/wav2vec2_xlsr/103/LID'

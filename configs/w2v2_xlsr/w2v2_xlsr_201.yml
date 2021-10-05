@@ -2,75 +2,9 @@ id: '201'
 mission: ASR_LIDB #{LID, ASR, ALL}
 task: finetune  #{train, evaluate, null(if no need to specified)}
 
-LID: 
-  load_ckpt: last
-  runner:
-    total_steps: 10000
-    gradient_clipping: 1
-    gradient_accumulate_steps: 128
-    log_step: 5
-    eval_step: 50
-    save_step: 20
-    max_keep: 1
-    eval_dataloader: test
-
-  optimizer: 
-    name: TorchOptim
-    torch_optim_name: Adam
-    lr: 8.0e-5
-
-  DATASET:
-    bucket_path: '/home/b07502072/cs_ssl/iven/hubert_asr/len_for_bucket/SEAME'
-    data_path: ''
-    load_valid: './data/valid_names/SEAME'
-    train: ['train']
-    test: ['dev-man', 'dev-sge']
-
-  UPSTREAM: 
-    name: wav2vec2_base_960
-
-  FEATURIZER:
-    type: weighted-sum
-    layer-norm: true
-
-  SPECAUG:
-    apply_time_warp: true
-    apply_time_mask: true
-    apply_freq_mask: false
-    time_warp_window: 4
-    time_mask_width_range: [0, 5]
-    freq_mask_width_range: [0, 50]
-    num_freq_mask: 4
-    num_time_mask: 8
-
-  DOWNSTREAM:
-    model_type: CNN
-    proj_dim: 1024
-    RNNs:
-      module: LSTM
-      bidirection: true
-      dim: [512, 128]
-      dropout: [0.2, 0.1]
-      layer_norm: [False, False]
-      proj: [False, False]
-      output_size: 3
-    Linear:
-      batch_norm: [True, True, True]
-      dim: [256, 128, 32]
-      act: ['ReLU', 'ReLU', 'ReLU']
-      output_size: 4
-    CNN:
-      widths: [9]
-      filter_nums: [4]
-      output_size: 4
-  
-  Loss:
-    weights: [0., 0.2, 0.35, 0.45]
-
-
 ASR:
-  apply_sil: false
-  load_ckpt: best
+  apply_sil: true
+  load_ckpt: last
   runner:
     total_steps: 200000
     gradient_clipping: 1
@@ -104,7 +38,7 @@ ASR:
     zero_infinity: true
 
   UPSTREAM: 
-    name: wav2vec2_large_ll60k
+    name: wav2vec2_xlsr
 
   FEATURIZER:
     type: weighted-sum
@@ -145,7 +79,8 @@ ASR:
       proj: [False]
 
 ALL:
-  apply_sil: false
+  apply_sil: true
   load_ckpt: best
-  asr_dir: '/home/b07502072/cs_ssl/cs_asr_ssl/results/wav2vec2_base_960/025/ASR'
-  lid_dir: '/home/b07502072/cs_ssl/cs_asr_ssl/results/wav2vec2_base_960/103/LID'
+  iven_ctc: true
+  asr_dir: '/home/b07502072/cs_ssl/model/xlsr_seame.ckpt'
+  lid_dir: '/home/b07502072/cs_ssl/cs_asr_ssl/results/wav2vec2_xlsr/103/LID'
