@@ -26,8 +26,8 @@ import matplotlib.pyplot as plt
 from time import localtime, strftime
 import random
 
-config_path = './configs/w2v2_large/w2v2_large_ll60_210.yml'
-# config_path = './configs/w2v2_xlsr/w2v2_xlsr_210.yml'
+# config_path = './configs/w2v2_large/w2v2_large_ll60_103.yml'
+config_path = './configs/w2v2_xlsr/w2v2_xlsr_110.yml'
 # config_path = './configs/w2v2_base/w2v2_base_206.yml'
 # config_path = './configs/fbank/fbank_102.yml'
 

@@ -52,7 +52,7 @@ def normalize(txt_pth, ignore_noise=False, trans_adverbial=False, rm_minor_token
 
 
 if __name__ == '__main__':
-    upstream_name = 'wav2vec2_xlsr'
+    upstream_name = 'wav2vec2_large_ll60k'
     exp_id = '210'
     exp_mission = 'ALL'
     dev_set = 'dev-sge'
