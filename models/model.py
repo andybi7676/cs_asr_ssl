@@ -243,7 +243,6 @@ class Downstream(nn.Module):
         self.project_dim = downstream_config['proj_dim']
         self.projector = nn.Linear(feature_dim, downstream_config['proj_dim'])
         if model_type == 'FC': 
-            self.bt = nn.BatchNorm1d(feature_dim)
             return 
         model_cls = eval(model_type)
         model_conf = downstream_config[model_type]
@@ -262,11 +261,7 @@ class Downstream(nn.Module):
         labels = pad_sequence(labels, batch_first=True).to(device)
 
         if self.model_type == 'FC':
-            N, T, C = features.size()[0], features.size()[1], features.size()[2]
-            features = features.view(N*T, C)
-            features = self.bt(features)
             logits = self.projector(features)
-            logits = logits.view(N, T, 4)
             return logits, labels, features_len, labels_len
         features = self.projector(features)
         logits, logits_len = self.model(features, features_len) # tensor(N, T, C)

@@ -1,0 +1,75 @@
+DATASET:
+  bucket_path: /home/b07502072/cs_ssl/cs_asr_ssl/data/len_for_bucket/splitted-seame
+  bucket_size: 32
+  data_path: ''
+  dev:
+  - dev
+  dict_mode: subword
+  dict_path: ./dicts/dict_seame.model
+  lid_fname: _expand_fbank_lid
+  load_valid: ./data/valid_names/splitted-seame
+  test:
+  - dev-sge
+  train:
+  - train
+  zero_infinity: true
+DOWNSTREAM:
+  CNN:
+    width: 3
+  Linear:
+    act:
+    - ReLU
+    - ReLU
+    batch_norm:
+    - true
+    - true
+    dim:
+    - 512
+    - 128
+    output_size: 4
+  RNNs:
+    bidirection: true
+    dim:
+    - 512
+    - 128
+    dropout:
+    - 0.2
+    - 0.1
+    layer_norm:
+    - false
+    - false
+    module: LSTM
+    output_size: 4
+    proj:
+    - false
+    - false
+  model_type: FC
+  proj_dim: 4
+FEATURIZER:
+  type: fbank
+Loss:
+  weights:
+  - 0.0
+  - 0.2
+  - 0.35
+  - 0.45
+UPSTREAM:
+  name: fbank
+load_ckpt: last
+optimizer:
+  lr: 8.0e-05
+  name: TorchOptim
+  torch_optim_name: Adam
+runner:
+  eval_dataloader: dev
+  eval_step: 2500
+  gradient_accumulate_steps: 1
+  gradient_clipping: 1
+  log_step: 100
+  max_keep: 1
+  save_step: 200
+  total_steps: 100000
+scheduler:
+  name: costum_scheduler
+  num_decay_steps: 50000
+  num_warmup_steps: 10000

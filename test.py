@@ -71,26 +71,30 @@ import torchaudio
 # outs = outs.view(-1).sum() ** 2
 # outs.backward()
 # print(outs)
-config_path = './configs/w2v2_base/w2v2_base_017.yml'
-with open(config_path, 'r') as yml_f:
-    config = yaml.safe_load(yml_f)
+config_path = '/home/b07502072/cs_ssl/model/fbank.ckpt'
+ckpt = torch.load(config_path)
+print(list(ckpt['Featurizer'].keys()))
+# print(ckpt['Featurizer']['weights'])
 
-config_asr = config.get('ASR')
-config_asr['DOWNSTREAM']['RNNs']['output_size'] = 5000
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-upstream_asr = torch.hub.load('s3prl/s3prl', config_asr['UPSTREAM']['name']).to(device)
-featurizer_asr = Featurizer(upstream_asr, device, **config_asr['FEATURIZER']).to(device)
-downstream_asr = Downstream(featurizer_asr.upstream_dim, **config_asr['DOWNSTREAM']).to(device)
-featurizer_asr.train()
-downstream_asr.train()
+# with open(config_path, 'r') as yml_f:
+#     config = yaml.safe_load(yml_f)
+
+# config_asr = config.get('ASR')
+# config_asr['DOWNSTREAM']['RNNs']['output_size'] = 5000
+# device = 'cuda' if torch.cuda.is_available() else 'cpu'
+# upstream_asr = torch.hub.load('s3prl/s3prl', config_asr['UPSTREAM']['name']).to(device)
+# featurizer_asr = Featurizer(upstream_asr, device, **config_asr['FEATURIZER']).to(device)
+# downstream_asr = Downstream(featurizer_asr.upstream_dim, **config_asr['DOWNSTREAM']).to(device)
+# featurizer_asr.train()
+# downstream_asr.train()
 # for param in featurizer_asr.parameters():
 #     sum += 1
 # for param in downstream_asr.parameters():
 #     sum += 1
-trainable_params = list(featurizer_asr.parameters()) + list(downstream_asr.parameters())
-total = sum(p.numel() for p in trainable_params)
+# trainable_params = list(featurizer_asr.parameters()) + list(downstream_asr.parameters())
+# total = sum(p.numel() for p in trainable_params)
 # for param_containing in trainable_params:
 #     for param in 
-print(total)
+# print(total)
 # print(ckpt['Downstream'].keys())
 # print(ckpt['CTC_Featurizer'].keys())
