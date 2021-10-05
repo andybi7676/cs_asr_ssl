@@ -1,0 +1,68 @@
+DATASET:
+  bucket_path: /home/b07502072/cs_ssl/cs_asr_ssl/data/len_for_bucket/splitted-seame
+  bucket_size: 32
+  data_path: ''
+  dev:
+  - dev
+  dict_mode: subword
+  dict_path: ./dicts/dict_seame.model
+  load_valid: ./data/valid_names/splitted-seame
+  test:
+  - dev-man
+  train:
+  - train
+  zero_infinity: true
+DOWNSTREAM:
+  RNNs:
+    bidirection: true
+    dim:
+    - 1024
+    - 1024
+    dropout:
+    - 0.2
+    - 0.2
+    layer_norm:
+    - false
+    - false
+    module: LSTM
+    proj:
+    - false
+    - false
+  model_type: RNNs
+  proj_dim: 1024
+FEATURIZER:
+  layer-norm: true
+  type: weighted-sum
+SPECAUG:
+  apply_freq_mask: true
+  apply_time_mask: true
+  apply_time_warp: true
+  freq_mask_width_range:
+  - 0
+  - 50
+  num_freq_mask: 4
+  num_time_mask: 2
+  time_mask_width_range:
+  - 0
+  - 40
+  time_warp_window: 5
+UPSTREAM:
+  name: wav2vec2_large_ll60k
+load_ckpt: last
+optimizer:
+  lr: 6.0e-05
+  name: TorchOptim
+  torch_optim_name: Adam
+runner:
+  eval_dataloader: dev
+  eval_step: 2500
+  gradient_accumulate_steps: 1
+  gradient_clipping: 1
+  log_step: 200
+  max_keep: 1
+  save_step: 500
+  total_steps: 200000
+scheduler:
+  name: costum_scheduler
+  num_decay_steps: 50000
+  num_warmup_steps: 10000

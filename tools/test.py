@@ -9,29 +9,29 @@ import torch.nn as nn
 import yaml
 import torchaudio
 
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
-SAMPLE_RATE = 16000
-sample_rate = 16000
-
-def load_wav(wav_path):
-    wav, sr = torchaudio.load(wav_path)
-    assert sr == sample_rate, f'Sample rate mismatch: real {sr}, config {sample_rate}'
-    return wav.view(-1)
-
 # device = 'cuda' if torch.cuda.is_available() else 'cpu'
-device = 'cpu'
-upstream = torch.hub.load('s3prl/s3prl', 'fbank').to(device)
-upstream_2 = torch.hub.load('s3prl/s3prl', 'wav2vec2_base_960').to(device)
-with torch.no_grad():
-    paired_wavs = [torch.randn(SAMPLE_RATE).to(device)]
-    paired_features = upstream(paired_wavs)
-    paired_features2 = upstream_2(paired_wavs)
 
-    print(len(paired_features['hidden_states']))
-    print(paired_features['hidden_states'][0].size())
-    print(len(paired_features2['hidden_states']))
-    print(paired_features2['hidden_states'][0].size())
+# SAMPLE_RATE = 16000
+# sample_rate = 16000
+
+# def load_wav(wav_path):
+#     wav, sr = torchaudio.load(wav_path)
+#     assert sr == sample_rate, f'Sample rate mismatch: real {sr}, config {sample_rate}'
+#     return wav.view(-1)
+
+# # device = 'cuda' if torch.cuda.is_available() else 'cpu'
+# device = 'cpu'
+# upstream = torch.hub.load('s3prl/s3prl', 'fbank').to(device)
+# upstream_2 = torch.hub.load('s3prl/s3prl', 'wav2vec2_base_960').to(device)
+# with torch.no_grad():
+#     paired_wavs = [torch.randn(SAMPLE_RATE).to(device)]
+#     paired_features = upstream(paired_wavs)
+#     paired_features2 = upstream_2(paired_wavs)
+
+#     print(len(paired_features['hidden_states']))
+#     print(paired_features['hidden_states'][0].size())
+#     print(len(paired_features2['hidden_states']))
+#     print(paired_features2['hidden_states'][0].size())
 #     for split in splits:
 #         split_valid_names = np.load(os.path.join(out_path, f'{split}.npy'))
 #         lid = []
@@ -79,9 +79,11 @@ with torch.no_grad():
 #     config = yaml.safe_load(yml_f)
 
 # config_asr = config.get('ASR')
-# device = 'cuda' if torch.cuda.is_available() else 'cpu'
-# ckpt_path = '/home/b07502072/cs_ssl/cs_asr_ssl/results/wav2vec2_base_960/014/ASR/dev-best.ckpt'
-# ckpt = torch.load(ckpt_path)
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+ckpt_path = '/home/b07502072/cs_ssl/model/xlsr_seame.ckpt'
+ckpt = torch.load(ckpt_path, map_location=device)
+print(ckpt.keys())
+
 # upstream_asr = torch.hub.load('s3prl/s3prl', self.config_asr['UPSTREAM']['name']).to(self.device)
 # featurizer_asr = Featurizer(upstream_asr, device, **config_asr['FEATURIZER']).to(device)
 # downstream_asr = Downstream(featurizer_asr.upstream_dim, **config_asr['DOWNSTREAM']).to(device)
@@ -89,7 +91,6 @@ with torch.no_grad():
 # print(len(trainable_params))
 # ckpt_path = '/home/b07502072/cs_ssl/iven/hubert_asr/result/downstream/pseudo_base/dev-clean-best.ckpt'
 # ckpt = torch.load(ckpt_path)
-# print(ckpt.keys())
 
 # print(ckpt['Downstream'].keys())
 # print(ckpt['CTC_Featurizer'].keys())

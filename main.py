@@ -26,9 +26,9 @@ import matplotlib.pyplot as plt
 from time import localtime, strftime
 import random
 
-# config_path = './configs/w2v2_large/w2v2_large_ll60_103.yml'
-# config_path = './configs/w2v2_xlsr/w2v2_xlsr_103.yml'
-config_path = './configs/w2v2_base/w2v2_base_203.yml'
+# config_path = './configs/w2v2_large/w2v2_large_ll60_005.yml'
+config_path = './configs/w2v2_xlsr/w2v2_xlsr_005.yml'
+# config_path = './configs/w2v2_base/w2v2_base_203.yml'
 # config_path = './configs/fbank/fbank_102.yml'
 
 def parse_l2_norm_data(l2_norm_path):
