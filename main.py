@@ -26,10 +26,10 @@ import matplotlib.pyplot as plt
 from time import localtime, strftime
 import random
 
-# config_path = './configs/w2v2_large/w2v2_large_ll60_110.yml'
-# config_path = './configs/w2v2_xlsr/w2v2_xlsr_110.yml'
-config_path = './configs/w2v2_base/w2v2_base_205.yml'
-# config_path = './configs/fbank/fbank_201.yml'
+config_path = './configs/w2v2_large/w2v2_large_ll60_210.yml'
+# config_path = './configs/w2v2_xlsr/w2v2_xlsr_210.yml'
+# config_path = './configs/w2v2_base/w2v2_base_206.yml'
+# config_path = './configs/fbank/fbank_102.yml'
 
 def parse_l2_norm_data(l2_norm_path):
     norms = []
@@ -248,9 +248,12 @@ class Runner():
                 best_ckpt_pths = glob.glob(f'{self.load_lid}/*best.ckpt')
                 assert len(best_ckpt_pths) == 1
                 self.lid_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
-                best_ckpt_pths = glob.glob(f'{self.load_asr}/*best.ckpt')
-                assert len(best_ckpt_pths) == 1
-                self.asr_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
+                if self.config_all.get('iven_ctc', False):
+                    self.asr_ckpt = torch.load(self.load_asr, map_location=self.device)
+                else:
+                    best_ckpt_pths = glob.glob(f'{self.load_asr}/*best.ckpt')
+                    assert len(best_ckpt_pths) == 1
+                    self.asr_ckpt = torch.load(best_ckpt_pths[0], map_location=self.device)
 
         if self.mission == 'ASR' and 'double' in self.task:
             self.exp_name = '/'.join([self.config_asr['UPSTREAM']['name'], self.id, self.mission])
@@ -1473,10 +1476,16 @@ class Runner():
 
     def evaluate_jointly(self, split='test'):
         if self.load_asr:
-            self.featurizer_asr.load_state_dict(self.asr_ckpt['Featurizer_asr'])
-            tqdm.write(f'[ LOAD ] - loaded featurizer_asr')
-            self.downstream_asr.load_state_dict(self.asr_ckpt['Downstream_asr'], strict=False)
-            tqdm.write(f'[ LOAD ] - loaded downstream_asr')
+            if self.config_all.get('iven_ctc', False):
+                self.featurizer_asr.load_state_dict(self.asr_ckpt['Featurizer'])
+                tqdm.write(f'[ LOAD ] - loaded featurizer_asr')
+                self.downstream_asr.load_state_dict(self.asr_ckpt['Downstream'], strict=False)
+                tqdm.write(f'[ LOAD ] - loaded downstream_asr')
+            else:
+                self.featurizer_asr.load_state_dict(self.asr_ckpt['Featurizer_asr'])
+                tqdm.write(f'[ LOAD ] - loaded featurizer_asr')
+                self.downstream_asr.load_state_dict(self.asr_ckpt['Downstream_asr'], strict=False)
+                tqdm.write(f'[ LOAD ] - loaded downstream_asr')
         
         if self.load_lid:
             self.featurizer_lid.load_state_dict(self.lid_ckpt['Featurizer_lid'])
@@ -1521,28 +1530,28 @@ class Runner():
                     probs = []
                     logits_asr = logits_asr[0]
                     logits_lid = logits_lid[0]
-                    # prob_asr = nn.functional.softmax(logits_asr, dim=-1)
-                    # prob_lid = nn.functional.softmax(logits_lid, dim=-1)
-                    prob_asr = logits_asr
-                    prob_lid = logits_lid
-                    # for i, pred in enumerate(pred_asr):
-                    #     prob_l = prob_asr[i].cpu().numpy()
-                    #     cls_l = prob_lid[i].tolist()
-                    #     if pred < 3 or pred == 2251:
-                    #         probs.append(prob_l)
-                    #     else:
-                    #         prob_l = [0.0]*3 + (cls_l[3]*prob_l[3:2282]).tolist() + (cls_l[2]*prob_l[2282:]).tolist()
-                    #         prob_l[2251] = 0.0
-                    #         probs.append(prob_l)
+                    prob_asr = nn.functional.softmax(logits_asr, dim=-1)
+                    prob_lid = nn.functional.softmax(logits_lid, dim=-1)
+                    # prob_asr = logits_asr
+                    # prob_lid = logits_lid
                     for i, pred in enumerate(pred_asr):
                         prob_l = prob_asr[i].cpu().numpy()
                         cls_l = prob_lid[i].tolist()
                         if pred < 3 or pred == 2251:
                             probs.append(prob_l)
                         else:
-                            prob_l = [0.0]*3 + (cls_l[3]+prob_l[3:2282]).tolist() + (cls_l[2]+prob_l[2282:]).tolist()
-                            prob_l[2251] = float('-inf')
+                            prob_l = [0.0]*3 + (cls_l[3]*prob_l[3:2282]).tolist() + (cls_l[2]*prob_l[2282:]).tolist()
+                            prob_l[2251] = 0.0
                             probs.append(prob_l)
+                    # for i, pred in enumerate(pred_asr):
+                    #     prob_l = prob_asr[i].cpu().numpy()
+                    #     cls_l = prob_lid[i].tolist()
+                    #     if pred < 3 or pred == 2251:
+                    #         probs.append(prob_l)
+                    #     else:
+                    #         prob_l = [0.0]*3 + (cls_l[3]+prob_l[3:2282]).tolist() + (cls_l[2]+prob_l[2282:]).tolist()
+                    #         prob_l[2251] = float('-inf')
+                    #         probs.append(prob_l)
 
                     probs = [probs]
                     probs = torch.FloatTensor(probs).to(self.device)
