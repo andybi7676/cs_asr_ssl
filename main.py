@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 import yaml
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 from datasets.LID import LID_Dataset
 from datasets.ASR import ASR_Dataset
@@ -26,9 +27,9 @@ import matplotlib.pyplot as plt
 from time import localtime, strftime
 import random
 
-# config_path = './configs/w2v2_large/w2v2_large_ll60_103.yml'
-config_path = './configs/w2v2_xlsr/w2v2_xlsr_110.yml'
-# config_path = './configs/w2v2_base/w2v2_base_206.yml'
+# config_path = './configs/w2v2_large/w2v2_large_ll60_110.yml'
+# config_path = './configs/w2v2_xlsr/w2v2_xlsr_110.yml'
+config_path = './configs/w2v2_base/w2v2_base_205.yml'
 # config_path = './configs/fbank/fbank_102.yml'
 
 def parse_l2_norm_data(l2_norm_path):
@@ -104,9 +105,10 @@ class Runner():
             self.outdir = f'./results/{self.exp_name}'
             if not os.path.exists(self.outdir): os.makedirs(self.outdir)
             time_str = strftime("%Y-%m-%d_%H-%M", localtime())
-            with open(self.outdir+f'/{time_str}_config_asr.yml', 'w') as yml_f:
-                yaml.dump(self.config_asr, yml_f, default_flow_style=False)
-            self.writer = SummaryWriter(log_dir=self.outdir)
+            if self.task != 'draw_ctc':
+                with open(self.outdir+f'/{time_str}_config_asr.yml', 'w') as yml_f:
+                    yaml.dump(self.config_asr, yml_f, default_flow_style=False)
+                self.writer = SummaryWriter(log_dir=self.outdir)
             self.dictionary = load_text_encoder(self.config_asr['DATASET']['dict_mode'], self.config_asr['DATASET']['dict_path'])
             self.config_asr['DOWNSTREAM1']['RNNs']['output_size'] = self.dictionary.vocab_size
             if not self.config_asr['DOWNSTREAM1']['RNNs'].get('output_size', False): 
@@ -208,7 +210,8 @@ class Runner():
         if self.mission == 'ALL':
             self.exp_name = '/'.join([self.config_lid['UPSTREAM']['name'], self.id, self.mission])
             self.outdir = f'./results/{self.exp_name}'
-            self.writer = SummaryWriter(log_dir=self.outdir)
+            if 'draw' not in self.task:
+                self.writer = SummaryWriter(log_dir=self.outdir)
             self.dictionary = load_text_encoder(self.config_asr['DATASET']['dict_mode'], self.config_asr['DATASET']['dict_path'])
             self.config_asr['DOWNSTREAM']['RNNs']['output_size'] = self.dictionary.vocab_size
             self.upstream_asr = torch.hub.load('s3prl/s3prl', self.config_asr['UPSTREAM']['name']).to(self.device)
@@ -1903,7 +1906,6 @@ class Runner():
         self.downstream_lid.load_state_dict(self.lid_ckpt['Downstream_lid'])
         tqdm.write('[ LOAD ] - loaded finetune ckpts')
 
-
     def evaluate_lidb_ASR(self, load=False, mission='dev'):
         if load:
             assert self.load_ckpt, 'No ckpt to be loaded'
@@ -2042,7 +2044,7 @@ class Runner():
         else:
             print('No ckpt to be loaded !')
             return 
-        draw_idx = 4960
+        draw_idx = 4937
         set_name = 'dev_man'
         
         if not hasattr(self, f'test_dataset_asr'):
@@ -2119,6 +2121,8 @@ class Runner():
                 'zh_tok': ('solid', 'solid'), 
                 'other': ('densely dotted',        (0, (1, 1)))
             }
+
+            raw_data = {}
             for key in curve_metrix.keys():
                 id = int(key)
                 kind = None
@@ -2131,6 +2135,7 @@ class Runner():
                 else:
                     kind = 'other'
                 y = curve_metrix[key]
+                raw_data[f'{kind}-{key}'] = [t.item() for t in y]
                 if kind == 'other':
                     axs[0].plot(x, y, linestyle=line_style[kind][-1], linewidth=1.5, alpha=0.5, label=key)
                 else:
@@ -2139,13 +2144,17 @@ class Runner():
             lid_classes = ['<pad>', '<sil>', '<chi>', '<eng>']
             for i, lid_class in enumerate(lid_classes):
                 y = [ prob[i].item() for prob in probs_lid[0] ]
+                raw_data[lid_class] = y
                 axs[0].plot(x, y, linestyle='solid', linewidth=0.5, label=f'{lid_class}')
             for i, lid_class in enumerate(lid_classes):
                 y = [ 1 if int(label) == i else 0 for label in lid_labels[0] ]
+                raw_data[f'TRUE-{lid_class}'] = y
                 axs[1].plot(x, y, label=f'{lid_class}')
             axs[0].legend(bbox_to_anchor=(1, 1.05),  prop={'size': 6})
             axs[0].set_xlabel(' '.join([str(tok_id) for tok_id in target_token_ids]), fontsize=6)
             fig.savefig(os.path.join(self.outdir, f'ctc_lid_cmp_{set_name}-{draw_idx}.png'), dpi=200)
+            df = pd.DataFrame(data=raw_data)
+            df.to_csv(os.path.join(self.outdir, f'ctc_lid_cmp_{set_name}-{draw_idx}-finetune.csv'))
             print(target_words)
             print(pred_words_batch[0])
 
@@ -2155,7 +2164,7 @@ class Runner():
             tqdm.write(f'[ LOAD ] - loaded featurizer_asr')
             self.downstream_asr.load_state_dict(self.asr_ckpt['Downstream_asr'], strict=False)
             tqdm.write(f'[ LOAD ] - loaded downstream_asr')
-        draw_idx = 4960
+        draw_idx = 4937
         set_name = 'dev_man'
         if self.load_lid:
             self.featurizer_lid.load_state_dict(self.lid_ckpt['Featurizer_lid'])
@@ -2190,10 +2199,34 @@ class Runner():
             assert len(features_asr) == len(labels), 'length of features and labels not consistent'
             assert len(features_lid) == len(labels), 'length of features and labels not consistent'
         
-            logits, padded_labels, log_probs_len, labels_len = self.downstream_asr(features_asr, labels)
+            logits_asr, padded_labels, log_probs_len, labels_len = self.downstream_asr(features_asr, labels)
             logits_lid, _, _, _ = self.downstream_lid(features_lid, labels)
+            pred_asr = logits_asr.argmax(dim=-1)
+            pred_lid = logits_lid.argmax(dim=-1)
+            pred_asr = pred_asr[0].tolist()
+            # print(pred_lid[0].tolist()[0:100])
+            # print(pred_asr[0:100])
+            probs = []
+            # logits_asr = logits_asr[0]
+            # logits_lid = logits_lid[0]
+            prob_asr = nn.functional.softmax(logits_asr[0], dim=-1)
+            prob_lid = nn.functional.softmax(logits_lid[0], dim=-1)
+            # prob_asr = logits_asr
+            # prob_lid = logits_lid
+            for i, pred in enumerate(pred_asr):
+                prob_l = prob_asr[i].cpu().numpy()
+                cls_l = prob_lid[i].tolist()
+                if pred < 3 or pred == 2251:
+                    probs.append(prob_l)
+                else:
+                    prob_l = [0.0]*3 + (cls_l[3]*prob_l[3:2282]).tolist() + (cls_l[2]*prob_l[2282:]).tolist()
+                    prob_l[2251] = 0.0
+                    probs.append(prob_l)
 
-            log_probs = nn.functional.log_softmax(logits, dim=-1)
+            probs = [probs]
+            probs = torch.FloatTensor(probs).to(self.device)
+
+            log_probs = nn.functional.log_softmax(logits_asr, dim=-1)
 
             target_tokens_batch = []
             target_words_batch = []
@@ -2207,9 +2240,9 @@ class Runner():
 
                 # target_tokens_batch.append(target_tokens)
                 # target_words_batch.append(target_words)
-            probs = nn.functional.softmax(logits, dim=-1)
+            # probs = nn.functional.softmax(logits_asr, dim=-1)
             probs_lid = nn.functional.softmax(logits_lid, dim=-1)
-            pred_tokens_batch, pred_words_batch = self._decode(log_probs.float().contiguous().cpu(), log_probs_len)
+            pred_tokens_batch, pred_words_batch = self._decode(probs.float().contiguous().cpu(), log_probs_len)
             curve_metrix = self._get_curve(probs.float().contiguous().cpu(), log_probs_len, target_token_ids)
             
             x = np.array(range(log_probs_len[0]))
@@ -2220,6 +2253,13 @@ class Runner():
                 'zh_tok': ('solid', 'solid'), 
                 'other': ('densely dotted',        (0, (1, 1)))
             }
+            color_style = {
+                'en_tok': '#9189FF',
+                'zh_tok': '#FF9393',
+                'space': 'w',
+                'other': 'w',
+            }
+            raw_data = {}
             for key in curve_metrix.keys():
                 id = int(key)
                 kind = None
@@ -2232,15 +2272,23 @@ class Runner():
                 else:
                     kind = 'other'
                 y = curve_metrix[key]
+                raw_data[f'{kind}-{key}'] = [t.item() for t in y]
                 if kind == 'other':
-                    axs[0].plot(x, y, linestyle=line_style[kind][-1], linewidth=1.5, alpha=0.5, label=key)
+                    axs[0].plot(x, y, linestyle=line_style[kind][-1], color=color_style[kind], linewidth=1.5, alpha=0.5, label=key)
                 else:
-                    axs[0].plot(x, y, linestyle=line_style[kind][-1], linewidth=1.5, label=key)
+                    axs[0].plot(x, y, linestyle=line_style[kind][-1], color=color_style[kind], linewidth=1.5, label=key)
             # axs[0].legend(bbox_to_anchor=(1, 1.2),  prop={'size': 6})
             lid_classes = ['<pad>', '<sil>', '<chi>', '<eng>']
+            lid_color_style = {
+                '<pad>': 'w',
+                '<sil>': 'w',
+                '<chi>': 'r',
+                '<eng>': 'b'
+            }
             for i, lid_class in enumerate(lid_classes):
                 y = [ prob[i].item() for prob in probs_lid[0] ]
-                axs[0].plot(x, y, linestyle='solid', linewidth=0.5, label=f'{lid_class}')
+                raw_data[lid_class] = y
+                axs[0].plot(x, y, linestyle='solid', color=lid_color_style[lid_class], linewidth=0.5, label=f'{lid_class}')
             # for i, lid_class in enumerate(lid_classes):
             #     y = [ 1 if int(label) == i else 0 for label in lid_labels[0] ]
             #     axs[1].plot(x, y, label=f'{lid_class}')
@@ -2249,6 +2297,8 @@ class Runner():
             fig.savefig(os.path.join(self.outdir, f'ctc_lid_cmp_{set_name}-{draw_idx}.png'), dpi=200)
             print(target_words)
             print(pred_words_batch[0])
+            df = pd.DataFrame(data=raw_data)
+            df.to_csv(os.path.join(self.outdir, f'ctc_lid_cmp_{set_name}-{draw_idx}-jointly.csv'))
             # self.records['loss'].append(loss.item())
             # self.records['target_tokens'] += target_tokens_batch
             # self.records['target_words'] += target_words_batch
@@ -2361,9 +2411,18 @@ class Runner():
         assert len(input_lens) == 1, 'Too much sentence to be drawn !'
 
         focus_ids = [0, 1]
-        for i in target_token_ids:
-            if i not in focus_ids:
-                focus_ids.append(i)
+        focus_target = False
+        if focus_target:
+            for i in target_token_ids:
+                if i not in focus_ids:
+                    focus_ids.append(i)
+        else:
+            pred_token_ids = probs.argmax(dim=-1)
+            pred_token_ids = pred_token_ids[pred_token_ids != self.blank].tolist()
+            for i in pred_token_ids:
+                if i not in focus_ids:
+                    focus_ids.append(i)
+
         tqdm.write(f'Focus on {len(focus_ids)} ids !')
         focus_words = [ self.dictionary.decode([i], True) for i in focus_ids ]
         focus_words_to_ids = { self.dictionary.decode([i], True): i for i in focus_ids }
